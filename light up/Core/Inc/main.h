@@ -31,7 +31,9 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "string.h"
+#include "stdlib.h"
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -57,17 +59,19 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-
 /* USER CODE BEGIN Private defines */
-//É¨Æµ·¶Î§
-#define FREQ_MIN 10
-#define FREQ_MAX 200
+/**************************************Õñ¶¯¿ØÖÆ**************************************/
+//É¨ÆµÉèÖÃ
+#define FREQ_MIN 1
+#define FREQ_MAX 1000
 #define FREQ_STEP 5
+void FREQ_Scan(void);
 
 //Õ¼¿Õ±È·¶Î§
-#define DR_MIN 15
-#define DR_MAX 40
+#define DR_MIN 5
+#define DR_MAX 50
 #define DR_STEP 5
+void DR_Scan(void);
 
 // ¿ØÖÆ²¨ÐÎ
 extern uint16_t drv_PWM_FREQ;// PWMÆµÂÊ
@@ -86,12 +90,23 @@ void DRV_Coast(void);
 void DRV_Forward(void);
 void DRV_Reverse(void);
 void DRV_Brake(void);
+/************************************************************************************/
 
+/**************************************²âÁ¿·´À¡**************************************/
 // LDCÆ¬Ñ¡
 #define CS1_LOW()  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET)
 #define CS1_HIGH() HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET)
 #define CS2_LOW()  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET)
 #define CS2_HIGH() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET)
+/************************************************************************************/
+
+/**************************************À¶ÑÀ´®¿Ú**************************************/
+#define MSG_LEN 64
+extern char RX_BYTE;
+extern char RX_BUFFER[MSG_LEN];
+extern char TX_BUFFER[MSG_LEN];
+void Command_Parse(void);
+/************************************************************************************/
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

@@ -219,33 +219,25 @@ void SysTick_Handler(void)
   */
 void TIM2_IRQHandler(void)//10us
 {
-	HAL_TIM_IRQHandler(&htim2);
-  /* USER CODE BEGIN TIM2_IRQn 0 */
-	// 方向控制波形
-  static uint32_t tim2_cnt;
-	if(tim2_cnt < ((uint32_t)drv_PWM_CNT * drv_PWM_DR / 100))
-	{
-		DRV_Forward();
-	}
-//	else if(tim2_cnt<(drv_PWM_CNT/2))
-//	{
-//		DRV_Coast();
-//	}
-	else if (tim2_cnt < ((uint32_t)drv_PWM_CNT * (50 + drv_PWM_DR) / 100))
-	{
-		DRV_Reverse();
-	}
-//	else if(tim2_cnt<drv_PWM_CNT)
-//	{
-//		DRV_Coast();
-//	}
-	else
-	{
-		tim2_cnt = 0;
-		DRV_Forward();
-	}
-	tim2_cnt++;
+		HAL_TIM_IRQHandler(&htim2);
+		/* USER CODE BEGIN TIM2_IRQn 0 */
+		// 方向控制波形
+		static uint32_t tim2_cnt;
+		if(tim2_cnt < ((uint32_t)drv_PWM_CNT * drv_PWM_DR / 100))
+				DRV_Forward();
+		else if (tim2_cnt < ((uint32_t)drv_PWM_CNT))
+				DRV_Reverse();
+		else
+		{
+				tim2_cnt = 0;
+				DRV_Forward();
+		}
+		tim2_cnt++;
 
+		
+		
+		
+		
   /* USER CODE END TIM2_IRQn 0 */
 
   /* USER CODE BEGIN TIM2_IRQn 1 */
@@ -296,5 +288,24 @@ void USART1_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	static uint8_t index = 0;
+	if(huart->Instance == USART1)
+	{
+				if (RX_BYTE == '\n' || RX_BYTE == '\r')  // 一条命令接收完毕
+        {
+            RX_BUFFER[index] = '\0';
+            Command_Parse();     // 你自己写的函数
+            index = 0;  // 重置
+        }
+        else
+        {
+            if (index < MSG_LEN - 1)
+                RX_BUFFER[index++] = RX_BYTE;
+        }
 
+        HAL_UART_Receive_IT(&huart1, (uint8_t*)&RX_BYTE, 1);
+    }
+}
 /* USER CODE END 1 */

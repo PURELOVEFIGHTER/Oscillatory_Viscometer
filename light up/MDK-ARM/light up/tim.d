@@ -29,3 +29,6 @@ light up\tim.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h
 light up\tim.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 light up\tim.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 light up\tim.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+light up\tim.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\string.h
+light up\tim.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdlib.h
+light up\tim.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdio.h

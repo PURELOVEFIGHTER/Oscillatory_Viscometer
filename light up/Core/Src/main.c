@@ -22,7 +22,6 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
-#include "string.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -48,17 +47,22 @@
 
 /* USER CODE BEGIN PV */
 volatile uint8_t drv_fault = 0 ;
-uint16_t drv_PWM_FREQ = FREQ_MIN ;
-uint8_t drv_PWM_DR = 50;
-uint16_t drv_PWM_CNT = 0 ;
+uint16_t drv_PWM_FREQ = 70  ;
+uint8_t drv_PWM_DR = 30;
+uint16_t drv_PWM_CNT ;
+
+char RX_BYTE = 1;
+char RX_BUFFER[MSG_LEN];
+char TX_BUFFER[MSG_LEN];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-/* DRV转动方向 ********************************************************/
+/**************************************DRV输出方向**************************************/
 //滑行
-void DRV_Coast(void){
+void DRV_Coast(void)
+{
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
 	
@@ -67,7 +71,8 @@ void DRV_Coast(void){
 };
 
 //正转
-void DRV_Forward(void){
+void DRV_Forward(void)
+{
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);// AIN1
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);// AIN2
 		
@@ -76,7 +81,8 @@ void DRV_Forward(void){
 };
 
 //反转
-void DRV_Reverse(void){
+void DRV_Reverse(void)
+{
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
 	
@@ -85,14 +91,60 @@ void DRV_Reverse(void){
 };
 
 //刹车
-void DRV_Brake(void){
+void DRV_Brake(void)
+{
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
 	
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_SET);
 };
-/***********************************************************************/
+/***************************************************************************************/
+// 扫频
+void FREQ_Scan(void)
+{
+		for (drv_PWM_FREQ = FREQ_MIN; drv_PWM_FREQ <= FREQ_MAX; drv_PWM_FREQ += FREQ_STEP)
+				HAL_Delay(5000);  // 等待系统稳定（振动建立）
+}
+
+// 占空比扫描
+void DR_Scan(void)
+{
+		for (; drv_PWM_DR <= DR_MAX; drv_PWM_DR += DR_STEP)
+				HAL_Delay(10000);  // 等待系统稳定（振动建立）
+}
+
+void Command_Parse(void)
+{
+		// 简单协议,例:输入 "DR:80" 设置占空比为 80，"FR:1000" 设置频率为 1000Hz
+		if (strncmp(RX_BUFFER, "DR:", 3) == 0)
+		{
+				drv_PWM_DR = atoi(&RX_BUFFER[3]);  // 提取并转换占空比
+				HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+				sprintf(TX_BUFFER, "PWM_DR set to %d\r\n", drv_PWM_DR);
+				HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+		}
+		else if (strncmp(RX_BUFFER, "FR:", 3) == 0)
+		{
+				drv_PWM_FREQ = atoi(&RX_BUFFER[3]);  // 提取并转换频率
+				HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+				sprintf(TX_BUFFER, "PWM_FREQ set to %dHz\r\n", drv_PWM_FREQ);
+				HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+		}
+		else if (strncmp(RX_BUFFER,"FR Scan",7) == 0)
+		{
+				FREQ_Scan();
+				HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+		}
+		else if (strncmp(RX_BUFFER,"DR Scan",7) == 0)
+		{
+				HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+				sprintf(TX_BUFFER, "Please set PWM_FREQ:");
+				HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+				drv_PWM_FREQ = atoi(&RX_BUFFER[3]);  // 提取并转换频率
+				DR_Scan();
+		}
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -112,7 +164,6 @@ int main(void)
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
-
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
@@ -138,6 +189,7 @@ int main(void)
 	HAL_TIM_Base_Start_IT(&htim2);
 	HAL_NVIC_SetPriority(EXTI0_IRQn, 1, 0);
 	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+	HAL_UART_Receive_IT(&huart1, (uint8_t*)&RX_BYTE, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -150,22 +202,13 @@ int main(void)
 					HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13); // 翻转 LED
 					HAL_Delay(300);                         // 控制闪烁频率
 			}
-			for (; drv_PWM_FREQ <= FREQ_MAX; drv_PWM_FREQ += FREQ_STEP)
-			{
-					drv_PWM_CNT = 100000/drv_PWM_FREQ;
-					HAL_Delay(10000);  // 等待系统稳定（振动建立）
-
-			}
-//			for (; drv_PWM_DR <= DR_MAX; drv_PWM_DR += DR_STEP)
-//			{
-//					HAL_Delay(5000);  // 等待系统稳定（振动建立）
-//			}
+			drv_PWM_CNT = 100000/drv_PWM_FREQ;
 	 }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
 
-  /* USER CODE END 3 */
+		/* USER CODE END 3 */
 }
 
 /**
