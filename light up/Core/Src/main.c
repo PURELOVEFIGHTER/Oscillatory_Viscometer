@@ -103,8 +103,8 @@ void DRV_Brake(void)
 // 扫频
 void FREQ_Scan(void)
 {
-		for (drv_PWM_FREQ = FREQ_MIN; drv_PWM_FREQ <= FREQ_MAX; drv_PWM_FREQ += FREQ_STEP)
-				HAL_Delay(5000);  // 等待系统稳定（振动建立）
+//		for (drv_PWM_FREQ = FREQ_MIN; drv_PWM_FREQ <= FREQ_MAX; drv_PWM_FREQ += FREQ_STEP)
+//				HAL_Delay(5000);  // 等待系统稳定（振动建立）
 }
 
 // 占空比扫描
@@ -116,24 +116,41 @@ void DR_Scan(void)
 
 void Command_Parse(void)
 {
+		if(strncmp(RX_BUFFER, "RESET", 5) == 0 || strncmp(RX_BUFFER, "Reset", 5))
+		{
+				__disable_irq();           // 关闭中断（可选）
+				NVIC_SystemReset();        // 触发系统复位
+		}
 		// 简单协议,例:输入 "DR:80" 设置占空比为 80，"FR:1000" 设置频率为 1000Hz
 		if (strncmp(RX_BUFFER, "DR:", 3) == 0)
 		{
 				drv_PWM_DR = atoi(&RX_BUFFER[3]);  // 提取并转换占空比
+			
 				HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+			
 				sprintf(TX_BUFFER, "PWM_DR set to %d\r\n", drv_PWM_DR);
 				HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
 		}
 		else if (strncmp(RX_BUFFER, "FR:", 3) == 0)
 		{
 				drv_PWM_FREQ = atoi(&RX_BUFFER[3]);  // 提取并转换频率
+			
 				HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+			
 				sprintf(TX_BUFFER, "PWM_FREQ set to %dHz\r\n", drv_PWM_FREQ);
 				HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
 		}
 		else if (strncmp(RX_BUFFER,"FR Scan",7) == 0)
 		{
-				FREQ_Scan();
+				sprintf(TX_BUFFER, "Frequency Scan begin.\r\n");
+				HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+			
+				for (drv_PWM_FREQ = FREQ_MIN; drv_PWM_FREQ <= FREQ_MAX; drv_PWM_FREQ += FREQ_STEP)
+				{
+						HAL_Delay(5000);  // 等待系统稳定（振动建立）
+						sprintf(TX_BUFFER, "PWM_FREQ:%dHz\r\n", drv_PWM_FREQ);
+						HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+				}
 				HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 		}
 		else if (strncmp(RX_BUFFER,"DR Scan",7) == 0)

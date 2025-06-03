@@ -34,6 +34,7 @@ extern "C" {
 #include "string.h"
 #include "stdlib.h"
 #include "stdio.h"
+#include "core_cm3.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -62,7 +63,7 @@ void Error_Handler(void);
 /* USER CODE BEGIN Private defines */
 /**************************************’Ò∂Øøÿ÷∆**************************************/
 //…®∆µ…Ë÷√
-#define FREQ_MIN 1
+#define FREQ_MIN 5
 #define FREQ_MAX 1000
 #define FREQ_STEP 5
 void FREQ_Scan(void);

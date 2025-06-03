@@ -31,3 +31,4 @@ light up\stm32f1xx_hal_msp.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_
 light up\stm32f1xx_hal_msp.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\string.h
 light up\stm32f1xx_hal_msp.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdlib.h
 light up\stm32f1xx_hal_msp.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdio.h
+light up\stm32f1xx_hal_msp.o: ../Drivers/CMSIS/Include/core_cm3.h
