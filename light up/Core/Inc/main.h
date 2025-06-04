@@ -34,7 +34,6 @@ extern "C" {
 #include "string.h"
 #include "stdlib.h"
 #include "stdio.h"
-#include "core_cm3.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -60,6 +59,7 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+
 /* USER CODE BEGIN Private defines */
 /**************************************’Ò∂Øøÿ÷∆**************************************/
 //…®∆µ…Ë÷√
