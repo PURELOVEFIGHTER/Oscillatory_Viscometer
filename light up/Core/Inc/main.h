@@ -34,6 +34,7 @@ extern "C" {
 #include "string.h"
 #include "stdlib.h"
 #include "stdio.h"
+#include "LDC1101.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -91,14 +92,6 @@ void DRV_Coast(void);
 void DRV_Forward(void);
 void DRV_Reverse(void);
 void DRV_Brake(void);
-/************************************************************************************/
-
-/**************************************测量反馈**************************************/
-// LDC片选
-#define CS1_LOW()  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET)
-#define CS1_HIGH() HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET)
-#define CS2_LOW()  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET)
-#define CS2_HIGH() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET)
 /************************************************************************************/
 
 /**************************************蓝牙串口**************************************/

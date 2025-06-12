@@ -7,6 +7,7 @@
 "light up\usart.o"
 "light up\stm32f1xx_it.o"
 "light up\stm32f1xx_hal_msp.o"
+"light up\ldc1101.o"
 "light up\stm32f1xx_hal_gpio_ex.o"
 "light up\stm32f1xx_hal_spi.o"
 "light up\stm32f1xx_hal.o"
