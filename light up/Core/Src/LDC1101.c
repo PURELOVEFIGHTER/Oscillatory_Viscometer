@@ -5,7 +5,7 @@
  *      Author: David Ryan
  */
 
-#include <string.h> // memcpy
+#include <string.h>
 #include <stdio.h>
 
 #include "LDC1101.h"
@@ -97,7 +97,7 @@ const uint8_t _REG_DEFAULT_VALS[32] = {
  ***********************************************/
 
 /**
- * @brief	Sets or clears the cs pin
+ * @brief	  Sets or clears the cs pin
  * @note   	This function uses GPIOx_BSRR register to allow atomic read/modify
  *         	accesses. In this way, there is no risk of an IRQ occurring between
  *         	the read and the modify access.
@@ -108,10 +108,9 @@ const uint8_t _REG_DEFAULT_VALS[32] = {
  *            	@arg GPIO_PIN_SET: to set the port pin
  *@return	None
  */
-void ldc1101_hal_write_cs(struct GPIO_PIN *pin, uint8_t value) {
-
+void ldc1101_hal_write_cs(struct GPIO_PIN *pin, 
+													uint8_t value) {
 	HAL_GPIO_WritePin(pin->GPIOx, pin->GPIO_Pin, value);
-
 }
 
 
@@ -130,29 +129,34 @@ void ldc1101_hal_toggle_cs(struct GPIO_PIN *pin) {
 /**
  * @brief  Transmit an amount of data in blocking mode.
  * @param  hspi pointer to a SPI_HandleTypeDef structure that contains
- *               the configuration information for SPI module.
+ *         the configuration information for SPI module.
  * @param  pData pointer to data buffer
  * @param  Size amount of data to be sent
  * @param  Timeout Timeout duration
  * @return HAL status
  */
-void ldc1101_hal_spi_transmit(SPI_HandleTypeDef *hspi, uint8_t *pData,
-		uint16_t Size, uint32_t Timeout) {
+void ldc1101_hal_spi_transmit(SPI_HandleTypeDef *hspi, 
+															uint8_t *pData,
+															uint16_t Size, 
+															uint32_t Timeout) {
 	HAL_SPI_Transmit(hspi, pData, Size, Timeout);
 }
 
 /**
   * @brief  Transmit and Receive an amount of data in blocking mode.
   * @param  hspi pointer to a SPI_HandleTypeDef structure that contains
-  *               the configuration information for SPI module.
+  *         the configuration information for SPI module.
   * @param  pTxData pointer to transmission data buffer
   * @param  pRxData pointer to reception data buffer
   * @param  Size amount of data to be sent and received
   * @param  Timeout Timeout duration
   * @return HAL status
   */
-void ldc1101_hal_spi_transmit_receive(SPI_HandleTypeDef *hspi, uint8_t *pTxData,
-		uint8_t *pRxData, uint16_t Size, uint32_t Timeout) {
+void ldc1101_hal_spi_transmit_receive(SPI_HandleTypeDef *hspi, 
+																			uint8_t *pTxData,
+																			uint8_t *pRxData, 
+																			uint16_t Size, 
+																			uint32_t Timeout) {
 	HAL_SPI_TransmitReceive(hspi, pTxData, pRxData, Size, Timeout);
 }
 
@@ -162,10 +166,10 @@ void ldc1101_hal_spi_transmit_receive(SPI_HandleTypeDef *hspi, uint8_t *pTxData,
 
 /**
  * @brief	Using the system specific HAL library deactivate the clock pin
- * 			and bring it low
+ * 				and bring it low
  * @param	void
  */
-void ldc1101_hal_deactivate_clkin() {
+void ldc1101_hal_deactivate_clkin(void) {
 
 	// unimplemented on stm32f44re
 
@@ -173,10 +177,10 @@ void ldc1101_hal_deactivate_clkin() {
 
 /**
  * @brief	Using the system specific HAL library activate the clock pin
- * 			at a constant frequency
+ * 				at a constant frequency
  * @param	void
  */
-void ldc1101_hal_activate_clkin() {
+void ldc1101_hal_activate_clkin(void) {
 
 	// unimplemented on stm32f44re
 
@@ -198,7 +202,7 @@ void ldc1101_hal_activate_clkin() {
  * @param  Timeout Timeout duration
  */
 void ldc1101_hal_uart_transmit(UART_HandleTypeDef *huart, uint8_t *pData,
-		uint16_t Size, uint32_t Timeout) {
+															 uint16_t Size, uint32_t Timeout) {
 
 	HAL_UART_Transmit(huart, pData, Size, Timeout);
 
@@ -209,9 +213,9 @@ void ldc1101_hal_uart_transmit(UART_HandleTypeDef *huart, uint8_t *pData,
  ***********************************************/
 
 /**
- * @brief	Sends a empty spi data buffer without activating the
- * 			cs line
- * @note	No effect is had on the chip
+ * @brief	Sends an empty spi data buffer without activating the
+ * 				cs line
+ * @note	No effect is held on the chip
  * @param	ldc1101 pointer to an LDC1101 struct
  * @return	Void
  */
@@ -272,7 +276,7 @@ uint8_t ldc1101_read_reg(struct LDC1101 *ldc1101, uint8_t reg) {
 
 /**
  * @brief	Pulls cs low and writes a value to the given register
- * 			checks if value was written
+ * 				checks if value was written
  * @note	na
  * @param	ldc1101 A pointer to a LDC1101 struct
  * @param	reg The address of the register to be written to
@@ -363,8 +367,7 @@ void ldc1101_read_consecutive_reg(struct LDC1101 *ldc1101, uint8_t startReg,
 
 	ldc1101_hal_write_cs(&ldc1101->cs, 0);
 
-	ldc1101_hal_spi_transmit_receive(ldc1101->hspi, txData, rxData, length + 1,
-			100);
+	ldc1101_hal_spi_transmit_receive(ldc1101->hspi, txData, rxData, length + 1, 100);
 
 	ldc1101_hal_write_cs(&ldc1101->cs, 1);
 
@@ -1159,8 +1162,8 @@ void ldc1101_print_chip(UART_HandleTypeDef *huart, struct LDC1101 *ldc1101,
 	sprintf(msgRid, "Device RID value: %8u\n\r", chip.rid);
 	sprintf(msgId, "Device ID value: %8u\n\r", chip.id);
 
-	HAL_UART_Transmit(huart, msgRid, sizeof(msgRid), 100);
-	HAL_UART_Transmit(huart, msgId, sizeof(msgId), 100);
+	HAL_UART_Transmit(huart, (uint8_t*)msgRid, sizeof(msgRid), 100);
+	HAL_UART_Transmit(huart, (uint8_t*)msgId, sizeof(msgId), 100);
 
 }
 
@@ -1189,7 +1192,7 @@ void ldc1101_print_reg(UART_HandleTypeDef *huart, struct LDC1101 *ldc1101,
 	sprintf(msg, "REG: %8u | VALUE: %u%u%u%u%u%u%u%u - 0x%4x\n\r", reg, bin[7],
 			bin[6], bin[5], bin[4], bin[3], bin[2], bin[1], bin[0], returnData);
 
-	HAL_UART_Transmit(huart, msg, sizeof(msg), 100);
+	HAL_UART_Transmit(huart, (uint8_t*)msg, sizeof(msg), 100);
 
 }
 
@@ -1201,7 +1204,7 @@ void ldc1101_print_reg(UART_HandleTypeDef *huart, struct LDC1101 *ldc1101,
  */
 void ldc1101_print_all_reg(UART_HandleTypeDef *huart, struct LDC1101 *ldc1101) {
 
-	HAL_UART_Transmit(huart, "===================================\n\r", 37,
+	HAL_UART_Transmit(huart, (uint8_t*)"===================================\n\r", 37,
 			100);
 
 	for (uint8_t i = 0; i < NUMBER_OF_REGS; i++) {
@@ -1233,7 +1236,7 @@ void ldc1101_print_rpl_data(UART_HandleTypeDef *huart, struct RPL_DATA rplData) 
 			bin[7], bin[6], bin[5], bin[4], bin[3], bin[2], bin[1], bin[0],
 			rplData.rp, rplData.l, rplData.rp_avg, rplData.l_avg);
 
-	HAL_UART_Transmit(huart, msg, sizeof(msg), 100);
+	HAL_UART_Transmit(huart, (uint8_t*)msg, sizeof(msg), 100);
 
 }
 
@@ -1257,11 +1260,11 @@ void ldc1101_print_lhr_data(UART_HandleTypeDef *huart, struct LHR_DATA lhrData) 
 		i++;
 	}
 
-	sprintf(msg, "Status: %u%u%u%u%u%u%u%u | LHR: %10lu | LHR_AVG: %10lu\n\r",
+	sprintf(msg, "Status: %u%u%u%u%u%u%u%u | LHR: %10u | LHR_AVG: %10u\n\r",
 			bin[7], bin[6], bin[5], bin[4], bin[3], bin[2], bin[1], bin[0],
 			lhrData.l, lhrData.l_avg);
 
-	HAL_UART_Transmit(huart, msg, sizeof(msg), 100);
+	HAL_UART_Transmit(huart, (uint8_t*)msg, sizeof(msg), 100);
 
 }
 
@@ -1278,7 +1281,7 @@ void ldc1101_quick_print_rpl(UART_HandleTypeDef *huart, struct RPL_DATA rplData)
 
 	sprintf(msg, "RP: %8u | L: %8u\r", rplData.rp, rplData.l);
 
-	HAL_UART_Transmit(huart, msg, sizeof(msg), 100);
+	HAL_UART_Transmit(huart, (uint8_t*)msg, sizeof(msg), 100);
 
 }
 
@@ -1292,9 +1295,9 @@ void ldc1101_quick_print_lhr(UART_HandleTypeDef *huart, struct LHR_DATA lhrData)
 
 	char msg[17];
 
-	sprintf(msg, "LHR: %10lu\r", lhrData.l);
+	sprintf(msg, "LHR: %10u\r", lhrData.l);
 
-	HAL_UART_Transmit(huart, msg, sizeof(msg), 100);
+	HAL_UART_Transmit(huart, (uint8_t*)msg, sizeof(msg), 100);
 
 }
 

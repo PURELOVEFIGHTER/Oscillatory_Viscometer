@@ -19,24 +19,41 @@
 #define NUMBER_OF_REGS 	32
 
 /* Register RP_SET Field Descriptions (RW) */
-#define LDC1101_RP_SET_RP_MAX_96KOhm                 0x00
-#define LDC1101_RP_SET_RP_MAX_48KOhm                 0x10
-#define LDC1101_RP_SET_RP_MAX_24KOhm                 0x20
-#define LDC1101_RP_SET_RP_MAX_12KOhm                 0x30
-#define LDC1101_RP_SET_RP_MAX_6KOhm                  0x40
-#define LDC1101_RP_SET_RP_MAX_3KOhm                  0x50
-#define LDC1101_RP_SET_RP_MAX_1_5KOhm                0x60
-#define LDC1101_RP_SET_RP_MAX_0_75KOh                0x70
-#define LDC1101_RP_SET_RP_MIN_96KOhm                 0x00
-#define LDC1101_RP_SET_RP_MIN_48KOhm                 0x01
-#define LDC1101_RP_SET_RP_MIN_24KOhm                 0x02
-#define LDC1101_RP_SET_RP_MIN_12KOhm                 0x03
-#define LDC1101_RP_SET_RP_MIN_6KOhm                  0x04
-#define LDC1101_RP_SET_RP_MIN_3KOhm                  0x05
-#define LDC1101_RP_SET_RP_MIN_1_5KOhm                0x06
-#define LDC1101_RP_SET_RP_MIN_0_75KOh                0x07
+/* 
+ * @brief 是否启用最大驱动电流限制
+ * @reg   _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE（由最高位 bit7 专门控制）
+ */
+#define _LDC1101_RP_SET_RP_MAX_IS_DRIVEN              0x00 // 
+#define _LDC1101_RP_SET_RP_MAX_CURRENT_IS_IGNORED     0x80 // 
+
+/* Register RP_SET Field Descriptions (RW) */
+/* 
+ * @brief 设置 RP+L 模式下 RP 的门限值
+ * @reg   _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE
+ */
+#define LDC1101_RP_SET_RP_MAX_96KOhm          0x00
+#define LDC1101_RP_SET_RP_MAX_48KOhm          0x10
+#define LDC1101_RP_SET_RP_MAX_24KOhm          0x20
+#define LDC1101_RP_SET_RP_MAX_12KOhm          0x30
+#define LDC1101_RP_SET_RP_MAX_6KOhm           0x40
+#define LDC1101_RP_SET_RP_MAX_3KOhm           0x50
+#define LDC1101_RP_SET_RP_MAX_1_5KOhm         0x60
+#define LDC1101_RP_SET_RP_MAX_0_75KOh         0x70
+
+#define LDC1101_RP_SET_RP_MIN_96KOhm          0x00
+#define LDC1101_RP_SET_RP_MIN_48KOhm          0x01
+#define LDC1101_RP_SET_RP_MIN_24KOhm          0x02
+#define LDC1101_RP_SET_RP_MIN_12KOhm          0x03
+#define LDC1101_RP_SET_RP_MIN_6KOhm           0x04
+#define LDC1101_RP_SET_RP_MIN_3KOhm           0x05
+#define LDC1101_RP_SET_RP_MIN_1_5KOhm         0x06
+#define LDC1101_RP_SET_RP_MIN_0_75KOh         0x07
 
 /* Configure Internal Time Constant 1 (RW) */
+/* 
+ * @brief TC1，使用 RP+L 模式时写入
+ * @reg   _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_1
+ */
 #define LDC1101_TC1_C1_0_75pF     0x00
 #define LDC1101_TC1_C1_1_5pF      0x40
 #define LDC1101_TC1_C1_3pF        0x80
@@ -46,6 +63,10 @@
 #define LDC1101_TC1_R1_21_1kOhm   0x1F
 
 /* Configure Internal Time Constant 2 (RW) */
+/* 
+ * @brief TC2，使用 LHR 模式时写入，此时 TC1 失效
+ * @reg   _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_1
+ */
 #define LDC1101_TC2_C2_3pF        0x00
 #define LDC1101_TC2_C2_6pF        0x40
 #define LDC1101_TC2_C2_12pF       0x80
@@ -55,7 +76,14 @@
 #define LDC1101_TC2_R2_30_5kOhm   0x3F
 
 /* Configure RP+L conversion interval (RW) */
-
+/* 
+ * @brirf 控制芯片采样频率的下限和转换算法的响应延迟
+ * @feat  快速金属检测	          1MHz	          192 μs – 384 μs
+ *	  		中速/机械检测	        800kHz – 1MHz	384 μs – 768 μs
+ *				慢速/稳定性优先检测	  500kHz	        1536 μs – 6144 μs
+ * @feat  仅作用于 RP+L 模式
+ * @reg   _LDC1101_REG_CFG_RP_L_CONVERSION_INTERVAL
+ */
 #define LDC1101_DIG_CFG_MIN_FREQ_500kHz   0x00
 #define LDC1101_DIG_CFG_MIN_FREQ_533kHz		0x10
 #define LDC1101_DIG_CFG_MIN_FREQ_571kHz		0x20
@@ -81,94 +109,116 @@
 #define LDC1101_DIG_CFG_RESP_TIME_6144s   0x07
 
 /* Configure INTB reporting on SDO pin (RW) */
-#define LDC1101_INTB_MODE_REPORT_LHR_DATA_READY               0x20
-#define LDC1101_INTB_MODE_L_CONVERSION_TO_L_THRESHOLDS        0x10
-#define LDC1101_INTB_MODE_L_CONVERSION_TO_L_HIGH_THRESHOLDS   0x08
-#define LDC1101_INTB_MODE_REPORT_RP_L_DATA_READY              0x04
-#define LDC1101_INTB_MODE_RP_CONVERSION_TO_L_THRESHOLDS       0x02
-#define LDC1101_INTB_MODE_RP_CONVERSION_TO_L_HIGH_THRESHOLDS  0x01
-#define LDC1101_INTB_MODE_NO_OUTPUT                           0x00
+/* 
+ * @brief 是否启用 SDO 引脚的 INTB 报告复用功能
+ * @reg   _LDC1101_REG_CFG_INTB_MODE（由最高位 bit7 专门控制）
+ */
+#define _LDC1101_INTB_MODE_DONT_REPORT_INTB_ON_SDO_PIN         0x00 // 
+#define _LDC1101_INTB_MODE_REPORT_INTB_ON_SDO_PIN              0x80 // 
+
+/* Configure INTB reporting on SDO pin (RW) */
+/* 
+ * @brief 配置哪些事件将被报告到 INTB 引脚 
+ * @reg   _LDC1101_REG_CFG_INTB_MODE 0x0A
+ */
+#define LDC1101_INTB_MODE_REPORT_LHR_DATA_READY               0x20 // 每次 LHR 数据更新完成就触发中断
+#define LDC1101_INTB_MODE_L_CONVERSION_TO_L_THRESHOLDS        0x10 // L 通道数据越过高/低门限触发
+#define LDC1101_INTB_MODE_L_CONVERSION_TO_L_HIGH_THRESHOLDS   0x08 // L 通道数据超过高门限触发
+#define LDC1101_INTB_MODE_REPORT_RP_L_DATA_READY              0x04 // 每次 RP+L 数据更新完成就触发中断
+#define LDC1101_INTB_MODE_RP_CONVERSION_TO_L_THRESHOLDS       0x02 // RP 通道数据越过高/低门限触发
+#define LDC1101_INTB_MODE_RP_CONVERSION_TO_L_HIGH_THRESHOLDS  0x01 // RP 通道数据超过高门限触发
+#define LDC1101_INTB_MODE_NO_OUTPUT                           0x00 // INTB 引脚保持高电平，不输出中断
 
 /* High Resolution L Configuration (RW) */
-#define LDC1101_LHR_CFG_FREQUENCY_DIVIDED_BY_2   0x01
-#define LDC1101_LHR_CFG_FREQUENCY_DIVIDED_BY_4   0x02
-#define LDC1101_LHR_CFG_FREQUENCY_DIVIDED_BY_8   0x03
+/* 
+ * @brief 配置 LHR 模式下的分频器，影响测量分辨率和速度 
+ * @feat  设置后可以立即生效，无需复位
+ * @feat  和 LHR_RCOUNT 一起决定最终的测量速度与精度
+ * @reg   _LDC1101_REG_CFG_LHR  0x34
+ */
+#define _LDC1101_LHR_CFG_FREQUENCY_NOT_DIVIDED   0x00 // 不分频
+#define LDC1101_LHR_CFG_FREQUENCY_DIVIDED_BY_2   0x01 // 最快响应，适合快速检测（但分辨率较低）
+#define LDC1101_LHR_CFG_FREQUENCY_DIVIDED_BY_4   0x02 // 平衡响应与分辨率
+#define LDC1101_LHR_CFG_FREQUENCY_DIVIDED_BY_8   0x03 // 最高分辨率，适合慢变化的精细检测
 
 
 
 /* PRIVITE DEFINE */
 
-/* LDC1101 REDGESTER ADDRESSES */
+/* LDC1101 REGISTER ADDRESSES */
+#define _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE  	0x01 // 设置 RP+L 测量动态范围（TI文档中被叫做 RP_SET）
+#define _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_1      	0x02 // RP+L 通道时间常数 TC1
+#define _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_2      	0x03 // L 通道时间常数 TC2
+#define _LDC1101_REG_CFG_RP_L_CONVERSION_INTERVAL      	0x04 // RP+L转换时间
+#define _LDC1101_REG_CFG_ADDITIONAL_DEVICE_SETTINGS    	0x05 // 其他设置
+#define _LDC1101_REG_RP_THRESH_H_LSB                   	0x06 // RP 高门限（16位）
+#define _LDC1101_REG_RP_THRESH_H_MSB                   	0x07 //
+#define _LDC1101_REG_RP_THRESH_L_LSB                   	0x08 // RP 低门限（16位）
+#define _LDC1101_REG_RP_THRESH_L_MSB                   	0x09 // 
+#define _LDC1101_REG_CFG_INTB_MODE                     	0x0A // 设置 INTB 输出模式
+#define _LDC1101_REG_CFG_POWER_STATE                   	0x0B // 设置电源状态（工作、休眠）
+#define _LDC1101_REG_AMPLITUDE_CONTROL_REQUIREMENT     	0x0C // 传感器振幅控制逻辑是否激活
 
-#define _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE  	0x01
-#define _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_1      	0x02
-#define _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_2      	0x03
-#define _LDC1101_REG_CFG_RP_L_CONVERSION_INTERVAL      	0x04
-#define _LDC1101_REG_CFG_ADDITIONAL_DEVICE_SETTINGS    	0x05
-#define _LDC1101_REG_RP_THRESH_H_LSB                   	0x06
-#define _LDC1101_REG_RP_THRESH_H_MSB                   	0x07
-#define _LDC1101_REG_RP_THRESH_L_LSB                   	0x08
-#define _LDC1101_REG_RP_THRESH_L_MSB                   	0x09
-#define _LDC1101_REG_CFG_INTB_MODE                     	0x0A
-#define _LDC1101_REG_CFG_POWER_STATE                   	0x0B
-#define _LDC1101_REG_AMPLITUDE_CONTROL_REQUIREMENT     	0x0C
+#define _LDC1101_REG_L_THRESH_HI_LSB                   	0x16 // L 通道高门限（16位）
+#define _LDC1101_REG_L_THRESH_HI_MSB                   	0x17 // 
+#define _LDC1101_REG_L_THRESH_LO_LSB                   	0x18 // L 通道低门限（16位）
+#define _LDC1101_REG_L_THRESH_LO_MSB                   	0x19 // 
 
-#define _LDC1101_REG_L_THRESH_HI_LSB                   	0x16
-#define _LDC1101_REG_L_THRESH_HI_MSB                   	0x17
-#define _LDC1101_REG_L_THRESH_LO_LSB                   	0x18
-#define _LDC1101_REG_L_THRESH_LO_MSB                   	0x19
+#define _LDC1101_REG_RP_L_MEASUREMENT_STATUS           	0x20 // RP+L 状态字 
+#define _LDC1101_REG_RP_DATA_LSB                       	0x21 // RP+L 模式的 RP 测量数据（16位）
+#define _LDC1101_REG_RP_DATA_MSB                       	0x22 // 
+#define _LDC1101_REG_L_DATA_LSB                        	0x23 // RP+L 模式的 L 测量数据（16位）
+#define _LDC1101_REG_L_DATA_MSB                        	0x24 // 
 
-#define _LDC1101_REG_RP_L_MEASUREMENT_STATUS           	0x20
-#define _LDC1101_REG_RP_DATA_LSB                       	0x21
-#define _LDC1101_REG_RP_DATA_MSB                       	0x22
-#define _LDC1101_REG_L_DATA_LSB                        	0x23
-#define _LDC1101_REG_L_DATA_MSB                        	0x24
+#define _LDC1101_REG_LHR_RCOUNT_LSB                    	0x30 // LHR 计数器设置（16位）
+#define _LDC1101_REG_LHR_RCOUNT_MSB                    	0x31 // 
+#define _LDC1101_REG_LHR_OFFSET_LSB                    	0x32 // LHR 偏移修正值（16位）
+#define _LDC1101_REG_LHR_OFFSET_MSB                    	0x33 // 
+#define _LDC1101_REG_CFG_LHR                           	0x34 // 设置 LHR 模式的频率分频因子
 
-#define _LDC1101_REG_LHR_RCOUNT_LSB                    	0x30
-#define _LDC1101_REG_LHR_RCOUNT_MSB                    	0x31
-#define _LDC1101_REG_LHR_OFFSET_LSB                    	0x32
-#define _LDC1101_REG_LHR_OFFSET_MSB                    	0x33
-#define _LDC1101_REG_CFG_LHR                           	0x34
+#define _LDC1101_REG_LHR_DATA_LSB												0x38 // LHR 模式测量数据（24 位）
+#define _LDC1101_REG_LHR_DATA_MID            						0x39 // 
+#define _LDC1101_REG_LHR_DATA_MSB            		   	    0x3A // 
+#define _LDC1101_REG_LHR_STATUS             	    	    0x3B // LHR 状态字
 
-#define _LDC1101_REG_LHR_DATA_LSB												0x38
-#define _LDC1101_REG_LHR_DATA_MID            						0x39
-#define _LDC1101_REG_LHR_DATA_MSB            		   	    0x3A
-#define _LDC1101_REG_LHR_STATUS             	    	    0x3B
-
-#define _LDC1101_REG_DEVICE_RID			               		  0x3E
-#define _LDC1101_REG_DEVICE_ID            	            0x3F
+#define _LDC1101_REG_DEVICE_RID			               		  0x3E // 芯片ID，应该返回 0xD4
+#define _LDC1101_REG_DEVICE_ID            	            0x3F // 修订号
 
 /* Configure additional device settings (RW) */
-#define _LDC1101_ALT_CFG_SHUTDOWN_ENABLE     0x02
-#define _LDC1101_ALT_CFG_SHUTDOWN_DISABLE    0x00
-#define _LDC1101_ALT_CFG_L_OPTIMAL_DISABLED  0x00
-#define _LDC1101_ALT_CFG_L_OPTIMAL_ENABLE    0x01
-
-/* Configure INTB reporting on SDO pin (RW) */
-#define _LDC1101_INTB_MODE_DONT_REPORT_INTB_ON_SDO_PIN         0x00
-#define _LDC1101_INTB_MODE_REPORT_INTB_ON_SDO_PIN              0x80
-
-/* Register RP_SET Field Descriptions (RW) */
-#define _LDC1101_RP_SET_RP_MAX_IS_DRIVEN              0x00
-#define _LDC1101_RP_SET_RP_MAX_CURRENT_IS_IGNORED     0x80
+/* 
+ * @brief 配置附加功能
+ * @reg   _LDC1101_REG_CFG_ADDITIONAL_DEVICE_SETTINGS
+ */
+#define _LDC1101_ALT_CFG_SHUTDOWN_ENABLE     0x02 // 芯片关断模式，配合_LDC1101_REG_CFG_POWER_STATE设置
+#define _LDC1101_ALT_CFG_SHUTDOWN_DISABLE    0x00 // 
+#define _LDC1101_ALT_CFG_L_OPTIMAL_DISABLED  0x00 //  L 通道的优化路径（LHR模式启用）
+#define _LDC1101_ALT_CFG_L_OPTIMAL_ENABLE    0x01 // 
 
 /* Configure Power State (RW) */
-#define _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE  0x00
-#define _LDC1101_FUNC_MODE_SLEEP_MODE              0x01
-#define _LDC1101_FUNC_MODE_SHUTDOWN_MODE           0x02
-
-/* High Resolution L Configuration (RW) */
-#define _LDC1101_LHR_CFG_FREQUENCY_NOT_DIVIDED   	 0x00
+/* 
+ * @brief 激活、睡眠、关断模式设置
+ * @feat  在初始化阶段，建议先写入 SLEEP 模式（0x01）配置好参数
+ *        然后再切换到 ACTIVE 模式（0x00）开始工作；
+ *        SHUTDOWN 模式只有在完全不使用芯片时才推荐进入。
+ * @reg   _LDC1101_REG_CFG_POWER_STATE
+ */
+#define _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE  0x00 // 激活模式，正常测量与数据输出
+#define _LDC1101_FUNC_MODE_SLEEP_MODE              0x01 // 睡眠模式，暂停测量但保留配置信息
+#define _LDC1101_FUNC_MODE_SHUTDOWN_MODE           0x02 // 关断模式，功耗最低但配置丢失
 
 /* LDC1101 struct status byte bit positions */
-#define _LDC1101_STATUS_POWER_STATE 	0x01
-#define _LDC1101_STATUS_MODE 					0x02
-#define _LDC1101_STATUS_BIT_2					0x04
-#define _LDC1101_STATUS_NO_SENSOR_OSCILLATION	0x08
-#define _LDC1101_STATUS_LHR_ERROR				0x10
-#define _LDC1101_STATUS_INTB_MODE				0x20
-#define _LDC1101_STATUS_BIT_6 					0x40
-#define _LDC1101_STATUS_BIT_7 					0x80
+/* 
+ * @brief LHR 状态寄存器标志位
+ * @reg   
+ */
+#define _LDC1101_STATUS_POWER_STATE 							 0x01 // 电源状态，当前芯片是否在工作状态（通常仅用于调试）
+#define _LDC1101_STATUS_MODE 					             0x02 // 当前是否为 LHR 模式
+#define _LDC1101_STATUS_BIT_2					             0x04 // 未公开或保留位（可忽略）
+#define _LDC1101_STATUS_NO_SENSOR_OSCILLATION	     0x08 // 无传感器振荡，表示线圈未振荡或传感器未连接/异常
+#define _LDC1101_STATUS_LHR_ERROR			             0x10 // LHR 模式出错（例如数据采集超时或格式不正确）
+#define _LDC1101_STATUS_INTB_MODE		               0x20 // INTB 引脚当前的配置状态
+#define _LDC1101_STATUS_BIT_6 					           0x40 // 未公开或保留位（可忽略）
+#define _LDC1101_STATUS_BIT_7 					           0x80 // 未公开或保留位（可忽略）
 
 /* LDC1101 external const declarations */
 extern const uint8_t _REG_ADRS[32];
@@ -177,7 +227,7 @@ extern const uint8_t _REG_DEFAULT_VALS[32];
 
 /**
  * @param  GPIOx where x can be (A..K) to select the GPIO peripheral for STM32F429X device or
- *                      x can be (A..I) to select the GPIO peripheral for STM32F40XX and STM32F427X devices.
+ *                     x can be (A..I) to select the GPIO peripheral for STM32F40XX and STM32F427X devices.
  * @param  GPIO_Pin specifies the port bit to be written.
  *          This parameter can be one of GPIO_PIN_x where x can be (0..15).
  */
@@ -206,7 +256,7 @@ struct GPIO_PIN {
 
 
 /**
- * @brief	LDC1101 Struct that handles all ldc1101 communication
+ * @brief		LDC1101 Struct that handles all ldc1101 communication
  * @param 	status Error reporting status byte
  * @param 	hspi Pointer to a hspi struct
  * @param 	cs GPIO_PIN struct
@@ -219,7 +269,7 @@ struct LDC1101 {
 
 /**
  * @brief	Rp and L data structure to store and reference
- * 			rp and l measurements
+ * 				rp and l measurements
  * @param	status Error reporting status register
  * @param	rp_msb Most significant byte for rp measurement
  * @param	rp_lsb Least significant byte for rp measurement
@@ -247,13 +297,13 @@ struct RPL_DATA {
 
 /**
  * @brief	L High Resolution structure for storing and referencing
- * 			lhr measurements
+ * 				lhr measurements
  * @param	status Error reporting status register
  * @param	l_lsb Least significant byte for l measurement
  * @param	l_mid Mid byte for l measurement
  * @param	l_msb Most significant byte for l measurement
  * @param	l	Full 32 bit value for l measurement
- * 			(only uses the 24 least significant bits)
+ * 				(only uses the 24 least significant bits)
  * @param	l_avg Running average of l measurement
  * @param	avg_delta Average calculation delta
  */
@@ -279,20 +329,20 @@ struct LDC1101_CHIP {
 };
 
 /* HAL FUNCTIONS */
-
+//对HAL库函数进行再一次封装
 void ldc1101_hal_write_cs(struct GPIO_PIN *pin, uint8_t value);
 
 void ldc1101_hal_toggle_cs(struct GPIO_PIN *pin);
 
 void ldc1101_hal_spi_transmit(SPI_HandleTypeDef *hspi, uint8_t *pData,
-		uint16_t Size, uint32_t Timeout);
+															uint16_t Size, uint32_t Timeout);
 
 void ldc1101_hal_deactivate_clkin(void);
 
 void ldc1101_hal_activate_clkin(void);
 
 void ldc1101_hal_uart_transmit(UART_HandleTypeDef *huart, uint8_t *pData,
-		uint16_t Size, uint32_t Timeout);
+															 uint16_t Size, uint32_t Timeout);
 
 /* BASIC OPERATIONS */
 void ldc1101_test_data_packet(struct LDC1101 *ldc1101);
@@ -302,16 +352,16 @@ void ldc1101_write_reg(struct LDC1101 *ldc1101, uint8_t reg, uint8_t data);
 uint8_t LDC1101_read_reg(struct LDC1101 *ldc1101, uint8_t reg);
 
 uint8_t ldc1101_write_and_check_reg(struct LDC1101 *ldc1101, uint8_t reg,
-		uint8_t data);
+																		uint8_t data);
 
 void ldc1101_edit_reg(struct LDC1101 *ldc1101, uint8_t reg, uint8_t data,
-		uint8_t mask);
+											uint8_t mask);
 
 uint8_t ldc1101_edit_and_check_reg(struct LDC1101 *ldc1101, uint8_t reg,
-		uint8_t data, uint8_t mask);
+																	 uint8_t data, uint8_t mask);
 
 void ldc1101_read_consecutive_reg(struct LDC1101 *ldc1101, uint8_t startReg,
-		uint8_t *buf, uint8_t length);
+																	uint8_t *buf, uint8_t length);
 
 void ldc1101_read_all_reg(struct LDC1101 *ldc1101);
 
@@ -352,34 +402,36 @@ uint8_t ldc1101_enable_optimize_for_l(struct LDC1101 *ldc1101);
 uint8_t ldc1101_disable_optimize_for_l(struct LDC1101 *ldc1101);
 
 uint8_t ldc1101_enable_rp_dynamic_range(struct LDC1101 *ldc1101, uint8_t RP_MAX,
-		uint8_t RP_MIN);
+																				uint8_t RP_MIN);
 
 uint8_t ldc1101_disable_rp_dynamic_range(struct LDC1101 *ldc1101);
 
 uint8_t ldc1101_configure_rp_dynamic_range(struct LDC1101 *ldc1101,
-		uint8_t RP_MAX, uint8_t RP_MIN);
+																					 uint8_t RP_MAX, uint8_t RP_MIN);
 
 uint8_t ldc1101_configure_resp_time(struct LDC1101 *ldc1101, uint8_t MIN_FREQ,
-		uint8_t RESP_TIME);
+																		uint8_t RESP_TIME);
 
 uint8_t ldc1101_enable_intb_mode(struct LDC1101 *ldc1101, uint8_t MODE);
 
 uint8_t ldc1101_disable_intb_mode(struct LDC1101 *ldc1101);
 
 uint8_t ldc1101_configure_tc1(struct LDC1101 *ldc1101, uint8_t R_VAL,
-		uint8_t C_VAL);
+															uint8_t C_VAL);
 
 uint8_t ldc1101_configure_tc2(struct LDC1101 *ldc1101, uint8_t R_VAL,
-		uint8_t C_VAL);
+															uint8_t C_VAL);
 
 uint8_t ldc1101_configure_dig(struct LDC1101 *ldc1101, uint8_t MIN_FREQ,
-		uint8_t RESP_TIME);
+															uint8_t RESP_TIME);
 
 uint8_t ldc1101_configure_rp_high_low_threshold(struct LDC1101 *ldc1101,
-		uint16_t RP_THRESH_HI, uint16_t RP_THRESH_LOW);
+																								uint16_t RP_THRESH_HI, 
+																								uint16_t RP_THRESH_LOW);
 
 uint8_t ldc1101_configure_l_high_low_threshold(struct LDC1101 *ldc1101,
-		uint16_t L_THRESH_HI, uint16_t L_THRESH_LOW);
+																							 uint16_t L_THRESH_HI, 
+																							 uint16_t L_THRESH_LOW);
 
 uint8_t ldc1101_configure_lhr_rcount(struct LDC1101 *ldc1101, uint16_t RCOUNT);
 
@@ -403,14 +455,14 @@ struct LHR_DATA ldc1101_read_lhr_data(struct LDC1101 *ldc1101, struct LHR_DATA d
 /* UART PRINT */
 
 void ldc1101_print_chip(UART_HandleTypeDef *huart, struct LDC1101 *ldc1101,
-		struct LDC1101_CHIP chip);
+										    struct LDC1101_CHIP chip);
 
 void ldc1101_print_rpl_data(UART_HandleTypeDef *huart, struct RPL_DATA rplData);
 
 void ldc1101_print_lhr_data(UART_HandleTypeDef *huaft, struct LHR_DATA lhrData);
 
 void ldc1101_print_reg(UART_HandleTypeDef *huart, struct LDC1101 *ldc1101,
-		uint8_t reg);
+											 uint8_t reg);
 
 void ldc1101_print_all_reg(UART_HandleTypeDef *huart, struct LDC1101 *ldc1101);
 
