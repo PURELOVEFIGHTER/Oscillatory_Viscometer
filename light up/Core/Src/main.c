@@ -46,7 +46,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-volatile uint8_t drv_fault = 0 ;
+volatile uint8_t drv_FAULT = 0 ;
 uint16_t drv_PWM_FREQ = 70  ;
 uint8_t drv_PWM_DR = 30;
 uint16_t drv_PWM_CNT ;
@@ -54,6 +54,12 @@ uint16_t drv_PWM_CNT ;
 char RX_BYTE = 1;
 char RX_BUFFER[MSG_LEN];
 char TX_BUFFER[MSG_LEN];
+
+LDC1101_Device ldc1 = { &hspi1, GPIOA, GPIO_PIN_4 };
+LDC1101_Device ldc2 = { &hspi2, GPIOB, GPIO_PIN_12 };
+
+uint8_t uart_state = 0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -161,6 +167,19 @@ void Command_Parse(void)
 				drv_PWM_FREQ = atoi(&RX_BUFFER[3]);  // 提取并转换频率
 				DR_Scan();
 		}
+		else if (strncmp(RX_BUFFER,"Read",4) == 0)
+		{
+					HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+			
+					// 读取芯片ID寄存器地址0x3F
+					uint8_t chip_id = ldc1101_readByte(&ldc1,0x01);
+
+					// 通过串口打印
+					sprintf(TX_BUFFER, "LDC1101 Device ID: 0x%02X\r\n", chip_id);
+					HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+		}
+		
+		memset(RX_BUFFER, 0, sizeof(RX_BUFFER));
 }
 /* USER CODE END PFP */
 
@@ -203,6 +222,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM2_Init();
   MX_TIM1_Init();
+	ldc1101_init(&ldc1);
   /* USER CODE BEGIN 2 */
 	DRV_Wake();
 	HAL_TIM_Base_Start_IT(&htim2);
@@ -216,9 +236,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-			if(drv_fault)
+			if(drv_FAULT)
 			{
-					drv_fault=0;
+					drv_FAULT=0;
 					HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13); // 翻转 LED
 					HAL_Delay(300);                         // 控制闪烁频率
 			}

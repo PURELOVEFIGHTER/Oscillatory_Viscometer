@@ -34,7 +34,7 @@ extern "C" {
 #include "string.h"
 #include "stdlib.h"
 #include "stdio.h"
-#include "LDC1101.h"
+#include "__ldc1101_driver.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -94,12 +94,16 @@ void DRV_Reverse(void);
 void DRV_Brake(void);
 /************************************************************************************/
 
+extern LDC1101_Device ldc1;
+extern LDC1101_Device ldc2;
+
 /**************************************À¶ÑÀ´®¿Ú**************************************/
 #define MSG_LEN 64
 extern char RX_BYTE;
 extern char RX_BUFFER[MSG_LEN];
 extern char TX_BUFFER[MSG_LEN];
 void Command_Parse(void);
+extern uint8_t uart_state;
 /************************************************************************************/
 /* USER CODE END Private defines */
 

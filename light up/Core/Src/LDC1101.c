@@ -106,7 +106,7 @@ const uint8_t _REG_DEFAULT_VALS[32] = {
  *          This parameter can be one of the GPIO_PinState enum values:
  *            	@arg GPIO_PIN_RESET: to clear the port pin
  *            	@arg GPIO_PIN_SET: to set the port pin
- *@return	None
+ * @return 	None
  */
 void ldc1101_hal_write_cs(struct GPIO_PIN *pin, 
 													uint8_t value) {
@@ -143,14 +143,14 @@ void ldc1101_hal_spi_transmit(SPI_HandleTypeDef *hspi,
 }
 
 /**
-  * @brief  Transmit and Receive an amount of data in blocking mode.
-  * @param  hspi pointer to a SPI_HandleTypeDef structure that contains
-  *         the configuration information for SPI module.
-  * @param  pTxData pointer to transmission data buffer
-  * @param  pRxData pointer to reception data buffer
-  * @param  Size amount of data to be sent and received
-  * @param  Timeout Timeout duration
-  * @return HAL status
+  * @brief   Transmit and Receive an amount of data in blocking mode.
+  * @param   hspi pointer to a SPI_HandleTypeDef structure that contains
+  *          the configuration information for SPI module.
+  * @param   pTxData     pointer to transmission data buffer
+  * @param   pRxData     pointer to reception data buffer
+  * @param   Size        amount of data to be sent and received
+  * @param   Timeout     Timeout duration
+  * @return  HAL status 
   */
 void ldc1101_hal_spi_transmit_receive(SPI_HandleTypeDef *hspi, 
 																			uint8_t *pTxData,
@@ -196,16 +196,16 @@ void ldc1101_hal_activate_clkin(void) {
  *         the sent data is handled as a set of u16. In this case, Size must indicate the number
  *         of u16 provided through pData.
  * @param  huart Pointer to a UART_HandleTypeDef structure that contains
- *               the configuration information for the specified UART module.
+ *         the configuration information for the specified UART module.
  * @param  pData Pointer to data buffer (u8 or u16 data elements).
  * @param  Size  Amount of data elements (u8 or u16) to be sent
  * @param  Timeout Timeout duration
  */
-void ldc1101_hal_uart_transmit(UART_HandleTypeDef *huart, uint8_t *pData,
-															 uint16_t Size, uint32_t Timeout) {
-
+void ldc1101_hal_uart_transmit(UART_HandleTypeDef *huart, 
+															 uint8_t *pData,
+															 uint16_t Size, 
+															 uint32_t Timeout) {
 	HAL_UART_Transmit(huart, pData, Size, Timeout);
-
 }
 
 /************************************************
@@ -283,8 +283,9 @@ uint8_t ldc1101_read_reg(struct LDC1101 *ldc1101, uint8_t reg) {
  * @param	data The data to write
  * @return	uint8_t ldc1101 OK value (true or false)
  */
-uint8_t ldc1101_write_and_check_reg(struct LDC1101 *ldc1101, uint8_t reg,
-		uint8_t data) {
+uint8_t ldc1101_write_and_check_reg(struct LDC1101 *ldc1101, 
+																		uint8_t reg,
+																		uint8_t data) {
 
 	ldc1101_write_reg(ldc1101, reg, data);
 
@@ -299,13 +300,13 @@ uint8_t ldc1101_write_and_check_reg(struct LDC1101 *ldc1101, uint8_t reg,
 
 /**
  * @brief	Pulls cs low and writes edits the register data contents
- * 			based on the new data and the mask
+ * 			  based on the new data and the mask
  * @note	na
  * @param	ldc1101 A pointer to a LDC1101 sturct
  * @param	reg The register for the data to be written to
  * @param	data The new data to be written
  * @param	mask The mask that determines what portion of the data byte to write
- * 			to the register
+ * 		   	to the register
  * @return	void
  */
 void ldc1101_edit_reg(struct LDC1101 *ldc1101, uint8_t reg, uint8_t data,
@@ -321,13 +322,13 @@ void ldc1101_edit_reg(struct LDC1101 *ldc1101, uint8_t reg, uint8_t data,
 
 /**
  * @brief	Pulls cs low and edits the regesture data contents
- * 			based on the new data and the mask
+ * 			  based on the new data and the mask
  * @note	na
  * @param	ldc1101 A pointer to a LDC1101 struct
  * @param	reg The register for the data to be editted in
  * @param	data The new data to be written
  * @param	mask The mask that determines what portion fo the data byte to write
- * 			to the register
+ * 		      	 to the register
  */
 
 uint8_t ldc1101_edit_and_check_reg(struct LDC1101 *ldc1101, uint8_t reg,
@@ -349,8 +350,10 @@ uint8_t ldc1101_edit_and_check_reg(struct LDC1101 *ldc1101, uint8_t reg,
  * @param	length The number of registers to read
  */
 
-void ldc1101_read_consecutive_reg(struct LDC1101 *ldc1101, uint8_t startReg,
-		uint8_t *buf, uint8_t length) {
+void ldc1101_read_consecutive_reg(struct LDC1101 *ldc1101, 
+																	uint8_t startReg,
+																	uint8_t *buf, 
+																	uint8_t length) {
 
 	startReg = startReg | 0x80;
 
@@ -379,7 +382,7 @@ void ldc1101_read_consecutive_reg(struct LDC1101 *ldc1101, uint8_t startReg,
 /**
  * @brief	Reads all registers of the ldc1101 chip
  * @note	No return value or buffer, used for debugging purposes only
- * 			viewable on a logic analyzer
+ * 			  viewable on a logic analyzer
  * @param	ldc1101 A pointer to a LDC1101 sturct
  */
 void ldc1101_read_all_reg(struct LDC1101 *ldc1101) {
@@ -465,7 +468,7 @@ uint8_t ldc1101_startup(struct LDC1101 *ldc1101) {
 
 /**
  * @brief	Writes the proper values to the proper registers
- * 			to enable sleep mode
+ * 		  	to enable sleep mode
  * @note	na
  * @param	ldc1101 A pointer to a LDC1101 struct
  */
@@ -479,7 +482,7 @@ uint8_t ldc1101_enter_sleep(struct LDC1101 *ldc1101) {
 
 /**
  * @brief	Writes the proper values to the proper registers
- * 			to disable sleep mode
+ * 		  	to disable sleep mode
  * @note	na
  * @param	ldc1101 A pointer to an LDC1101 struct
  */
@@ -526,26 +529,22 @@ uint8_t ldc1101_restart(struct LDC1101 *ldc1101) {
 }
 
 /* INITIALIZATION */
-
 /**
  * @brief	Costume function to initialize the chip
  * @note	na
  * @param	ldc1101 A pointer to a LDC1101 struct
  */
 uint8_t ldc1101_init(struct LDC1101 *ldc1101) {
-
-	ldc1101_read_all_reg(ldc1101);
-
-	HAL_Delay(10);
-
-	if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK) {
-		return LDC1101_NOT_OK;
-	}
-
-	HAL_Delay(10);
-
-	ldc1101_read_all_reg(ldc1101);
-
+	ldc1101_write_reg(ldc1101, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_SLEEP_MODE);	                    // 进入睡眠模式，开始设置配置
+	
+	// 启动 LHR 模式
+	ldc1101_write_reg(ldc1101, _LDC1101_REG_CFG_ADDITIONAL_DEVICE_SETTINGS, _LDC1101_ALT_CFG_L_OPTIMAL_ENABLE);   // L通道路径优化
+	ldc1101_write_reg(ldc1101, _LDC1101_REG_AMPLITUDE_CONTROL_REQUIREMENT, 0x01);                                 // 起振检测报告
+	ldc1101_write_reg(ldc1101, _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE, 0x01); 															// 设置 RPMIN
+	
+	
+	
+	ldc1101_write_reg(ldc1101, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE);	        // 进入激活模式，结束配置设置，开始转换
 	return LDC1101_OK;
 }
 
@@ -600,9 +599,9 @@ uint8_t ldc1101_lhr_setup(struct LDC1101 *ldc1101) {
 /**
  * @brief	Enables optimized induction reading
  * @note	Optimize sensor drive signal for L measurements (for both High-Res L and L
- measurement). When LOPTIMAL is enabled, RP measurements are not
- completed. It is also necessary to set DOK_REPORT=1 when this mode is
- enabled.
+					measurement). When LOPTIMAL is enabled, RP measurements are not
+					completed. It is also necessary to set DOK_REPORT=1 when this mode is
+					enabled.
  * @param	ldc1101 A pointer to a LDC1101 struct
  */
 uint8_t ldc1101_enable_optimize_for_l(struct LDC1101 *ldc1101) {
@@ -726,13 +725,13 @@ uint8_t ldc1101_disable_rp_dynamic_range(struct LDC1101 *ldc1101) {
 /**
  * @brief	Configures the dynamic range for rp readings
  * @note	This setting improves the RP measurement accuracy for very high Q coils by
- *	 	 	driving 0A as the RPMAX current drive. Typically, sensors with Q > 50 can benefit
- *		 	from enabling this mode.
+ *	 	   	driving 0A as the RPMAX current drive. Typically, sensors with Q > 50 can benefit
+ *		  	from enabling this mode.
  * @param	ldc1101 A pointer to a LDC1101 struct
  * @param	RP_MAX The maximum input dynamic range for the sensor RP measurement,
- * 			The programmed RP_MIN setting must not exceed the programmed RP_MAX setting.
+ * 		  	The programmed RP_MIN setting must not exceed the programmed RP_MAX setting.
  * @param	RP_MIN The minimum input dynamic range for the sensor RP measurement,
- * 			The programmed RP_MIN setting must not exceed the programmed RP_MAX setting.
+ * 			  The programmed RP_MIN setting must not exceed the programmed RP_MAX setting.
  *
  */
 uint8_t ldc1101_configure_rp_dynamic_range(struct LDC1101 *ldc1101,
@@ -820,8 +819,8 @@ uint8_t ldc1101_disable_intb_mode(struct LDC1101 *ldc1101) {
 
 	}
 	return ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_CFG_INTB_MODE,
-	_LDC1101_INTB_MODE_DONT_REPORT_INTB_ON_SDO_PIN);
+																		_LDC1101_REG_CFG_INTB_MODE,
+																		_LDC1101_INTB_MODE_DONT_REPORT_INTB_ON_SDO_PIN);
 
 }
 
@@ -896,12 +895,12 @@ uint8_t ldc1101_configure_tc2(struct LDC1101 *ldc1101, uint8_t R_VAL,
  * @note	na
  * @param	ldc1101 A pointer to a LDC1101 struct
  * @param	MIN_FREQ Minimum frequency, Configure this register based on the lowest possible sensor frequency. This is
- typically when the target is providing minimum interaction with the sensor,
- although with some steel and ferrite targets, the minimum sensor frequency
- occurs with maximum target interaction.
+					typically when the target is providing minimum interaction with the sensor,
+					although with some steel and ferrite targets, the minimum sensor frequency
+					occurs with maximum target interaction.
  * @param	RESP_TIME The Response Time, which is the number of sensor periods used per
- conversion. This setting applies to the RP and Standard Resolution L
- measurement, but not the High Resolution L measurement.
+					conversion. This setting applies to the RP and Standard Resolution L
+					measurement, but not the High Resolution L measurement.
  */
 uint8_t ldc1101_configure_dig(struct LDC1101 *ldc1101, uint8_t MIN_FREQ,
 		uint8_t RESP_TIME) {
@@ -931,7 +930,7 @@ uint8_t ldc1101_configure_dig(struct LDC1101 *ldc1101, uint8_t MIN_FREQ,
 
 /**
  * @brief	Configures the high and low threshold registers
- * 			for rp readings
+ * 			  for rp readings
  * @note	na
  * @param	ldc1101 A pointer to a LDC1101 struct
  * @param	RP_THRESH_HI The 16 bit value for the high threshold
@@ -985,7 +984,7 @@ uint8_t ldc1101_configure_rp_high_low_threshold(struct LDC1101 *ldc1101,
 
 /**
  * @brief	Configures the high and low threshold registers
- * 			for l readings
+ * 		   	for l readings
  * @note	na
  * @param	ldc1101 A pointer to a LDC1101 struct
  * @param	RP_THRESH_HI The 16 bit value for the high threshold
@@ -1088,12 +1087,12 @@ struct LDC1101_CHIP ldc1101_get_id(struct LDC1101 *ldc1101) {
 /**
  * @brief	Retrieves rpl data from rpl data registers
  * @note	ldc1101 must be configured for rpl measurements for
- * 			best result
+ * 		  	best result
  * @param	ldc1101 A pointer to a LDC1101 struct
  * @param	data The RPL_DATA struct to be updated
  */
 struct RPL_DATA ldc1101_read_rpl_data(struct LDC1101 *ldc1101,
-		struct RPL_DATA data) {
+		                                  struct RPL_DATA data) {
 
 	uint8_t buf[5];
 
@@ -1147,7 +1146,7 @@ struct LHR_DATA ldc1101_read_lhr_data(struct LDC1101 *ldc1101,
 
 /**
  * @brief	Given a chip struct it will print its contents in a human readable
- * 			form over a uart connection
+ * 		  	form over a uart connection
  * @note	na
  * @param	huart A pointer to a huart struct
  * @param	ldc1101 A pointer to a LDC1101 struct
@@ -1174,9 +1173,9 @@ void ldc1101_print_chip(UART_HandleTypeDef *huart, struct LDC1101 *ldc1101,
  * @param	ldc1101 A pointer to a LDC1101 struct
  * @param	reg The address of the reggister that is to be read
  */
-void ldc1101_print_reg(UART_HandleTypeDef *huart, struct LDC1101 *ldc1101,
-		uint8_t reg) {
-
+void ldc1101_print_reg(UART_HandleTypeDef *huart, 
+											 struct LDC1101 *ldc1101,
+		                   uint8_t reg) {
 	uint8_t returnData = ldc1101_read_reg(ldc1101, reg);
 
 	char msg[43];
@@ -1204,8 +1203,7 @@ void ldc1101_print_reg(UART_HandleTypeDef *huart, struct LDC1101 *ldc1101,
  */
 void ldc1101_print_all_reg(UART_HandleTypeDef *huart, struct LDC1101 *ldc1101) {
 
-	HAL_UART_Transmit(huart, (uint8_t*)"===================================\n\r", 37,
-			100);
+	HAL_UART_Transmit(huart, (uint8_t*)"===================================\n\r", 37, 100);
 
 	for (uint8_t i = 0; i < NUMBER_OF_REGS; i++) {
 		ldc1101_print_reg(huart, ldc1101, _REG_ADRS[i]);
@@ -1214,7 +1212,7 @@ void ldc1101_print_all_reg(UART_HandleTypeDef *huart, struct LDC1101 *ldc1101) {
 
 /**
  * @brief	Given a rpl_data struct it prints it in a human readable form
- * 			over uart
+ * 			  over uart
  * @note	na
  * @param	huart A pointer to a huart struct
  * @param	rplData A RPL_DATA struct
@@ -1241,8 +1239,8 @@ void ldc1101_print_rpl_data(UART_HandleTypeDef *huart, struct RPL_DATA rplData) 
 }
 
 /**
- * @brief	Given a lhr_data struct it prints it in a human readable form
- * 			over uart
+ * @brief	Given an lhr_data struct it prints it in a human readable form
+ * 		  	over uart
  * @note	na
  * @param	huart A pointer to a huart struct
  * @param	lhrData A lhr_data struct
@@ -1270,7 +1268,7 @@ void ldc1101_print_lhr_data(UART_HandleTypeDef *huart, struct LHR_DATA lhrData) 
 
 /**
  * @brief	Given a rpl_data struct it prints the raw data without the status
- * 			or running average
+ * 		  	or running average
  * @note	na
  * @param	huart A pointer to a huart struct
  * @param	rplData A RPL_DATA struct
@@ -1332,8 +1330,9 @@ uint16_t ldc1101_running_avg_16bit(uint16_t avg, uint16_t newValue,
  * @param
  * @param
  */
-uint32_t ldc1101_running_avg_32bit(uint32_t avg, uint32_t newValue,
-		uint32_t delta) {
+uint32_t ldc1101_running_avg_32bit(uint32_t avg, 
+                                   uint32_t newValue,
+		                               uint32_t delta) {
 	return (avg * ((delta - 1) / delta)) + (newValue / delta);
 }
 
@@ -1367,9 +1366,8 @@ void ldc1101_status_set_bit(struct LDC1101 *ldc1101, uint8_t bit) {
  */
 uint8_t ldc1101_status_check_bit(struct LDC1101 *ldc1101, uint8_t bit) {
 
-	if ((ldc1101->status & bit) == bit) {
-		return 1;
-	}
+	if ((ldc1101->status & bit) == bit) 
+			return 1;
 
 	return 0;
 }
@@ -1377,20 +1375,19 @@ uint8_t ldc1101_status_check_bit(struct LDC1101 *ldc1101, uint8_t bit) {
 /**
  * @brief	A function to edit a sub set of a byte
  * @note	Example:	oldData: 	0b00110011
- * 						data:		0b00011110
- * 						mask:		0b00111000
- * 						newData:	0b00011011
- * 			The set procedure enforces 1's and 0's i.e. it performs
- * 			both a bitwise & and bitwise |.
+ * 						      data:	   	0b00011110
+ * 						      mask:	  	0b00111000
+ * 					      	newData:	0b00011011
+ * 		  	The set procedure enforces 1's and 0's i.e. it performs
+ * 		  	both a bitwise & and bitwise |.
  * @param	oldData The original state of the data
  * @param	data The new data to be written
  * @param	mask The mask that determines which bits will be updated,
- * 			all bits from data that align with 1's in mask will be written
- * 			to oldData. All bits outside of the mask will stay the same.
+ * 		  	all bits from data that align with 1's in mask will be written
+ * 		  	to oldData. All bits outside of the mask will stay the same.
  * @return	uint8_t Byte that has been edited
  */
 uint8_t ldc1101_mask_edit_byte(uint8_t oldData, uint8_t data, uint8_t mask) {
-
 	/**
 	 * Step by step method
 	 * uint8_t maskedData = data & mask;

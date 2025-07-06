@@ -430,9 +430,9 @@
               <FilePath>../Core/Src/stm32f1xx_hal_msp.c</FilePath>
             </File>
             <File>
-              <FileName>LDC1101.c</FileName>
+              <FileName>__ldc1101_driver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Core\Src\LDC1101.c</FilePath>
+              <FilePath>..\Core\Src\__ldc1101_driver.c</FilePath>
             </File>
           </Files>
         </Group>
