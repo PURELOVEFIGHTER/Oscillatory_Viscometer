@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "__ldc1101_driver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -46,26 +46,32 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+
+// DRV8833相关变量
 volatile uint8_t drv_FAULT = 0 ;
-uint16_t drv_PWM_FREQ = 70  ;
+uint16_t drv_PWM_FREQ = 70;
 uint8_t drv_PWM_DR = 30;
 uint16_t drv_PWM_CNT ;
 
+
+// 串口相关变量
 char RX_BYTE = 1;
 char RX_BUFFER[MSG_LEN];
 char TX_BUFFER[MSG_LEN];
-
-LDC1101_Device ldc1 = { &hspi1, GPIOA, GPIO_PIN_4 };
-LDC1101_Device ldc2 = { &hspi2, GPIOB, GPIO_PIN_12 };
-
 uint8_t uart_state = 0;
+
+
+//LDC1101 相关变量
+uint16_t rp_data;
+uint16_t l_data;
+uint32_t lhr_data;
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-/**************************************DRV输出方向**************************************/
+/**************************************DRV8833设置**************************************/
 //滑行
 void DRV_Coast(void)
 {
@@ -105,7 +111,8 @@ void DRV_Brake(void)
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_SET);
 };
-/***************************************************************************************/
+
+
 // 扫频
 void FREQ_Scan(void)
 {
@@ -119,6 +126,10 @@ void DR_Scan(void)
 		for (; drv_PWM_DR <= DR_MAX; drv_PWM_DR += DR_STEP)
 				HAL_Delay(10000);  // 等待系统稳定（振动建立）
 }
+/***************************************************************************************/
+
+
+
 
 void Command_Parse(void)
 {
@@ -161,24 +172,60 @@ void Command_Parse(void)
 		}
 		else if (strncmp(RX_BUFFER,"DR Scan",7) == 0)
 		{
-				HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-				sprintf(TX_BUFFER, "Please set PWM_FREQ:");
-				HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-				drv_PWM_FREQ = atoi(&RX_BUFFER[3]);  // 提取并转换频率
-				DR_Scan();
+//				HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+//				sprintf(TX_BUFFER, "Please set PWM_DR:");
+//				HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+//				drv_PWM_FREQ = atoi(&RX_BUFFER[3]);  // 提取并转换频率
+//				DR_Scan();
 		}
-		else if (strncmp(RX_BUFFER,"Read",4) == 0)
+		
+		
+		// 检查SPI通讯状态
+		else if (strncmp(RX_BUFFER,"SPI Check",9) == 0)
 		{
 					HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 			
-					// 读取芯片ID寄存器地址0x3F
-					uint8_t chip_id = ldc1101_readByte(&ldc1,0x01);
+					uint8_t chip_id = ldc1101_readByte(&ldc1, _LDC1101_REG_CHIP_ID);
 
-					// 通过串口打印
 					sprintf(TX_BUFFER, "LDC1101 Device ID: 0x%02X\r\n", chip_id);
 					HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
 		}
-		
+		// 读取寄存器数值
+		else if(strncmp(RX_BUFFER,"Read:",5) == 0)
+		{
+			    uint8_t reg_addr;
+					uint8_t reg_val;
+
+					// 直接解析寄存器地址，默认格式为 0xXX
+					sscanf(&RX_BUFFER[5], "%hhx", &reg_addr);
+
+					reg_val = ldc1101_readByte(&ldc1, reg_addr);
+
+					sprintf(TX_BUFFER, "[0x%02X] = 0x%02X\r\n", reg_addr, reg_val);
+					HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+		}
+		// 检查 RP+L 模式工作状态
+		else if (strncmp(RX_BUFFER, "RPL Check", 9) == 0)
+		{
+				HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+
+				uint8_t rpl_status = ldc1101_readByte(&ldc2, _LDC1101_REG_RP_L_MEASUREMENT_STATUS);
+
+				// 将 rpl_status 转成二进制字符串
+				sprintf(TX_BUFFER, "RP+L Measurement Status: "
+													 "%d%d%d%d%d%d%d%d\r\n",
+								(rpl_status >> 7) & 0x01,
+								(rpl_status >> 6) & 0x01,
+								(rpl_status >> 5) & 0x01,
+								(rpl_status >> 4) & 0x01,
+								(rpl_status >> 3) & 0x01,
+								(rpl_status >> 2) & 0x01,
+								(rpl_status >> 1) & 0x01,
+								(rpl_status >> 0) & 0x01);
+
+				HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+		}
+
 		memset(RX_BUFFER, 0, sizeof(RX_BUFFER));
 }
 /* USER CODE END PFP */
@@ -213,6 +260,7 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
 
+
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -221,15 +269,24 @@ int main(void)
   MX_SPI2_Init();
   MX_USART1_UART_Init();
   MX_TIM2_Init();
-  MX_TIM1_Init();
-	ldc1101_init(&ldc1);
   /* USER CODE BEGIN 2 */
-	DRV_Wake();
-	HAL_TIM_Base_Start_IT(&htim2);
-	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-	HAL_NVIC_SetPriority(EXTI0_IRQn, 1, 0);
-	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
-	HAL_UART_Receive_IT(&huart1, (uint8_t*)&RX_BYTE, 1);
+	DRV_Wake();	                                             // DRV8833 唤醒
+	HAL_TIM_Base_Start_IT(&htim2);                           // 定时器制作 DRV8833 驱动波形
+	HAL_NVIC_EnableIRQ(EXTI0_IRQn);                          // DRV8833 报错开启
+	HAL_NVIC_SetPriority(EXTI0_IRQn, 1, 0);                  // DRV8833 报错优先级设定
+	
+	HAL_UART_Receive_IT(&huart1, (uint8_t*)&RX_BYTE, 1);     // 串口通讯开启
+	if(ldc1101_init(&ldc1)||ldc1101_init(&ldc2))             // LDC1101 初始化
+	{
+			sprintf(TX_BUFFER, "LDC1101 Initialize Failed.\r\n");
+			HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+	}else
+	{
+			sprintf(TX_BUFFER, "LDC1101 Initialize Done.\r\n");
+			HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+	}
+	ldc1101_writeByte(&ldc1, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE);// 开始测量
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -243,12 +300,23 @@ int main(void)
 					HAL_Delay(300);                         // 控制闪烁频率
 			}
 			drv_PWM_CNT = 100000/drv_PWM_FREQ;
+			
+//			uint16_t rp_data = ldc1101_getRPData(&ldc1);
+//			uint16_t l_data = ldc1101_getLData(&ldc1);
+//    
+//			// 把数据格式化到你的 TX_BUFFER
+//			sprintf(TX_BUFFER, "RP: %u, L: %u\r\n", rp_data, l_data);
+//    
+//			// 发送到串口
+//			HAL_UART_Transmit(&huart1, (uint8_t *)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+//    
+//			HAL_Delay(500);  // 每500ms发送一次
 	 }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
 
-  /* USER CODE END 3 */
+    /* USER CODE END 3 */
 }
 
 /**

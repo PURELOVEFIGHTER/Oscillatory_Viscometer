@@ -76,15 +76,15 @@ void FREQ_Scan(void);
 void DR_Scan(void);
 
 // 控制波形
-extern uint16_t drv_PWM_FREQ;// PWM频率
-extern uint16_t drv_PWM_CNT;// PWM所需中断计数值
-extern uint8_t drv_PWM_DR;// PWM占空比
+extern uint16_t drv_PWM_FREQ;  // PWM频率
+extern uint16_t drv_PWM_CNT;   // PWM所需中断计数值
+extern uint8_t  drv_PWM_DR;    // PWM占空比
 
 // DRV错误标志
 extern volatile uint8_t drv_fault;
 
 // DRV睡眠状态
-#define DRV_Wake() HAL_GPIO_WritePin(GPIOB,GPIO_PIN_1,GPIO_PIN_SET)
+#define DRV_Wake()  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_1,GPIO_PIN_SET)
 #define DRV_Sleep() HAL_GPIO_WritePin(GPIOB,GPIO_PIN_1,GPIO_PIN_RESET)
 
 // DRV驱动方向
@@ -94,8 +94,10 @@ void DRV_Reverse(void);
 void DRV_Brake(void);
 /************************************************************************************/
 
-extern LDC1101_Device ldc1;
-extern LDC1101_Device ldc2;
+/**************************************LDC1101**************************************/
+
+
+/************************************************************************************/
 
 /**************************************蓝牙串口**************************************/
 #define MSG_LEN 64

@@ -32,8 +32,8 @@ light up\main.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\string.h
 light up\main.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdlib.h
 light up\main.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdio.h
 light up\main.o: ../Core/Inc/__ldc1101_driver.h
-light up\main.o: ../Core/Inc/main.h
 light up\main.o: ../Core/Inc/spi.h
+light up\main.o: ../Core/Inc/main.h
 light up\main.o: ../Core/Inc/tim.h
 light up\main.o: ../Core/Inc/usart.h
 light up\main.o: ../Core/Inc/gpio.h

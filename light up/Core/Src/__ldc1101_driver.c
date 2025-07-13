@@ -1,19 +1,9 @@
-/*
-    __ldc1101_driver.c
-
------------------------------------------------------------------------------
-
-  This file is part of mikroSDK.
-
-  Copyright (c) 2017, MikroElektonika - http://www.mikroe.com
-
-  All rights reserved.
-
------------------------------------------------------------------------------ */
-
 #include "__ldc1101_driver.h"
 
 /* ------------------------------------------------------------------- MACROS */
+
+LDC1101_Device ldc1 = { &hspi1, GPIOA, GPIO_PIN_4 };
+LDC1101_Device ldc2 = { &hspi2, GPIOB, GPIO_PIN_12 };
 
 /* Register */
 const uint8_t _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE = 0x01;
@@ -129,8 +119,7 @@ const uint8_t _LDC1101_LHR_CFG_FREQUENCY_DIVIDED_BY_8   = 0x03;
 
 
 /* ---------------------------------------------------------------- VARIABLES */
-static const uint8_t DEVICE_ERROR = 0x01;
-static const uint8_t DEVICE_OK = 0x00;
+
 
 /* -------------------------------------------- PRIVATE FUNCTION DECLARATIONS */
 
@@ -172,46 +161,63 @@ uint8_t ldc1101_readByte(LDC1101_Device *dev, uint8_t addr)
 }
 
 
-// 初始化
+
+
+
 uint8_t ldc1101_init(LDC1101_Device *dev)
 {
-    uint8_t chip_id;
-
-    chip_id = ldc1101_readByte(dev, _LDC1101_REG_CHIP_ID);
+    // 设置为 SLEEP 模式，开始初始化
+    ldc1101_writeByte(dev, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_SLEEP_MODE);// 0x01
+	
+	  // 先读取 CHIP ID，确认 SPI 和芯片正常
+    uint8_t chip_id = ldc1101_readByte(dev, _LDC1101_REG_CHIP_ID);
     if (chip_id != 0xD4) {
         return DEVICE_ERROR;
     }
 
-    ldc1101_writeByte(dev, _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE, 0x07);
-    ldc1101_writeByte(dev, _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_1, 0x90);
-    ldc1101_writeByte(dev, _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_2, 0xA0);
-    ldc1101_writeByte(dev, _LDC1101_REG_CFG_RP_L_CONVERSION_INTERVAL, 0x03);
-    ldc1101_writeByte(dev, _LDC1101_REG_CFG_ADDITIONAL_DEVICE, 0x00);
+    // 设置 RP 测量动态范围（初次建议中等范围，后续可细调）
+    ldc1101_writeByte(dev, _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE,
+                      _LDC1101_RP_SET_RP_MIN_3KOhm | _LDC1101_RP_SET_RP_MAX_24KOhm);// 0x25
+
+    // 配置内部时间常数（初次用中间值）
+    ldc1101_writeByte(dev, _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_1, 
+                      _LDC1101_TC1_C1_3pF | _LDC1101_TC1_R1_212_7kOhm);// 0x90
+    ldc1101_writeByte(dev, _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_2, 
+                      _LDC1101_TC2_C2_6pF | _LDC1101_TC2_R2_426_4kOhm);// 0x60
+
+    // 配置 RP+L 转换时间（中等响应速度）
+    ldc1101_writeByte(dev, _LDC1101_REG_CFG_RP_L_CONVERSION_INTERVAL,
+                      _LDC1101_DIG_CFG_MIN_FREQ_500kHz | _LDC1101_DIG_CFG_RESP_TIME_1536s);// 0x05
+
+    // 关闭其他辅助功能
+    ldc1101_writeByte(dev, _LDC1101_REG_CFG_ADDITIONAL_DEVICE, 
+										  _LDC1101_ALT_CFG_L_OPTIMAL_DISABLED | _LDC1101_ALT_CFG_SHUTDOWN_DISABLE);// 0x00
+    ldc1101_writeByte(dev, _LDC1101_REG_CFG_INTB_MODE, _LDC1101_INTB_MODE_NO_OUTPUT);// 0x00
+
+    // 关闭门限功能（初次调试不使用）
     ldc1101_writeByte(dev, _LDC1101_REG_RP_THRESH_H_MSB, 0x00);
-    ldc1101_writeByte(dev, _LDC1101_REG_RP_THRESH_L_LSB, 0x00);
+    ldc1101_writeByte(dev, _LDC1101_REG_RP_THRESH_H_LSB, 0x00);
     ldc1101_writeByte(dev, _LDC1101_REG_RP_THRESH_L_MSB, 0x00);
-    ldc1101_writeByte(dev, _LDC1101_REG_CFG_INTB_MODE, 0x00);
-    ldc1101_writeByte(dev, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_SLEEP_MODE);
-    ldc1101_writeByte(dev, _LDC1101_REG_AMPLITUDE_CONTROL_REQUIREMENT, 0x00);
-    ldc1101_writeByte(dev, _LDC1101_REG_L_THRESH_HI_LSB, 0x00);
+    ldc1101_writeByte(dev, _LDC1101_REG_RP_THRESH_L_LSB, 0x00);
     ldc1101_writeByte(dev, _LDC1101_REG_L_THRESH_HI_MSB, 0x00);
-    ldc1101_writeByte(dev, _LDC1101_REG_L_THRESH_LO_LSB, 0x00);
+    ldc1101_writeByte(dev, _LDC1101_REG_L_THRESH_HI_LSB, 0x00);
     ldc1101_writeByte(dev, _LDC1101_REG_L_THRESH_LO_MSB, 0x00);
-    ldc1101_writeByte(dev, _LDC1101_REG_LHR_RCOUNT_LSB, 0x00);
-    ldc1101_writeByte(dev, _LDC1101_REG_LHR_RCOUNT_MSB, 0x00);
-    ldc1101_writeByte(dev, _LDC1101_REG_LHR_OFFSET_LSB, 0x00);
-    ldc1101_writeByte(dev, _LDC1101_REG_LHR_OFFSET_MSB, 0x00);
-    ldc1101_writeByte(dev, _LDC1101_REG_CFG_LHR, 0x00);
+    ldc1101_writeByte(dev, _LDC1101_REG_L_THRESH_LO_LSB, 0x00);
+
+    // 关闭振幅控制
+    ldc1101_writeByte(dev, _LDC1101_REG_AMPLITUDE_CONTROL_REQUIREMENT, 0x00);
+
+    // 切换到 ACTIVE CONVERSION 模式开始测量
+    ldc1101_writeByte(dev, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE);
+
+    // 等待测量稳定
     HAL_Delay(100);
 
     return DEVICE_OK;
 }
 
-// 功耗模式
-void ldc1101_setPowerMode(LDC1101_Device *dev, uint8_t mode)
-{
-    ldc1101_writeByte(dev, _LDC1101_REG_CFG_POWER_STATE, mode);
-}
+
+
 
 // 切换到 L 模式
 void ldc1101_goTo_Lmode(LDC1101_Device *dev)
@@ -237,8 +243,8 @@ uint8_t ldc1101_getStatus(LDC1101_Device *dev)
 uint16_t ldc1101_getRPData(LDC1101_Device *dev)
 {
     uint16_t data;
-    data = ldc1101_readByte(dev, 0x22);
-    data = (data << 8) | ldc1101_readByte(dev, 0x21);
+    data = ldc1101_readByte(dev, _LDC1101_REG_RP_DATA_MSB);
+    data = (data << 8) | ldc1101_readByte(dev, _LDC1101_REG_RP_DATA_LSB);
     return data;
 }
 
@@ -246,9 +252,20 @@ uint16_t ldc1101_getRPData(LDC1101_Device *dev)
 uint16_t ldc1101_getLData(LDC1101_Device *dev)
 {
     uint16_t data;
-    data = ldc1101_readByte(dev, 0x24);
-    data = (data << 8) | ldc1101_readByte(dev, 0x23);
+    data = ldc1101_readByte(dev, _LDC1101_REG_L_DATA_MSB);
+    data = (data << 8) | ldc1101_readByte(dev, _LDC1101_REG_L_DATA_LSB);
     return data;
+}
+
+// 获取 LHR 数据
+uint32_t ldc1101_getLHRData(LDC1101_Device *dev)
+{
+    uint32_t data = 0;
+    data |= ((uint32_t)ldc1101_readByte(dev, _LDC1101_REG_LHR_DATA_MSB) << 16);
+    data |= ((uint32_t)ldc1101_readByte(dev, _LDC1101_REG_LHR_DATA_MID) << 8);
+    data |= ((uint32_t)ldc1101_readByte(dev, _LDC1101_REG_LHR_DATA_LSB));
+
+    return data;  // 返回24位数据，低24位有效
 }
 
 /* -------------------------------------------------------------------------- */

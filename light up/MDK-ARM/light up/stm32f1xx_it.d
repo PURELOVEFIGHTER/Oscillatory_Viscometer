@@ -32,6 +32,6 @@ light up\stm32f1xx_it.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\string.h
 light up\stm32f1xx_it.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdlib.h
 light up\stm32f1xx_it.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdio.h
 light up\stm32f1xx_it.o: ../Core/Inc/__ldc1101_driver.h
-light up\stm32f1xx_it.o: ../Core/Inc/main.h
 light up\stm32f1xx_it.o: ../Core/Inc/spi.h
+light up\stm32f1xx_it.o: ../Core/Inc/main.h
 light up\stm32f1xx_it.o: ../Core/Inc/stm32f1xx_it.h
