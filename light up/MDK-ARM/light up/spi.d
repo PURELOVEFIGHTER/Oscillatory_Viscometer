@@ -34,3 +34,4 @@ light up\spi.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdlib.h
 light up\spi.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdio.h
 light up\spi.o: ../Core/Inc/__ldc1101_driver.h
 light up\spi.o: ../Core/Inc/spi.h
+light up\spi.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdbool.h

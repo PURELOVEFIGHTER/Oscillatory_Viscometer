@@ -35,3 +35,4 @@ light up\tim.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdio.h
 light up\tim.o: ../Core/Inc/__ldc1101_driver.h
 light up\tim.o: ../Core/Inc/spi.h
 light up\tim.o: ../Core/Inc/main.h
+light up\tim.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdbool.h

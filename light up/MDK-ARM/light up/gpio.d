@@ -35,3 +35,4 @@ light up\gpio.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdio.h
 light up\gpio.o: ../Core/Inc/__ldc1101_driver.h
 light up\gpio.o: ../Core/Inc/spi.h
 light up\gpio.o: ../Core/Inc/main.h
+light up\gpio.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdbool.h

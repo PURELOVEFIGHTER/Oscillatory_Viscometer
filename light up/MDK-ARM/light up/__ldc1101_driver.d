@@ -34,3 +34,4 @@ light up\__ldc1101_driver.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\string.h
 light up\__ldc1101_driver.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdlib.h
 light up\__ldc1101_driver.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdio.h
 light up\__ldc1101_driver.o: ../Core/Inc/__ldc1101_driver.h
+light up\__ldc1101_driver.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdbool.h

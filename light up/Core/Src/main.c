@@ -49,7 +49,7 @@
 
 // DRV8833相关变量
 volatile uint8_t drv_FAULT = 0 ;
-uint16_t drv_PWM_FREQ = 70;
+uint16_t drv_PWM_FREQ = 100;
 uint8_t drv_PWM_DR = 30;
 uint16_t drv_PWM_CNT ;
 
@@ -62,9 +62,10 @@ uint8_t uart_state = 0;
 
 
 //LDC1101 相关变量
-uint16_t rp_data;
-uint16_t l_data;
-uint32_t lhr_data;
+uint16_t RP_DATA = 0;
+uint16_t L_DATA = 0;
+uint32_t LHR_DATA = 0;
+bool isLHR = 0;
 
 /* USER CODE END PV */
 
@@ -205,7 +206,7 @@ void Command_Parse(void)
 					HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
 		}
 		// 检查 RP+L 模式工作状态
-		else if (strncmp(RX_BUFFER, "RPL Check", 9) == 0)
+		else if ((strncmp(RX_BUFFER, "RPL Check", 9) == 0) && (isLHR == 0))
 		{
 				HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 
@@ -222,6 +223,26 @@ void Command_Parse(void)
 								(rpl_status >> 2) & 0x01,
 								(rpl_status >> 1) & 0x01,
 								(rpl_status >> 0) & 0x01);
+
+				HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+		}
+		else if ((strncmp(RX_BUFFER, "LHR Check", 9) == 0) && (isLHR == 1))
+		{
+				HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+
+				uint8_t lhr_status = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
+
+				// 将 rpl_status 转成二进制字符串
+				sprintf(TX_BUFFER, "LHR Measurement Status: "
+													 "%d%d%d%d%d%d%d%d\r\n",
+								(lhr_status >> 7) & 0x01,
+								(lhr_status >> 6) & 0x01,
+								(lhr_status >> 5) & 0x01,
+								(lhr_status >> 4) & 0x01,
+								(lhr_status >> 3) & 0x01,
+								(lhr_status >> 2) & 0x01,
+								(lhr_status >> 1) & 0x01,
+								(lhr_status >> 0) & 0x01);
 
 				HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
 		}
@@ -293,24 +314,73 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-			if(drv_FAULT)
-			{
-					drv_FAULT=0;
-					HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13); // 翻转 LED
-					HAL_Delay(300);                         // 控制闪烁频率
-			}
-			drv_PWM_CNT = 100000/drv_PWM_FREQ;
+				drv_PWM_CNT = 100000/drv_PWM_FREQ;
 			
-//			uint16_t rp_data = ldc1101_getRPData(&ldc1);
-//			uint16_t l_data = ldc1101_getLData(&ldc1);
-//    
-//			// 把数据格式化到你的 TX_BUFFER
-//			sprintf(TX_BUFFER, "RP: %u, L: %u\r\n", rp_data, l_data);
-//    
-//			// 发送到串口
-//			HAL_UART_Transmit(&huart1, (uint8_t *)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-//    
-//			HAL_Delay(500);  // 每500ms发送一次
+
+				uint8_t status = ldc1101_readByte(&ldc1, _LDC1101_REG_LHR_STATUS);
+
+				// 判断 LHR_Data_Ready == 0，表示有新数据
+				if ((status & 0x01) == 0)
+				{
+						uint32_t lhr_data = ldc1101_getLHRData(&ldc1);
+
+						// 输出 LHR 数据（十进制 + 十六进制）
+						sprintf(TX_BUFFER, "LHR: %lu (0x%08lX)\r\n", lhr_data, lhr_data);
+						HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+				}
+
+				HAL_Delay(100); 
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+//				uint8_t status = ldc1101_readByte(&ldc1, _LDC1101_REG_RP_L_MEASUREMENT_STATUS);
+
+//				if ((status & (1 << 6)) == 0)  // 第6位为0，表示有新数据
+//				{
+//						uint16_t rp_data = ldc1101_getRPData(&ldc1);
+//						uint16_t l_data = ldc1101_getLData(&ldc1);
+
+//						sprintf(TX_BUFFER, "RP: %u, L: %u\r\n", rp_data, l_data);
+//						HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+//				}
+//				
+//				HAL_Delay(100);
+			
+		
+		
+		
+//			if(isLHR == 0)
+//		  {
+//		      ldc1101_goTo_RPmode(&ldc2);
+//		
+//					HAL_Delay(1000);
+//					
+//					ldc1101_goTo_Lmode(&ldc2);
+
+//					isLHR = 1;
+//			}
+//			else
+//			{
+//				  uint32_t lhr_data = ldc1101_getLHRData(&ldc2);
+
+//					// 打印 LHR 数据（十进制）
+//					sprintf(TX_BUFFER, "LHR: %lu\r\n", lhr_data);
+//					HAL_UART_Transmit(&huart1, (uint8_t *)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+//				  
+//					HAL_Delay(100);
+//			}
 	 }
     /* USER CODE END WHILE */
 
