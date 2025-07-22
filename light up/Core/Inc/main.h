@@ -36,6 +36,7 @@ extern "C" {
 #include "stdio.h"
 #include "__ldc1101_driver.h"
 #include "stdbool.h"
+#include "drv8833_driver.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -63,14 +64,16 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 
 /* USER CODE BEGIN Private defines */
-/**************************************振动控制**************************************/
-//扫频设置
+/**************************************DRV8833**************************************/
+extern DRV8833_HandleTypeDef drv1;
+
+//频率扫描设置
 #define FREQ_MIN 5
 #define FREQ_MAX 1000
 #define FREQ_STEP 5
 void FREQ_Scan(void);
 
-//占空比范围
+//占空比扫描设置
 #define DR_MIN 5
 #define DR_MAX 50
 #define DR_STEP 5
@@ -79,25 +82,13 @@ void DR_Scan(void);
 // 控制波形
 extern uint16_t drv_PWM_FREQ;  // PWM频率
 extern uint16_t drv_PWM_CNT;   // PWM所需中断计数值
-extern uint8_t  drv_PWM_DR;    // PWM占空比
-
-// DRV错误标志
-extern volatile uint8_t drv_fault;
-
-// DRV睡眠状态
-#define DRV_Wake()  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_1,GPIO_PIN_SET)
-#define DRV_Sleep() HAL_GPIO_WritePin(GPIOB,GPIO_PIN_1,GPIO_PIN_RESET)
-
-// DRV驱动方向
-void DRV_Coast(void);
-void DRV_Forward(void);
-void DRV_Reverse(void);
-void DRV_Brake(void);
+extern uint16_t drv_PWM_DR;    // PWM占空比
 /************************************************************************************/
 
 /**************************************LDC1101**************************************/
 extern bool isLHR;
-
+extern LDC1101_Device ldc1;
+extern LDC1101_Device ldc2;
 /************************************************************************************/
 
 /**************************************蓝牙串口**************************************/
@@ -106,7 +97,6 @@ extern char RX_BYTE;
 extern char RX_BUFFER[MSG_LEN];
 extern char TX_BUFFER[MSG_LEN];
 void Command_Parse(void);
-extern uint8_t uart_state;
 /************************************************************************************/
 /* USER CODE END Private defines */
 

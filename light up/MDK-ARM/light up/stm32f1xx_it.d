@@ -1,4 +1,6 @@
 light up\stm32f1xx_it.o: ../Core/Src/stm32f1xx_it.c
+light up\stm32f1xx_it.o: ../Core/Inc/stm32f1xx_it.h
+light up\stm32f1xx_it.o: ../Core/Inc/spi.h
 light up\stm32f1xx_it.o: ../Core/Inc/main.h
 light up\stm32f1xx_it.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
 light up\stm32f1xx_it.o: ../Core/Inc/stm32f1xx_hal_conf.h
@@ -32,7 +34,6 @@ light up\stm32f1xx_it.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\string.h
 light up\stm32f1xx_it.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdlib.h
 light up\stm32f1xx_it.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdio.h
 light up\stm32f1xx_it.o: ../Core/Inc/__ldc1101_driver.h
-light up\stm32f1xx_it.o: ../Core/Inc/spi.h
-light up\stm32f1xx_it.o: ../Core/Inc/main.h
 light up\stm32f1xx_it.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdbool.h
-light up\stm32f1xx_it.o: ../Core/Inc/stm32f1xx_it.h
+light up\stm32f1xx_it.o: ../Core/Inc/drv8833_driver.h
+light up\stm32f1xx_it.o: ../Core/Inc/usart.h

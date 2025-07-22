@@ -1,10 +1,6 @@
 #include "__ldc1101_driver.h"
 
 /* ------------------------------------------------------------------- MACROS */
-
-LDC1101_Device ldc1 = { &hspi1, GPIOA, GPIO_PIN_4 };
-LDC1101_Device ldc2 = { &hspi2, GPIOB, GPIO_PIN_12 };
-
 /* Register */
 const uint8_t _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE = 0x01;
 const uint8_t _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_1     = 0x02;

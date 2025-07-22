@@ -1,5 +1,6 @@
 --cpu Cortex-M3
 "light up\startup_stm32f103xb.o"
+"light up\drv8833_driver.o"
 "light up\__ldc1101_driver.o"
 "light up\main.o"
 "light up\gpio.o"

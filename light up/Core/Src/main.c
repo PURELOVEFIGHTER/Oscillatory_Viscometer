@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "__ldc1101_driver.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,9 +48,10 @@
 /* USER CODE BEGIN PV */
 
 // DRV8833相关变量
+DRV8833_HandleTypeDef drv1;
 volatile uint8_t drv_FAULT = 0 ;
-uint16_t drv_PWM_FREQ = 100;
-uint8_t drv_PWM_DR = 30;
+uint16_t drv_PWM_FREQ = 250;
+uint16_t drv_PWM_DR = 30;
 uint16_t drv_PWM_CNT ;
 
 
@@ -62,6 +63,8 @@ uint8_t uart_state = 0;
 
 
 //LDC1101 相关变量
+LDC1101_Device ldc1 = { &hspi1, GPIOA, GPIO_PIN_4 };
+LDC1101_Device ldc2 = { &hspi2, GPIOB, GPIO_PIN_12 };
 uint16_t RP_DATA = 0;
 uint16_t L_DATA = 0;
 uint32_t LHR_DATA = 0;
@@ -72,48 +75,6 @@ bool isLHR = 0;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-/**************************************DRV8833设置**************************************/
-//滑行
-void DRV_Coast(void)
-{
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
-	
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_RESET);
-};
-
-//正转
-void DRV_Forward(void)
-{
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);// AIN1
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);// AIN2
-		
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_SET);// BIN2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_RESET);// BIN2
-};
-
-//反转
-void DRV_Reverse(void)
-{
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
-	
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_SET);
-};
-
-//刹车
-void DRV_Brake(void)
-{
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
-	
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_SET);
-};
-
-
 // 扫频
 void FREQ_Scan(void)
 {
@@ -127,7 +88,6 @@ void DR_Scan(void)
 		for (; drv_PWM_DR <= DR_MAX; drv_PWM_DR += DR_STEP)
 				HAL_Delay(10000);  // 等待系统稳定（振动建立）
 }
-/***************************************************************************************/
 
 
 
@@ -290,8 +250,15 @@ int main(void)
   MX_SPI2_Init();
   MX_USART1_UART_Init();
   MX_TIM2_Init();
+	DRV8833_Init(&drv1,
+               GPIOA, GPIO_PIN_0,
+               GPIOA, GPIO_PIN_1,
+               GPIOA, GPIO_PIN_3,
+               GPIOA, GPIO_PIN_2,
+               GPIOB, GPIO_PIN_1,
+               NULL,0);
   /* USER CODE BEGIN 2 */
-	DRV_Wake();	                                             // DRV8833 唤醒
+	DRV_Wake(&drv1);	                                       // DRV8833 唤醒
 	HAL_TIM_Base_Start_IT(&htim2);                           // 定时器制作 DRV8833 驱动波形
 	HAL_NVIC_EnableIRQ(EXTI0_IRQn);                          // DRV8833 报错开启
 	HAL_NVIC_SetPriority(EXTI0_IRQn, 1, 0);                  // DRV8833 报错优先级设定
@@ -317,19 +284,19 @@ int main(void)
 				drv_PWM_CNT = 100000/drv_PWM_FREQ;
 			
 
-				uint8_t status = ldc1101_readByte(&ldc1, _LDC1101_REG_LHR_STATUS);
+//				uint8_t status = ldc1101_readByte(&ldc1, _LDC1101_REG_LHR_STATUS);
 
-				// 判断 LHR_Data_Ready == 0，表示有新数据
-				if ((status & 0x01) == 0)
-				{
-						uint32_t lhr_data = ldc1101_getLHRData(&ldc1);
+//				// 判断 LHR_Data_Ready == 0，表示有新数据
+//				if ((status & 0x01) == 0)
+//				{
+//						uint32_t lhr_data = ldc1101_getLHRData(&ldc1);
 
-						// 输出 LHR 数据（十进制 + 十六进制）
-						sprintf(TX_BUFFER, "LHR: %lu (0x%08lX)\r\n", lhr_data, lhr_data);
-						HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-				}
+//						// 输出 LHR 数据（十进制 + 十六进制）
+//						sprintf(TX_BUFFER, "LHR: %lu (0x%08lX)\r\n", lhr_data, lhr_data);
+//						HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+//				}
 
-				HAL_Delay(100); 
+//				HAL_Delay(100); 
 
 		
 		

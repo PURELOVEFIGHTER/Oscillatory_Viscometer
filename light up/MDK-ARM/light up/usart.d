@@ -33,6 +33,5 @@ light up\usart.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\string.h
 light up\usart.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdlib.h
 light up\usart.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdio.h
 light up\usart.o: ../Core/Inc/__ldc1101_driver.h
-light up\usart.o: ../Core/Inc/spi.h
-light up\usart.o: ../Core/Inc/main.h
 light up\usart.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdbool.h
+light up\usart.o: ../Core/Inc/drv8833_driver.h

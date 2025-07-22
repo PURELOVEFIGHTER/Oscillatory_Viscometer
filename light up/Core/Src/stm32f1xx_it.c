@@ -18,10 +18,11 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 #include "stm32f1xx_it.h"
+#include "main.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -220,17 +221,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	 if(GPIO_Pin == GPIO_PIN_0)
 	 {
-//			uint16_t rp_data = ldc1101_getRPData(&ldc2);
-//			uint16_t l_data = ldc1101_getLData(&ldc2);
-//		
-//			sprintf(TX_BUFFER, "RP: %u, L: %u\r\n", rp_data, l_data);
-//			HAL_UART_Transmit(&huart1, (uint8_t *)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-		 
-		 
-//				uint32_t lhr_data = ldc1101_getLHRData(&ldc2);
 
-//				sprintf(TX_BUFFER, "LHR: %lu\r\n", lhr_data);
-//				HAL_UART_Transmit(&huart1, (uint8_t *)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
 	 }
 }
 
@@ -246,17 +237,17 @@ void TIM2_IRQHandler(void)
 		// 方向控制波形
 		static uint32_t tim2_cnt_drv;
 		if(tim2_cnt_drv < ((uint32_t)drv_PWM_CNT * drv_PWM_DR / 100))
-				DRV_Forward();
+				DRV_Forward(&(drv1.channel_A));
 		else if (tim2_cnt_drv < ((uint32_t)drv_PWM_CNT))
-				DRV_Reverse();
+				DRV_Reverse(&(drv1.channel_A));
 		else
 		{
 				tim2_cnt_drv = 0;
-				DRV_Forward();
+				DRV_Forward(&(drv1.channel_A));
 		}
 		tim2_cnt_drv++;
 		
-		static uint32_t tim2_cnt_ldc;
+//		static uint32_t tim2_cnt_ldc;
 
   /* USER CODE END TIM2_IRQn 0 */
 		HAL_TIM_IRQHandler(&htim2);

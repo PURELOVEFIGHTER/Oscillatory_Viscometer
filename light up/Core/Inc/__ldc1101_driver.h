@@ -1,27 +1,24 @@
 #ifndef __LDC1101_DRIVER_H
 #define __LDC1101_DRIVER_H
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include "stdint.h"
 #include "stm32f1xx_hal.h"
-#include "spi.h"
+
 
 #define DEVICE_ERROR  0x01
-#define DEVICE_OK  0x00
+#define DEVICE_OK     0x00
 
+// 优先使用前向依赖，尽量避免包含 main.h 这种大杂烩文件
+typedef struct __SPI_HandleTypeDef SPI_HandleTypeDef;
 typedef struct {
-    SPI_HandleTypeDef *hspi;    // SPI句柄
-    GPIO_TypeDef *cs_port;      // CS引脚端口
-    uint16_t cs_pin;            // CS引脚号
+    SPI_HandleTypeDef  *hspi;  
+    GPIO_TypeDef  *cs_port; 
+    uint16_t  cs_pin;
 } LDC1101_Device;
-
-extern LDC1101_Device ldc1;
-extern LDC1101_Device ldc2;
-
 
 /* Register */
 extern const uint8_t _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE;

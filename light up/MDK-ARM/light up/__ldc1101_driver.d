@@ -28,10 +28,3 @@ light up\__ldc1101_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_s
 light up\__ldc1101_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 light up\__ldc1101_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 light up\__ldc1101_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
-light up\__ldc1101_driver.o: ../Core/Inc/spi.h
-light up\__ldc1101_driver.o: ../Core/Inc/main.h
-light up\__ldc1101_driver.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\string.h
-light up\__ldc1101_driver.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdlib.h
-light up\__ldc1101_driver.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdio.h
-light up\__ldc1101_driver.o: ../Core/Inc/__ldc1101_driver.h
-light up\__ldc1101_driver.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdbool.h
