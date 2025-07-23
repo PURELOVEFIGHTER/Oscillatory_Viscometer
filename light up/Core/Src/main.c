@@ -49,8 +49,8 @@
 
 // DRV8833相关变量
 DRV8833_HandleTypeDef drv1;
-volatile uint8_t drv_FAULT = 0 ;
-uint16_t drv_PWM_FREQ = 250;
+
+uint16_t drv_PWM_FREQ = 100;
 uint16_t drv_PWM_DR = 30;
 uint16_t drv_PWM_CNT ;
 
@@ -68,7 +68,6 @@ LDC1101_Device ldc2 = { &hspi2, GPIOB, GPIO_PIN_12 };
 uint16_t RP_DATA = 0;
 uint16_t L_DATA = 0;
 uint32_t LHR_DATA = 0;
-bool isLHR = 0;
 
 /* USER CODE END PV */
 
@@ -94,11 +93,6 @@ void DR_Scan(void)
 
 void Command_Parse(void)
 {
-		if(strncmp(RX_BUFFER, "RESET", 5) == 0 || strncmp(RX_BUFFER, "Reset", 5) == 0)
-		{
-				__disable_irq();           // 关闭中断（可选）
-				NVIC_SystemReset();        // 触发系统复位
-		}
 		// 简单协议,例:输入 "DR:80" 设置占空比为 80，"FR:1000" 设置频率为 1000Hz
 		if (strncmp(RX_BUFFER, "DR:", 3) == 0)
 		{
@@ -264,7 +258,7 @@ int main(void)
 	HAL_NVIC_SetPriority(EXTI0_IRQn, 1, 0);                  // DRV8833 报错优先级设定
 	
 	HAL_UART_Receive_IT(&huart1, (uint8_t*)&RX_BYTE, 1);     // 串口通讯开启
-	if(ldc1101_init(&ldc1)||ldc1101_init(&ldc2))             // LDC1101 初始化
+	if(ldc1101_init(&ldc1,_LDC1101_RP_SET_RP_MIN_0_75KOhm)||ldc1101_init(&ldc2,_LDC1101_RP_SET_RP_MIN_1_5KOhm))             // LDC1101 初始化
 	{
 			sprintf(TX_BUFFER, "LDC1101 Initialize Failed.\r\n");
 			HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
@@ -282,21 +276,22 @@ int main(void)
   while (1)
   {
 				drv_PWM_CNT = 100000/drv_PWM_FREQ;
+				HAL_Delay(100);
 			
 
-//				uint8_t status = ldc1101_readByte(&ldc1, _LDC1101_REG_LHR_STATUS);
+				uint8_t status = ldc1101_readByte(&ldc1, _LDC1101_REG_LHR_STATUS);
 
-//				// 判断 LHR_Data_Ready == 0，表示有新数据
-//				if ((status & 0x01) == 0)
-//				{
-//						uint32_t lhr_data = ldc1101_getLHRData(&ldc1);
+				// 判断 LHR_Data_Ready == 0，表示有新数据
+				if ((status & 0x01) == 0)
+				{
+						uint32_t lhr_data = ldc1101_getLHRData(&ldc2);
 
-//						// 输出 LHR 数据（十进制 + 十六进制）
-//						sprintf(TX_BUFFER, "LHR: %lu (0x%08lX)\r\n", lhr_data, lhr_data);
-//						HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-//				}
+						// 输出 LHR 数据（十进制 + 十六进制）
+						sprintf(TX_BUFFER, "LHR: %lu (0x%08lX)\r\n", lhr_data, lhr_data);
+						HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+				}
 
-//				HAL_Delay(100); 
+				HAL_Delay(100); 
 
 		
 		
@@ -316,38 +311,15 @@ int main(void)
 
 //				if ((status & (1 << 6)) == 0)  // 第6位为0，表示有新数据
 //				{
-//						uint16_t rp_data = ldc1101_getRPData(&ldc1);
-//						uint16_t l_data = ldc1101_getLData(&ldc1);
+//						uint16_t rp_data = ldc1101_getRPData(&ldc2);
+//						uint16_t l_data = ldc1101_getLData(&ldc2);
 
-//						sprintf(TX_BUFFER, "RP: %u, L: %u\r\n", rp_data, l_data);
+////						sprintf(TX_BUFFER, "RP: %u, L: %u\r\n", rp_data, l_data);
+//						sprintf(TX_BUFFER, "%u\r\n", rp_data);
 //						HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
 //				}
 //				
 //				HAL_Delay(100);
-			
-		
-		
-		
-//			if(isLHR == 0)
-//		  {
-//		      ldc1101_goTo_RPmode(&ldc2);
-//		
-//					HAL_Delay(1000);
-//					
-//					ldc1101_goTo_Lmode(&ldc2);
-
-//					isLHR = 1;
-//			}
-//			else
-//			{
-//				  uint32_t lhr_data = ldc1101_getLHRData(&ldc2);
-
-//					// 打印 LHR 数据（十进制）
-//					sprintf(TX_BUFFER, "LHR: %lu\r\n", lhr_data);
-//					HAL_UART_Transmit(&huart1, (uint8_t *)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-//				  
-//					HAL_Delay(100);
-//			}
 	 }
     /* USER CODE END WHILE */
 

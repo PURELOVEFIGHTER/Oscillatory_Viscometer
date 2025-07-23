@@ -35,7 +35,6 @@ extern "C" {
 #include "stdlib.h"
 #include "stdio.h"
 #include "__ldc1101_driver.h"
-#include "stdbool.h"
 #include "drv8833_driver.h"
 /* USER CODE END Includes */
 
@@ -86,7 +85,6 @@ extern uint16_t drv_PWM_DR;    // PWMÕ¼¿Õ±È
 /************************************************************************************/
 
 /**************************************LDC1101**************************************/
-extern bool isLHR;
 extern LDC1101_Device ldc1;
 extern LDC1101_Device ldc2;
 /************************************************************************************/

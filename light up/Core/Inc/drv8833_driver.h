@@ -29,6 +29,8 @@ typedef struct {
 
 } DRV8833_HandleTypeDef;
 
+extern volatile uint8_t drv_FAULT;
+
 void DRV8833_Init(DRV8833_HandleTypeDef *hdrv,
                   GPIO_TypeDef *AIN1_Port, uint16_t AIN1_Pin,
                   GPIO_TypeDef *AIN2_Port, uint16_t AIN2_Pin,

@@ -1,5 +1,7 @@
 #include "drv8833_driver.h"
 
+volatile uint8_t drv_FAULT = 0 ;
+
 void DRV8833_Init(DRV8833_HandleTypeDef *hdrv,
                   GPIO_TypeDef *AIN1_Port, uint16_t AIN1_Pin,
                   GPIO_TypeDef *AIN2_Port, uint16_t AIN2_Pin,

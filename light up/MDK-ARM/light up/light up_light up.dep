@@ -1,8 +1,8 @@
 Dependencies for Project 'light up', Target 'light up': (DO NOT MODIFY !)
 CompilerVersion: 5060750::V5.06 update 6 (build 750)::ARMCC
 F (startup_stm32f103xb.s)(0x686F8F5A)(--cpu Cortex-M3 -g --apcs=interwork -I.\RTE\_light_up-ID:\Keil528a\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\Keil528a\Keil\STM32F1xx_DFP\2.1.0\Device\Include--pd "__UVISION_VERSION SETA 542" --pd "STM32F10X_MD SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f103xb.lst --xref -o "light up\startup_stm32f103xb.o" --depend "light up\startup_stm32f103xb.d")
-F (..\Core\Src\drv8833_driver.c)(0x687FC5BC)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM-I.\RTE\_light_up-ID:\Keil528a\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\Keil528a\Keil\STM32F1xx_DFP\2.1.0\Device\Include-D__UVISION_VERSION="542" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o "light up\drv8833_driver.o" --omf_browse "light up\drv8833_driver.crf" --depend "light up\drv8833_driver.d")
-I (../Core/Inc/drv8833_driver.h)(0x687FBC7C)
+F (..\Core\Src\drv8833_driver.c)(0x68809B27)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM-I.\RTE\_light_up-ID:\Keil528a\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\Keil528a\Keil\STM32F1xx_DFP\2.1.0\Device\Include-D__UVISION_VERSION="542" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o "light up\drv8833_driver.o" --omf_browse "light up\drv8833_driver.crf" --depend "light up\drv8833_driver.d")
+I (../Core/Inc/drv8833_driver.h)(0x68809B27)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x67F3C431)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x68494F0C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x67F3C431)
@@ -30,9 +30,8 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x67F3C431)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x67F3C431)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x67F3C431)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x67F3C431)
-F (..\Core\Src\__ldc1101_driver.c)(0x687FC5E6)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM-I.\RTE\_light_up-ID:\Keil528a\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\Keil528a\Keil\STM32F1xx_DFP\2.1.0\Device\Include-D__UVISION_VERSION="542" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o "light up\__ldc1101_driver.o" --omf_browse "light up\__ldc1101_driver.crf" --depend "light up\__ldc1101_driver.d")
-I (../Core/Inc/__ldc1101_driver.h)(0x687FC85E)
-I (D:\Keil528a\ARM\ARMCC\include\stdint.h)(0x5CEB79E2)
+F (..\Core\Src\__ldc1101_driver.c)(0x6880CB5C)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM-I.\RTE\_light_up-ID:\Keil528a\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\Keil528a\Keil\STM32F1xx_DFP\2.1.0\Device\Include-D__UVISION_VERSION="542" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o "light up\__ldc1101_driver.o" --omf_browse "light up\__ldc1101_driver.crf" --depend "light up\__ldc1101_driver.d")
+I (../Core/Inc/__ldc1101_driver.h)(0x6880CB5C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x67F3C431)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x68494F0C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x67F3C431)
@@ -40,6 +39,7 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h)(0x67F3C431)
 I (../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h)(0x67F3C42E)
 I (../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h)(0x67F3C42E)
 I (../Drivers/CMSIS/Include/core_cm3.h)(0x67F3C431)
+I (D:\Keil528a\ARM\ARMCC\include\stdint.h)(0x5CEB79E2)
 I (../Drivers/CMSIS/Include/cmsis_version.h)(0x67F3C431)
 I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x67F3C431)
 I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x67F3C431)
@@ -59,8 +59,9 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x67F3C431)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x67F3C431)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x67F3C431)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x67F3C431)
-F (../Core/Src/main.c)(0x687FC5E6)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM-I.\RTE\_light_up-ID:\Keil528a\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\Keil528a\Keil\STM32F1xx_DFP\2.1.0\Device\Include-D__UVISION_VERSION="542" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o "light up\main.o" --omf_browse "light up\main.crf" --depend "light up\main.d")
-I (../Core/Inc/main.h)(0x687FC5E6)
+I (D:\Keil528a\ARM\ARMCC\include\stdbool.h)(0x5CEB79DE)
+F (../Core/Src/main.c)(0x6880CC50)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM-I.\RTE\_light_up-ID:\Keil528a\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\Keil528a\Keil\STM32F1xx_DFP\2.1.0\Device\Include-D__UVISION_VERSION="542" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o "light up\main.o" --omf_browse "light up\main.crf" --depend "light up\main.d")
+I (../Core/Inc/main.h)(0x68809A31)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x67F3C431)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x68494F0C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x67F3C431)
@@ -91,16 +92,16 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x67F3C431)
 I (D:\Keil528a\ARM\ARMCC\include\string.h)(0x5CEB79E2)
 I (D:\Keil528a\ARM\ARMCC\include\stdlib.h)(0x5CEB79E2)
 I (D:\Keil528a\ARM\ARMCC\include\stdio.h)(0x5CEB79E2)
-I (../Core/Inc/__ldc1101_driver.h)(0x687FC85E)
+I (../Core/Inc/__ldc1101_driver.h)(0x6880CB5C)
 I (D:\Keil528a\ARM\ARMCC\include\stdbool.h)(0x5CEB79DE)
-I (../Core/Inc/drv8833_driver.h)(0x687FBC7C)
+I (../Core/Inc/drv8833_driver.h)(0x68809B27)
 I (../Core/Inc/spi.h)(0x682DDBC5)
 I (../Core/Inc/tim.h)(0x686E2C81)
 I (../Core/Inc/usart.h)(0x682DDBC5)
 I (../Core/Inc/gpio.h)(0x682DDBC5)
 F (../Core/Src/gpio.c)(0x68739E37)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM-I.\RTE\_light_up-ID:\Keil528a\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\Keil528a\Keil\STM32F1xx_DFP\2.1.0\Device\Include-D__UVISION_VERSION="542" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o "light up\gpio.o" --omf_browse "light up\gpio.crf" --depend "light up\gpio.d")
 I (../Core/Inc/gpio.h)(0x682DDBC5)
-I (../Core/Inc/main.h)(0x687FC5E6)
+I (../Core/Inc/main.h)(0x68809A31)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x67F3C431)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x68494F0C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x67F3C431)
@@ -131,12 +132,12 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x67F3C431)
 I (D:\Keil528a\ARM\ARMCC\include\string.h)(0x5CEB79E2)
 I (D:\Keil528a\ARM\ARMCC\include\stdlib.h)(0x5CEB79E2)
 I (D:\Keil528a\ARM\ARMCC\include\stdio.h)(0x5CEB79E2)
-I (../Core/Inc/__ldc1101_driver.h)(0x687FC85E)
+I (../Core/Inc/__ldc1101_driver.h)(0x6880CB5C)
 I (D:\Keil528a\ARM\ARMCC\include\stdbool.h)(0x5CEB79DE)
-I (../Core/Inc/drv8833_driver.h)(0x687FBC7C)
+I (../Core/Inc/drv8833_driver.h)(0x68809B27)
 F (../Core/Src/spi.c)(0x68739E37)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM-I.\RTE\_light_up-ID:\Keil528a\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\Keil528a\Keil\STM32F1xx_DFP\2.1.0\Device\Include-D__UVISION_VERSION="542" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o "light up\spi.o" --omf_browse "light up\spi.crf" --depend "light up\spi.d")
 I (../Core/Inc/spi.h)(0x682DDBC5)
-I (../Core/Inc/main.h)(0x687FC5E6)
+I (../Core/Inc/main.h)(0x68809A31)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x67F3C431)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x68494F0C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x67F3C431)
@@ -167,12 +168,12 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x67F3C431)
 I (D:\Keil528a\ARM\ARMCC\include\string.h)(0x5CEB79E2)
 I (D:\Keil528a\ARM\ARMCC\include\stdlib.h)(0x5CEB79E2)
 I (D:\Keil528a\ARM\ARMCC\include\stdio.h)(0x5CEB79E2)
-I (../Core/Inc/__ldc1101_driver.h)(0x687FC85E)
+I (../Core/Inc/__ldc1101_driver.h)(0x6880CB5C)
 I (D:\Keil528a\ARM\ARMCC\include\stdbool.h)(0x5CEB79DE)
-I (../Core/Inc/drv8833_driver.h)(0x687FBC7C)
+I (../Core/Inc/drv8833_driver.h)(0x68809B27)
 F (../Core/Src/tim.c)(0x68739E37)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM-I.\RTE\_light_up-ID:\Keil528a\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\Keil528a\Keil\STM32F1xx_DFP\2.1.0\Device\Include-D__UVISION_VERSION="542" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o "light up\tim.o" --omf_browse "light up\tim.crf" --depend "light up\tim.d")
 I (../Core/Inc/tim.h)(0x686E2C81)
-I (../Core/Inc/main.h)(0x687FC5E6)
+I (../Core/Inc/main.h)(0x68809A31)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x67F3C431)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x68494F0C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x67F3C431)
@@ -203,12 +204,12 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x67F3C431)
 I (D:\Keil528a\ARM\ARMCC\include\string.h)(0x5CEB79E2)
 I (D:\Keil528a\ARM\ARMCC\include\stdlib.h)(0x5CEB79E2)
 I (D:\Keil528a\ARM\ARMCC\include\stdio.h)(0x5CEB79E2)
-I (../Core/Inc/__ldc1101_driver.h)(0x687FC85E)
+I (../Core/Inc/__ldc1101_driver.h)(0x6880CB5C)
 I (D:\Keil528a\ARM\ARMCC\include\stdbool.h)(0x5CEB79DE)
-I (../Core/Inc/drv8833_driver.h)(0x687FBC7C)
+I (../Core/Inc/drv8833_driver.h)(0x68809B27)
 F (../Core/Src/usart.c)(0x68739E37)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM-I.\RTE\_light_up-ID:\Keil528a\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\Keil528a\Keil\STM32F1xx_DFP\2.1.0\Device\Include-D__UVISION_VERSION="542" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o "light up\usart.o" --omf_browse "light up\usart.crf" --depend "light up\usart.d")
 I (../Core/Inc/usart.h)(0x682DDBC5)
-I (../Core/Inc/main.h)(0x687FC5E6)
+I (../Core/Inc/main.h)(0x68809A31)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x67F3C431)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x68494F0C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x67F3C431)
@@ -239,13 +240,12 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x67F3C431)
 I (D:\Keil528a\ARM\ARMCC\include\string.h)(0x5CEB79E2)
 I (D:\Keil528a\ARM\ARMCC\include\stdlib.h)(0x5CEB79E2)
 I (D:\Keil528a\ARM\ARMCC\include\stdio.h)(0x5CEB79E2)
-I (../Core/Inc/__ldc1101_driver.h)(0x687FC85E)
+I (../Core/Inc/__ldc1101_driver.h)(0x6880CB5C)
 I (D:\Keil528a\ARM\ARMCC\include\stdbool.h)(0x5CEB79DE)
-I (../Core/Inc/drv8833_driver.h)(0x687FBC7C)
-F (../Core/Src/stm32f1xx_it.c)(0x687FC8E3)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM-I.\RTE\_light_up-ID:\Keil528a\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\Keil528a\Keil\STM32F1xx_DFP\2.1.0\Device\Include-D__UVISION_VERSION="542" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o "light up\stm32f1xx_it.o" --omf_browse "light up\stm32f1xx_it.crf" --depend "light up\stm32f1xx_it.d")
+I (../Core/Inc/drv8833_driver.h)(0x68809B27)
+F (../Core/Src/stm32f1xx_it.c)(0x687FC948)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM-I.\RTE\_light_up-ID:\Keil528a\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\Keil528a\Keil\STM32F1xx_DFP\2.1.0\Device\Include-D__UVISION_VERSION="542" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o "light up\stm32f1xx_it.o" --omf_browse "light up\stm32f1xx_it.crf" --depend "light up\stm32f1xx_it.d")
 I (../Core/Inc/stm32f1xx_it.h)(0x68739E37)
-I (../Core/Inc/spi.h)(0x682DDBC5)
-I (../Core/Inc/main.h)(0x687FC5E6)
+I (../Core/Inc/main.h)(0x68809A31)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x67F3C431)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x68494F0C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x67F3C431)
@@ -276,12 +276,11 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x67F3C431)
 I (D:\Keil528a\ARM\ARMCC\include\string.h)(0x5CEB79E2)
 I (D:\Keil528a\ARM\ARMCC\include\stdlib.h)(0x5CEB79E2)
 I (D:\Keil528a\ARM\ARMCC\include\stdio.h)(0x5CEB79E2)
-I (../Core/Inc/__ldc1101_driver.h)(0x687FC85E)
+I (../Core/Inc/__ldc1101_driver.h)(0x6880CB5C)
 I (D:\Keil528a\ARM\ARMCC\include\stdbool.h)(0x5CEB79DE)
-I (../Core/Inc/drv8833_driver.h)(0x687FBC7C)
-I (../Core/Inc/usart.h)(0x682DDBC5)
+I (../Core/Inc/drv8833_driver.h)(0x68809B27)
 F (../Core/Src/stm32f1xx_hal_msp.c)(0x682DDBC6)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM-I.\RTE\_light_up-ID:\Keil528a\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\Keil528a\Keil\STM32F1xx_DFP\2.1.0\Device\Include-D__UVISION_VERSION="542" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o "light up\stm32f1xx_hal_msp.o" --omf_browse "light up\stm32f1xx_hal_msp.crf" --depend "light up\stm32f1xx_hal_msp.d")
-I (../Core/Inc/main.h)(0x687FC5E6)
+I (../Core/Inc/main.h)(0x68809A31)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x67F3C431)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x68494F0C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x67F3C431)
@@ -312,9 +311,9 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x67F3C431)
 I (D:\Keil528a\ARM\ARMCC\include\string.h)(0x5CEB79E2)
 I (D:\Keil528a\ARM\ARMCC\include\stdlib.h)(0x5CEB79E2)
 I (D:\Keil528a\ARM\ARMCC\include\stdio.h)(0x5CEB79E2)
-I (../Core/Inc/__ldc1101_driver.h)(0x687FC85E)
+I (../Core/Inc/__ldc1101_driver.h)(0x6880CB5C)
 I (D:\Keil528a\ARM\ARMCC\include\stdbool.h)(0x5CEB79DE)
-I (../Core/Inc/drv8833_driver.h)(0x687FBC7C)
+I (../Core/Inc/drv8833_driver.h)(0x68809B27)
 F (../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c)(0x67F3C431)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../MDK-ARM-I.\RTE\_light_up-ID:\Keil528a\ARM\CMSIS\6.1.0\CMSIS\Core\Include-ID:\Keil528a\Keil\STM32F1xx_DFP\2.1.0\Device\Include-D__UVISION_VERSION="542" -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o "light up\stm32f1xx_hal_gpio_ex.o" --omf_browse "light up\stm32f1xx_hal_gpio_ex.crf" --depend "light up\stm32f1xx_hal_gpio_ex.d")
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x67F3C431)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x68494F0C)
