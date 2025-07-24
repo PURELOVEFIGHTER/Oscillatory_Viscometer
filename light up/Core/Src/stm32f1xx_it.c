@@ -18,8 +18,8 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f1xx_it.h"
 #include "main.h"
+#include "stm32f1xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -216,18 +216,6 @@ void EXTI0_IRQHandler(void)
   /* USER CODE END EXTI0_IRQn 1 */
 }
 
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-	 if(GPIO_Pin == GPIO_PIN_0)
-	 {
-
-	 }
-}
-
-
-
-
 /**
   * @brief This function handles TIM2 global interrupt.
   */
@@ -250,7 +238,7 @@ void TIM2_IRQHandler(void)
 //		static uint32_t tim2_cnt_ldc;
 
   /* USER CODE END TIM2_IRQn 0 */
-		HAL_TIM_IRQHandler(&htim2);
+  HAL_TIM_IRQHandler(&htim2);
   /* USER CODE BEGIN TIM2_IRQn 1 */
 
   /* USER CODE END TIM2_IRQn 1 */

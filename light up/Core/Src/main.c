@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "i2c.h"
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
@@ -244,14 +245,15 @@ int main(void)
   MX_SPI2_Init();
   MX_USART1_UART_Init();
   MX_TIM2_Init();
-	DRV8833_Init(&drv1,
-               GPIOA, GPIO_PIN_0,
-               GPIOA, GPIO_PIN_1,
-               GPIOA, GPIO_PIN_3,
-               GPIOA, GPIO_PIN_2,
-               GPIOB, GPIO_PIN_1,
-               NULL,0);
+  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
+	DRV8833_Init(&drv1,
+						 GPIOA, GPIO_PIN_0,
+						 GPIOA, GPIO_PIN_1,
+						 GPIOA, GPIO_PIN_3,
+						 GPIOA, GPIO_PIN_2,
+						 GPIOB, GPIO_PIN_1,
+						 NULL,0);
 	DRV_Wake(&drv1);	                                       // DRV8833 唤醒
 	HAL_TIM_Base_Start_IT(&htim2);                           // 定时器制作 DRV8833 驱动波形
 	HAL_NVIC_EnableIRQ(EXTI0_IRQn);                          // DRV8833 报错开启
@@ -326,7 +328,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-    /* USER CODE END 3 */
+  /* USER CODE END 3 */
 }
 
 /**

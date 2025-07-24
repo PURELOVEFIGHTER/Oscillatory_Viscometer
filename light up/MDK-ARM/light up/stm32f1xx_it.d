@@ -1,5 +1,4 @@
 light up\stm32f1xx_it.o: ../Core/Src/stm32f1xx_it.c
-light up\stm32f1xx_it.o: ../Core/Inc/stm32f1xx_it.h
 light up\stm32f1xx_it.o: ../Core/Inc/main.h
 light up\stm32f1xx_it.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
 light up\stm32f1xx_it.o: ../Core/Inc/stm32f1xx_hal_conf.h
@@ -24,6 +23,7 @@ light up\stm32f1xx_it.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma_e
 light up\stm32f1xx_it.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_cortex.h
 light up\stm32f1xx_it.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash.h
 light up\stm32f1xx_it.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h
+light up\stm32f1xx_it.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h
 light up\stm32f1xx_it.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h
 light up\stm32f1xx_it.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h
 light up\stm32f1xx_it.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
@@ -35,3 +35,4 @@ light up\stm32f1xx_it.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdio.h
 light up\stm32f1xx_it.o: ../Core/Inc/__ldc1101_driver.h
 light up\stm32f1xx_it.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdbool.h
 light up\stm32f1xx_it.o: ../Core/Inc/drv8833_driver.h
+light up\stm32f1xx_it.o: ../Core/Inc/stm32f1xx_it.h

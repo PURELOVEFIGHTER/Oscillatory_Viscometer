@@ -23,6 +23,7 @@ light up\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma_ex.h
 light up\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_cortex.h
 light up\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash.h
 light up\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h
+light up\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h
 light up\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h
 light up\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h
 light up\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
@@ -34,6 +35,7 @@ light up\main.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdio.h
 light up\main.o: ../Core/Inc/__ldc1101_driver.h
 light up\main.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdbool.h
 light up\main.o: ../Core/Inc/drv8833_driver.h
+light up\main.o: ../Core/Inc/i2c.h
 light up\main.o: ../Core/Inc/spi.h
 light up\main.o: ../Core/Inc/tim.h
 light up\main.o: ../Core/Inc/usart.h

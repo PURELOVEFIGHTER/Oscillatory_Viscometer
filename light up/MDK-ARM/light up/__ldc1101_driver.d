@@ -23,6 +23,7 @@ light up\__ldc1101_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_d
 light up\__ldc1101_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_cortex.h
 light up\__ldc1101_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash.h
 light up\__ldc1101_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h
+light up\__ldc1101_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h
 light up\__ldc1101_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h
 light up\__ldc1101_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h
 light up\__ldc1101_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
