@@ -18,79 +18,81 @@
 /**
  * Register Addresses
  */
-const uint8_t _REG_ADRS[32] = { 
-		0x01, // - REG_RP_SET
-		0x02, // - REG_TC1
-		0x03, // - REG_TC2
-		0x04, // - REG_DIG_CONFIG
-		0x05, // - REG_ALT_CONFIG
-		0x06, // - REG_RP_THRESH_H_LSB
-		0x07, // - REG_RP_THRESH_H_MSB
-		0x08, // - REG_RP_THRESH_L_LSB
-		0x09, // - REG_RP_THRESH_L_MSB
-		0x0a, // - REG_INTB_MODE
-		0x0b, // - REG_START_CONFIG
-		0x0c, // - REG_D_CONF
-		0x16, // - REG_L_THRESH_HI_LSB
-		0x17, // - REG_L_THRESH_HI_MSB
-		0x18, // - REG_L_THRESH_LO_LSB
-		0x19, // - REG_L_THRESH_LO_MSB
-		0x20, // - REG_STATUS
-		0x21, // - REG_RP_DATA_LSB - R
-		0x22, // - REG_RP_DATA_MSB - R
-		0x23, // - REG_L_DATA_LSB - R
-		0x24, // - REG_L_DATA_MSB - R
-		0x30, // - REG_LHR_RCOUNT_LSB
-		0x31, // - REG_LHR_RCOUNT_MSB
-		0x32, // - REG_LHR_OFFSET_LSB
-		0x33, // - REG_LHR_OFFSET_MSB
-		0x34, // - REG_LHR_CONFIG
-		0x38, // - REG_LHR_DATA_LSB - R
-		0x39, // - REG_LHR_DATA_MID - R
-		0x3a, // - REG_LHR_DATA_MSB - R
-		0x3b, // - REG_LHR_STATUS - R
-		0x3e, // - REG_RID - R
-		0x3f  // - REG_CHIP_ID - R
-		};
+const uint8_t _REG_ADRS[32] =
+{
+    0x01, // - REG_RP_SET
+    0x02, // - REG_TC1
+    0x03, // - REG_TC2
+    0x04, // - REG_DIG_CONFIG
+    0x05, // - REG_ALT_CONFIG
+    0x06, // - REG_RP_THRESH_H_LSB
+    0x07, // - REG_RP_THRESH_H_MSB
+    0x08, // - REG_RP_THRESH_L_LSB
+    0x09, // - REG_RP_THRESH_L_MSB
+    0x0a, // - REG_INTB_MODE
+    0x0b, // - REG_START_CONFIG
+    0x0c, // - REG_D_CONF
+    0x16, // - REG_L_THRESH_HI_LSB
+    0x17, // - REG_L_THRESH_HI_MSB
+    0x18, // - REG_L_THRESH_LO_LSB
+    0x19, // - REG_L_THRESH_LO_MSB
+    0x20, // - REG_STATUS
+    0x21, // - REG_RP_DATA_LSB - R
+    0x22, // - REG_RP_DATA_MSB - R
+    0x23, // - REG_L_DATA_LSB - R
+    0x24, // - REG_L_DATA_MSB - R
+    0x30, // - REG_LHR_RCOUNT_LSB
+    0x31, // - REG_LHR_RCOUNT_MSB
+    0x32, // - REG_LHR_OFFSET_LSB
+    0x33, // - REG_LHR_OFFSET_MSB
+    0x34, // - REG_LHR_CONFIG
+    0x38, // - REG_LHR_DATA_LSB - R
+    0x39, // - REG_LHR_DATA_MID - R
+    0x3a, // - REG_LHR_DATA_MSB - R
+    0x3b, // - REG_LHR_STATUS - R
+    0x3e, // - REG_RID - R
+    0x3f  // - REG_CHIP_ID - R
+};
 
 /**
  * Default data on startup
  * used for restoration
  */
-const uint8_t _REG_DEFAULT_VALS[32] = { 
-		0x07,	// REG_RP_SET
-		0x90,	// REG_TC1
-		0xa0,	// REG_TC2
-		0x03,	// REG_DIG_CONFIG
-		0x00,	// REG_ALT_CONFIG
-		0x00,	// REG_RP_THRESH_H_LSB
-		0x00,	// REG_RP_THRESH_H_MSB
-		0x00,	// REG_RP_THRESH_L_LSB
-		0x00,	// REG_RP_THRESH_L_MSB
-		0x00,	// REG_INTB_MODE
-		0x01,	// REG_START_CONFIG
-		0x00,	// REG_D_CONF
-		0x00,	// REG_L_THRESH_HI_LSB
-		0x00,	// REG_L_THRESH_HI_MSB
-		0x00,	// REG_L_THRESH_LO_LSB
-		0x00,	// REG_L_THRESH_LO_MSB
-		0x00,	// REG_STATUS
-		0x00,	// REG_RP_DATA_LSB - R
-		0x00,	// REG_RP_DATA_MSB - R
-		0x00,	// REG_L_DATA_LSB - R
-		0x00,	// REG_L_DATA_MSB - R
-		0x00,	// REG_LHR_RCOUNT_LSB
-		0x00,	// REG_LHR_RCOUNT_MSB
-		0x00,	// REG_LHR_OFFSET_LSB
-		0x00,	// REG_LHR_OFFSET_MSB
-		0x00,	// REG_LHR_CONFIG
-		0x00,	// REG_LHR_DATA_LSB - R
-		0x00,	// REG_LHR_DATA_MID - R
-		0x00,	// REG_LHR_DATA_MSB - R
-		0x00,	// REG_LHR_STATUS - R
-		0x02,	// REG_RID - R
-		0xd4,	// REG_CHIP_ID - R
-		};
+const uint8_t _REG_DEFAULT_VALS[32] =
+{
+    0x07,	// REG_RP_SET
+    0x90,	// REG_TC1
+    0xa0,	// REG_TC2
+    0x03,	// REG_DIG_CONFIG
+    0x00,	// REG_ALT_CONFIG
+    0x00,	// REG_RP_THRESH_H_LSB
+    0x00,	// REG_RP_THRESH_H_MSB
+    0x00,	// REG_RP_THRESH_L_LSB
+    0x00,	// REG_RP_THRESH_L_MSB
+    0x00,	// REG_INTB_MODE
+    0x01,	// REG_START_CONFIG
+    0x00,	// REG_D_CONF
+    0x00,	// REG_L_THRESH_HI_LSB
+    0x00,	// REG_L_THRESH_HI_MSB
+    0x00,	// REG_L_THRESH_LO_LSB
+    0x00,	// REG_L_THRESH_LO_MSB
+    0x00,	// REG_STATUS
+    0x00,	// REG_RP_DATA_LSB - R
+    0x00,	// REG_RP_DATA_MSB - R
+    0x00,	// REG_L_DATA_LSB - R
+    0x00,	// REG_L_DATA_MSB - R
+    0x00,	// REG_LHR_RCOUNT_LSB
+    0x00,	// REG_LHR_RCOUNT_MSB
+    0x00,	// REG_LHR_OFFSET_LSB
+    0x00,	// REG_LHR_OFFSET_MSB
+    0x00,	// REG_LHR_CONFIG
+    0x00,	// REG_LHR_DATA_LSB - R
+    0x00,	// REG_LHR_DATA_MID - R
+    0x00,	// REG_LHR_DATA_MSB - R
+    0x00,	// REG_LHR_STATUS - R
+    0x02,	// REG_RID - R
+    0xd4,	// REG_CHIP_ID - R
+};
 
 /************************************************
  *  ldc1101 HAL_SPI functions
@@ -108,9 +110,10 @@ const uint8_t _REG_DEFAULT_VALS[32] = {
  *            	@arg GPIO_PIN_SET: to set the port pin
  * @return 	None
  */
-void ldc1101_hal_write_cs(struct GPIO_PIN *pin, 
-													uint8_t value) {
-	HAL_GPIO_WritePin(pin->GPIOx, pin->GPIO_Pin, value);
+void ldc1101_hal_write_cs(struct GPIO_PIN *pin,
+                          uint8_t value)
+{
+    HAL_GPIO_WritePin(pin->GPIOx, pin->GPIO_Pin, value);
 }
 
 
@@ -122,8 +125,9 @@ void ldc1101_hal_write_cs(struct GPIO_PIN *pin,
   * @param  GPIO_Pin Specifies the pins to be toggled.
   * @return None
   */
-void ldc1101_hal_toggle_cs(struct GPIO_PIN *pin) {
-	HAL_GPIO_TogglePin(pin->GPIOx, pin->GPIO_Pin);
+void ldc1101_hal_toggle_cs(struct GPIO_PIN *pin)
+{
+    HAL_GPIO_TogglePin(pin->GPIOx, pin->GPIO_Pin);
 }
 
 /**
@@ -135,11 +139,12 @@ void ldc1101_hal_toggle_cs(struct GPIO_PIN *pin) {
  * @param  Timeout Timeout duration
  * @return HAL status
  */
-void ldc1101_hal_spi_transmit(SPI_HandleTypeDef *hspi, 
-															uint8_t *pData,
-															uint16_t Size, 
-															uint32_t Timeout) {
-	HAL_SPI_Transmit(hspi, pData, Size, Timeout);
+void ldc1101_hal_spi_transmit(SPI_HandleTypeDef *hspi,
+                              uint8_t *pData,
+                              uint16_t Size,
+                              uint32_t Timeout)
+{
+    HAL_SPI_Transmit(hspi, pData, Size, Timeout);
 }
 
 /**
@@ -150,14 +155,15 @@ void ldc1101_hal_spi_transmit(SPI_HandleTypeDef *hspi,
   * @param   pRxData     pointer to reception data buffer
   * @param   Size        amount of data to be sent and received
   * @param   Timeout     Timeout duration
-  * @return  HAL status 
+  * @return  HAL status
   */
-void ldc1101_hal_spi_transmit_receive(SPI_HandleTypeDef *hspi, 
-																			uint8_t *pTxData,
-																			uint8_t *pRxData, 
-																			uint16_t Size, 
-																			uint32_t Timeout) {
-	HAL_SPI_TransmitReceive(hspi, pTxData, pRxData, Size, Timeout);
+void ldc1101_hal_spi_transmit_receive(SPI_HandleTypeDef *hspi,
+                                      uint8_t *pTxData,
+                                      uint8_t *pRxData,
+                                      uint16_t Size,
+                                      uint32_t Timeout)
+{
+    HAL_SPI_TransmitReceive(hspi, pTxData, pRxData, Size, Timeout);
 }
 
 /************************************************
@@ -169,9 +175,10 @@ void ldc1101_hal_spi_transmit_receive(SPI_HandleTypeDef *hspi,
  * 				and bring it low
  * @param	void
  */
-void ldc1101_hal_deactivate_clkin(void) {
+void ldc1101_hal_deactivate_clkin(void)
+{
 
-	// unimplemented on stm32f44re
+    // unimplemented on stm32f44re
 
 }
 
@@ -180,9 +187,10 @@ void ldc1101_hal_deactivate_clkin(void) {
  * 				at a constant frequency
  * @param	void
  */
-void ldc1101_hal_activate_clkin(void) {
+void ldc1101_hal_activate_clkin(void)
+{
 
-	// unimplemented on stm32f44re
+    // unimplemented on stm32f44re
 
 }
 
@@ -201,11 +209,12 @@ void ldc1101_hal_activate_clkin(void) {
  * @param  Size  Amount of data elements (u8 or u16) to be sent
  * @param  Timeout Timeout duration
  */
-void ldc1101_hal_uart_transmit(UART_HandleTypeDef *huart, 
-															 uint8_t *pData,
-															 uint16_t Size, 
-															 uint32_t Timeout) {
-	HAL_UART_Transmit(huart, pData, Size, Timeout);
+void ldc1101_hal_uart_transmit(UART_HandleTypeDef *huart,
+                               uint8_t *pData,
+                               uint16_t Size,
+                               uint32_t Timeout)
+{
+    HAL_UART_Transmit(huart, pData, Size, Timeout);
 }
 
 /************************************************
@@ -219,13 +228,14 @@ void ldc1101_hal_uart_transmit(UART_HandleTypeDef *huart,
  * @param	ldc1101 pointer to an LDC1101 struct
  * @return	Void
  */
-void ldc1101_test_data_packet(struct LDC1101 *ldc1101) {
+void ldc1101_test_data_packet(struct LDC1101 *ldc1101)
+{
 
-	uint8_t pData;
+    uint8_t pData;
 
-	ldc1101_hal_spi_transmit(ldc1101->hspi, &pData, 1, 100);
+    ldc1101_hal_spi_transmit(ldc1101->hspi, &pData, 1, 100);
 
-	HAL_Delay(10);
+    HAL_Delay(10);
 }
 
 /**
@@ -236,17 +246,18 @@ void ldc1101_test_data_packet(struct LDC1101 *ldc1101) {
  * @param	data Data to be written
  * @return	void
  */
-void ldc1101_write_reg(struct LDC1101 *ldc1101, uint8_t reg, uint8_t data) {
+void ldc1101_write_reg(struct LDC1101 *ldc1101, uint8_t reg, uint8_t data)
+{
 
-	reg = reg & 0x7F; // w/r bit is MSB, write = 0
+    reg = reg & 0x7F; // w/r bit is MSB, write = 0
 
-	uint8_t rxData[2] = { reg, data };
+    uint8_t rxData[2] = { reg, data };
 
-	ldc1101_hal_write_cs(&ldc1101->cs, 0);
+    ldc1101_hal_write_cs(&ldc1101->cs, 0);
 
-	ldc1101_hal_spi_transmit(ldc1101->hspi, rxData, 2, 100);
+    ldc1101_hal_spi_transmit(ldc1101->hspi, rxData, 2, 100);
 
-	ldc1101_hal_write_cs(&ldc1101->cs, 1);
+    ldc1101_hal_write_cs(&ldc1101->cs, 1);
 
 }
 
@@ -257,21 +268,22 @@ void ldc1101_write_reg(struct LDC1101 *ldc1101, uint8_t reg, uint8_t data) {
  * @param	reg The address of the register to be read
  * @return	uint8_t value of reg
  */
-uint8_t ldc1101_read_reg(struct LDC1101 *ldc1101, uint8_t reg) {
+uint8_t ldc1101_read_reg(struct LDC1101 *ldc1101, uint8_t reg)
+{
 
-	reg = reg | 0x80; // w/r bit is MSB, read = 1
+    reg = reg | 0x80; // w/r bit is MSB, read = 1
 
-	uint8_t txData[2] = { reg, 0x0 };
+    uint8_t txData[2] = { reg, 0x0 };
 
-	uint8_t rxData[2];
+    uint8_t rxData[2];
 
-	ldc1101_hal_write_cs(&ldc1101->cs, 0);
+    ldc1101_hal_write_cs(&ldc1101->cs, 0);
 
-	ldc1101_hal_spi_transmit_receive(ldc1101->hspi, txData, rxData, 2, 100);
+    ldc1101_hal_spi_transmit_receive(ldc1101->hspi, txData, rxData, 2, 100);
 
-	ldc1101_hal_write_cs(&ldc1101->cs, 1);
+    ldc1101_hal_write_cs(&ldc1101->cs, 1);
 
-	return rxData[1];
+    return rxData[1];
 }
 
 /**
@@ -283,19 +295,21 @@ uint8_t ldc1101_read_reg(struct LDC1101 *ldc1101, uint8_t reg) {
  * @param	data The data to write
  * @return	uint8_t ldc1101 OK value (true or false)
  */
-uint8_t ldc1101_write_and_check_reg(struct LDC1101 *ldc1101, 
-																		uint8_t reg,
-																		uint8_t data) {
+uint8_t ldc1101_write_and_check_reg(struct LDC1101 *ldc1101,
+                                    uint8_t reg,
+                                    uint8_t data)
+{
 
-	ldc1101_write_reg(ldc1101, reg, data);
+    ldc1101_write_reg(ldc1101, reg, data);
 
-	uint8_t returnData = ldc1101_read_reg(ldc1101, reg);
+    uint8_t returnData = ldc1101_read_reg(ldc1101, reg);
 
-	if (data == returnData) {
-		return LDC1101_OK;
-	}
+    if (data == returnData)
+    {
+        return LDC1101_OK;
+    }
 
-	return LDC1101_NOT_OK;
+    return LDC1101_NOT_OK;
 }
 
 /**
@@ -310,13 +324,14 @@ uint8_t ldc1101_write_and_check_reg(struct LDC1101 *ldc1101,
  * @return	void
  */
 void ldc1101_edit_reg(struct LDC1101 *ldc1101, uint8_t reg, uint8_t data,
-		uint8_t mask) {
+                      uint8_t mask)
+{
 
-	uint8_t oldData = ldc1101_read_reg(ldc1101, reg);
+    uint8_t oldData = ldc1101_read_reg(ldc1101, reg);
 
-	uint8_t newData = ldc1101_mask_edit_byte(oldData, data, mask);
+    uint8_t newData = ldc1101_mask_edit_byte(oldData, data, mask);
 
-	ldc1101_write_reg(ldc1101, reg, newData);
+    ldc1101_write_reg(ldc1101, reg, newData);
 
 }
 
@@ -332,13 +347,14 @@ void ldc1101_edit_reg(struct LDC1101 *ldc1101, uint8_t reg, uint8_t data,
  */
 
 uint8_t ldc1101_edit_and_check_reg(struct LDC1101 *ldc1101, uint8_t reg,
-		uint8_t data, uint8_t mask) {
+                                   uint8_t data, uint8_t mask)
+{
 
-	uint8_t oldData = ldc1101_read_reg(ldc1101, reg);
+    uint8_t oldData = ldc1101_read_reg(ldc1101, reg);
 
-	uint8_t newData = ldc1101_mask_edit_byte(oldData, data, mask);
+    uint8_t newData = ldc1101_mask_edit_byte(oldData, data, mask);
 
-	return ldc1101_write_and_check_reg(ldc1101, reg, newData);
+    return ldc1101_write_and_check_reg(ldc1101, reg, newData);
 }
 
 /**
@@ -350,33 +366,35 @@ uint8_t ldc1101_edit_and_check_reg(struct LDC1101 *ldc1101, uint8_t reg,
  * @param	length The number of registers to read
  */
 
-void ldc1101_read_consecutive_reg(struct LDC1101 *ldc1101, 
-																	uint8_t startReg,
-																	uint8_t *buf, 
-																	uint8_t length) {
+void ldc1101_read_consecutive_reg(struct LDC1101 *ldc1101,
+                                  uint8_t startReg,
+                                  uint8_t *buf,
+                                  uint8_t length)
+{
 
-	startReg = startReg | 0x80;
+    startReg = startReg | 0x80;
 
-	uint8_t txData[length + 1];
+    uint8_t txData[length + 1];
 
-	txData[0] = startReg;
+    txData[0] = startReg;
 
-	// initialize array to 0
-	for (uint8_t i = 1; i <= length; i++) {
-		txData[i] = 0x0;
-	}
+    // initialize array to 0
+    for (uint8_t i = 1; i <= length; i++)
+    {
+        txData[i] = 0x0;
+    }
 
-	uint8_t rxData[length + 1];
+    uint8_t rxData[length + 1];
 
-	ldc1101_hal_write_cs(&ldc1101->cs, 0);
+    ldc1101_hal_write_cs(&ldc1101->cs, 0);
 
-	ldc1101_hal_spi_transmit_receive(ldc1101->hspi, txData, rxData, length + 1, 100);
+    ldc1101_hal_spi_transmit_receive(ldc1101->hspi, txData, rxData, length + 1, 100);
 
-	ldc1101_hal_write_cs(&ldc1101->cs, 1);
+    ldc1101_hal_write_cs(&ldc1101->cs, 1);
 
-	memcpy(buf, rxData + 1, length);
+    memcpy(buf, rxData + 1, length);
 
-	return;
+    return;
 }
 
 /**
@@ -385,18 +403,21 @@ void ldc1101_read_consecutive_reg(struct LDC1101 *ldc1101,
  * 			  viewable on a logic analyzer
  * @param	ldc1101 A pointer to a LDC1101 sturct
  */
-void ldc1101_read_all_reg(struct LDC1101 *ldc1101) {
-	uint8_t txData[64];
-	txData[0] = 0x81;
-	for (uint8_t i = 1; i <= 64; i++) {
-		txData[i] = i;
-	}
+void ldc1101_read_all_reg(struct LDC1101 *ldc1101)
+{
+    uint8_t txData[64];
+    txData[0] = 0x81;
 
-	ldc1101_hal_write_cs(&ldc1101->cs, 0);
+    for (uint8_t i = 1; i <= 64; i++)
+    {
+        txData[i] = i;
+    }
 
-	ldc1101_hal_spi_transmit(ldc1101->hspi, txData, 64, 100);
+    ldc1101_hal_write_cs(&ldc1101->cs, 0);
 
-	ldc1101_hal_write_cs(&ldc1101->cs, 1);
+    ldc1101_hal_spi_transmit(ldc1101->hspi, txData, 64, 100);
+
+    ldc1101_hal_write_cs(&ldc1101->cs, 1);
 
 }
 
@@ -411,33 +432,37 @@ void ldc1101_read_all_reg(struct LDC1101 *ldc1101) {
  * @note	Clock must be pulled low
  * @param	ldc1101 A pointer to a LDC1101 struct
  */
-uint8_t ldc1101_shutdown(struct LDC1101 *ldc1101) {
+uint8_t ldc1101_shutdown(struct LDC1101 *ldc1101)
+{
 
-	/**
-	 * 1. Set ALT_CONFIG.SHUTDOWN_EN = 1 (register 0x05-bit[1]).
-	 * 2. Stop toggling the CLKIN pin input and drive the CLKIN pin Low.
-	 * 3. Set START_CONFIG.FUNC_MODE = b10 (register 0x0B:bits[1:0]). This register can be written while the
-	 * LDC1101 is in active mode; on completion of the register write the LDC1101 will enter shutdown.
-	 */
+    /**
+     * 1. Set ALT_CONFIG.SHUTDOWN_EN = 1 (register 0x05-bit[1]).
+     * 2. Stop toggling the CLKIN pin input and drive the CLKIN pin Low.
+     * 3. Set START_CONFIG.FUNC_MODE = b10 (register 0x0B:bits[1:0]). This register can be written while the
+     * LDC1101 is in active mode; on completion of the register write the LDC1101 will enter shutdown.
+     */
 
-	if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK) {
-		return LDC1101_NOT_OK;
-	}
+    if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK)
+    {
+        return LDC1101_NOT_OK;
+    }
 
-	if (ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_CFG_ADDITIONAL_DEVICE_SETTINGS,
-	_LDC1101_FUNC_MODE_SHUTDOWN_MODE) == LDC1101_NOT_OK) {
-		return LDC1101_NOT_OK;
-	}
+    if (ldc1101_write_and_check_reg(ldc1101,
+                                    _LDC1101_REG_CFG_ADDITIONAL_DEVICE_SETTINGS,
+                                    _LDC1101_FUNC_MODE_SHUTDOWN_MODE) == LDC1101_NOT_OK)
+    {
+        return LDC1101_NOT_OK;
+    }
 
-	ldc1101_hal_deactivate_clkin();
+    ldc1101_hal_deactivate_clkin();
 
-	if (ldc1101_write_and_check_reg(ldc1101, _LDC1101_REG_CFG_POWER_STATE,
-	_LDC1101_FUNC_MODE_SHUTDOWN_MODE) == LDC1101_NOT_OK) {
-		return LDC1101_NOT_OK;
-	}
+    if (ldc1101_write_and_check_reg(ldc1101, _LDC1101_REG_CFG_POWER_STATE,
+                                    _LDC1101_FUNC_MODE_SHUTDOWN_MODE) == LDC1101_NOT_OK)
+    {
+        return LDC1101_NOT_OK;
+    }
 
-	return LDC1101_OK;
+    return LDC1101_OK;
 
 }
 
@@ -447,23 +472,25 @@ uint8_t ldc1101_shutdown(struct LDC1101 *ldc1101) {
  * @note
  * @param	ldc1101 A ponter to a LDC1101 struct
  */
-uint8_t ldc1101_startup(struct LDC1101 *ldc1101) {
+uint8_t ldc1101_startup(struct LDC1101 *ldc1101)
+{
 
-	ldc1101_test_data_packet(ldc1101);
+    ldc1101_test_data_packet(ldc1101);
 
-	ldc1101_read_all_reg(ldc1101);
+    ldc1101_read_all_reg(ldc1101);
 
-	HAL_Delay(10);
+    HAL_Delay(10);
 
-	if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK) {
-		return LDC1101_NOT_OK;
-	}
+    if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK)
+    {
+        return LDC1101_NOT_OK;
+    }
 
-	HAL_Delay(10);
+    HAL_Delay(10);
 
-	ldc1101_read_all_reg(ldc1101);
+    ldc1101_read_all_reg(ldc1101);
 
-	return LDC1101_OK;
+    return LDC1101_OK;
 }
 
 /**
@@ -472,12 +499,13 @@ uint8_t ldc1101_startup(struct LDC1101 *ldc1101) {
  * @note	na
  * @param	ldc1101 A pointer to a LDC1101 struct
  */
-uint8_t ldc1101_enter_sleep(struct LDC1101 *ldc1101) {
+uint8_t ldc1101_enter_sleep(struct LDC1101 *ldc1101)
+{
 
-	ldc1101_status_clear_bit(ldc1101, _LDC1101_STATUS_POWER_STATE);
+    ldc1101_status_clear_bit(ldc1101, _LDC1101_STATUS_POWER_STATE);
 
-	return ldc1101_write_and_check_reg(ldc1101, _LDC1101_REG_CFG_POWER_STATE,
-	_LDC1101_FUNC_MODE_SLEEP_MODE);
+    return ldc1101_write_and_check_reg(ldc1101, _LDC1101_REG_CFG_POWER_STATE,
+                                       _LDC1101_FUNC_MODE_SLEEP_MODE);
 }
 
 /**
@@ -486,12 +514,13 @@ uint8_t ldc1101_enter_sleep(struct LDC1101 *ldc1101) {
  * @note	na
  * @param	ldc1101 A pointer to an LDC1101 struct
  */
-uint8_t ldc1101_exit_sleep(struct LDC1101 *ldc1101) {
+uint8_t ldc1101_exit_sleep(struct LDC1101 *ldc1101)
+{
 
-	ldc1101_status_set_bit(ldc1101, _LDC1101_STATUS_POWER_STATE);
+    ldc1101_status_set_bit(ldc1101, _LDC1101_STATUS_POWER_STATE);
 
-	return ldc1101_write_and_check_reg(ldc1101, _LDC1101_REG_CFG_POWER_STATE,
-	_LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE);
+    return ldc1101_write_and_check_reg(ldc1101, _LDC1101_REG_CFG_POWER_STATE,
+                                       _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE);
 }
 
 /**
@@ -499,11 +528,12 @@ uint8_t ldc1101_exit_sleep(struct LDC1101 *ldc1101) {
  * @note	na
  * @param	ldc1101 A ponter to an LDC1101 struct
  */
-uint8_t ldc1101_toggle_sleep(struct LDC1101 *ldc1101) {
-	uint8_t currentPowerState = ldc1101_read_reg(ldc1101,
-	_LDC1101_REG_CFG_POWER_STATE);
-	return ldc1101_write_and_check_reg(ldc1101, _LDC1101_REG_CFG_POWER_STATE,
-			!currentPowerState);
+uint8_t ldc1101_toggle_sleep(struct LDC1101 *ldc1101)
+{
+    uint8_t currentPowerState = ldc1101_read_reg(ldc1101,
+                                _LDC1101_REG_CFG_POWER_STATE);
+    return ldc1101_write_and_check_reg(ldc1101, _LDC1101_REG_CFG_POWER_STATE,
+                                       !currentPowerState);
 
 }
 
@@ -512,19 +542,22 @@ uint8_t ldc1101_toggle_sleep(struct LDC1101 *ldc1101) {
  * @note	na
  * @param	ldc1101 A pointer to an LDC1101 struct
  */
-uint8_t ldc1101_restart(struct LDC1101 *ldc1101) {
+uint8_t ldc1101_restart(struct LDC1101 *ldc1101)
+{
 
-	if (ldc1101_shutdown(ldc1101) == LDC1101_NOT_OK) {
-		return LDC1101_NOT_OK;
-	}
+    if (ldc1101_shutdown(ldc1101) == LDC1101_NOT_OK)
+    {
+        return LDC1101_NOT_OK;
+    }
 
-	HAL_Delay(300);
+    HAL_Delay(300);
 
-	if (ldc1101_startup(ldc1101) == LDC1101_NOT_OK) {
-		return LDC1101_NOT_OK;
-	}
+    if (ldc1101_startup(ldc1101) == LDC1101_NOT_OK)
+    {
+        return LDC1101_NOT_OK;
+    }
 
-	return LDC1101_OK;
+    return LDC1101_OK;
 
 }
 
@@ -534,18 +567,19 @@ uint8_t ldc1101_restart(struct LDC1101 *ldc1101) {
  * @note	na
  * @param	ldc1101 A pointer to a LDC1101 struct
  */
-uint8_t ldc1101_init(struct LDC1101 *ldc1101) {
-	ldc1101_write_reg(ldc1101, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_SLEEP_MODE);	                    // 进入睡眠模式，开始设置配置
-	
-	// 启动 LHR 模式
-	ldc1101_write_reg(ldc1101, _LDC1101_REG_CFG_ADDITIONAL_DEVICE_SETTINGS, _LDC1101_ALT_CFG_L_OPTIMAL_ENABLE);   // L通道路径优化
-	ldc1101_write_reg(ldc1101, _LDC1101_REG_AMPLITUDE_CONTROL_REQUIREMENT, 0x01);                                 // 起振检测报告
-	ldc1101_write_reg(ldc1101, _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE, 0x01); 															// 设置 RPMIN
-	
-	
-	
-	ldc1101_write_reg(ldc1101, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE);	        // 进入激活模式，结束配置设置，开始转换
-	return LDC1101_OK;
+uint8_t ldc1101_init(struct LDC1101 *ldc1101)
+{
+    ldc1101_write_reg(ldc1101, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_SLEEP_MODE);	                    // 进入睡眠模式，开始设置配置
+
+    // 启动 LHR 模式
+    ldc1101_write_reg(ldc1101, _LDC1101_REG_CFG_ADDITIONAL_DEVICE_SETTINGS, _LDC1101_ALT_CFG_L_OPTIMAL_ENABLE);   // L通道路径优化
+    ldc1101_write_reg(ldc1101, _LDC1101_REG_AMPLITUDE_CONTROL_REQUIREMENT, 0x01);                                 // 起振检测报告
+    ldc1101_write_reg(ldc1101, _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE, 0x01); 															// 设置 RPMIN
+
+
+
+    ldc1101_write_reg(ldc1101, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE);	        // 进入激活模式，结束配置设置，开始转换
+    return LDC1101_OK;
 }
 
 /**
@@ -554,10 +588,11 @@ uint8_t ldc1101_init(struct LDC1101 *ldc1101) {
  * @param	ldc1101 A pointer to a LDC1101 struct
  * @param
  */
-uint8_t ldc1101_rpl_setup(struct LDC1101 *ldc1101) {
+uint8_t ldc1101_rpl_setup(struct LDC1101 *ldc1101)
+{
 
-	// no initial setup required for rpl measurements
-	return LDC1101_OK;
+    // no initial setup required for rpl measurements
+    return LDC1101_OK;
 }
 
 /**
@@ -565,29 +600,30 @@ uint8_t ldc1101_rpl_setup(struct LDC1101 *ldc1101) {
  * @note	na
  * @param	ldc1101 A pointer to a LDC1101 struct
  */
-uint8_t ldc1101_lhr_setup(struct LDC1101 *ldc1101) {
+uint8_t ldc1101_lhr_setup(struct LDC1101 *ldc1101)
+{
 
-	uint8_t pData;
+    uint8_t pData;
 
-	ldc1101_hal_spi_transmit(ldc1101->hspi, &pData, 1, 100);
+    ldc1101_hal_spi_transmit(ldc1101->hspi, &pData, 1, 100);
 
-	HAL_Delay(10);
+    HAL_Delay(10);
 
-	ldc1101_read_all_reg(ldc1101);
+    ldc1101_read_all_reg(ldc1101);
 
-	HAL_Delay(10);
+    HAL_Delay(10);
 
-	ldc1101_write_reg(ldc1101, _LDC1101_REG_LHR_OFFSET_LSB, 0xff);
+    ldc1101_write_reg(ldc1101, _LDC1101_REG_LHR_OFFSET_LSB, 0xff);
 
-	HAL_Delay(10);
+    HAL_Delay(10);
 
-	ldc1101_write_reg(ldc1101, _LDC1101_REG_CFG_LHR, 0x1);
+    ldc1101_write_reg(ldc1101, _LDC1101_REG_CFG_LHR, 0x1);
 
-	HAL_Delay(10);
+    HAL_Delay(10);
 
-	ldc1101_read_all_reg(ldc1101);
+    ldc1101_read_all_reg(ldc1101);
 
-	return LDC1101_OK;
+    return LDC1101_OK;
 
 }
 
@@ -604,28 +640,33 @@ uint8_t ldc1101_lhr_setup(struct LDC1101 *ldc1101) {
 					enabled.
  * @param	ldc1101 A pointer to a LDC1101 struct
  */
-uint8_t ldc1101_enable_optimize_for_l(struct LDC1101 *ldc1101) {
+uint8_t ldc1101_enable_optimize_for_l(struct LDC1101 *ldc1101)
+{
 
-	if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1) {
+    if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1)
+    {
 
-		if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
-		_LDC1101_REG_CFG_ADDITIONAL_DEVICE_SETTINGS,
-		_LDC1101_ALT_CFG_L_OPTIMAL_ENABLE);
+        uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
+                         _LDC1101_REG_CFG_ADDITIONAL_DEVICE_SETTINGS,
+                         _LDC1101_ALT_CFG_L_OPTIMAL_ENABLE);
 
-		if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		return okFlag;
+        return okFlag;
 
-	}
-	return ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_CFG_ADDITIONAL_DEVICE_SETTINGS,
-	_LDC1101_ALT_CFG_L_OPTIMAL_ENABLE);
+    }
+
+    return ldc1101_write_and_check_reg(ldc1101,
+                                       _LDC1101_REG_CFG_ADDITIONAL_DEVICE_SETTINGS,
+                                       _LDC1101_ALT_CFG_L_OPTIMAL_ENABLE);
 
 }
 
@@ -634,28 +675,33 @@ uint8_t ldc1101_enable_optimize_for_l(struct LDC1101 *ldc1101) {
  * @note	na
  * @param	ldc1101 A pointer to a LDC1101 struct
  */
-uint8_t ldc1101_disable_optimize_for_l(struct LDC1101 *ldc1101) {
+uint8_t ldc1101_disable_optimize_for_l(struct LDC1101 *ldc1101)
+{
 
-	if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1) {
+    if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1)
+    {
 
-		if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
-		_LDC1101_REG_CFG_ADDITIONAL_DEVICE_SETTINGS,
-		_LDC1101_ALT_CFG_L_OPTIMAL_DISABLED);
+        uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
+                         _LDC1101_REG_CFG_ADDITIONAL_DEVICE_SETTINGS,
+                         _LDC1101_ALT_CFG_L_OPTIMAL_DISABLED);
 
-		if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		return okFlag;
+        return okFlag;
 
-	}
-	return ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_CFG_ADDITIONAL_DEVICE_SETTINGS,
-	_LDC1101_ALT_CFG_L_OPTIMAL_DISABLED);
+    }
+
+    return ldc1101_write_and_check_reg(ldc1101,
+                                       _LDC1101_REG_CFG_ADDITIONAL_DEVICE_SETTINGS,
+                                       _LDC1101_ALT_CFG_L_OPTIMAL_DISABLED);
 
 }
 
@@ -667,28 +713,33 @@ uint8_t ldc1101_disable_optimize_for_l(struct LDC1101 *ldc1101) {
  * @param	RP_MIN Minimum value for the dynamic range
  */
 uint8_t ldc1101_enable_rp_dynamic_range(struct LDC1101 *ldc1101, uint8_t RP_MAX,
-		uint8_t RP_MIN) {
+                                        uint8_t RP_MIN)
+{
 
-	uint8_t data = _LDC1101_RP_SET_RP_MAX_IS_DRIVEN | RP_MAX | RP_MIN;
+    uint8_t data = _LDC1101_RP_SET_RP_MAX_IS_DRIVEN | RP_MAX | RP_MIN;
 
-	if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1) {
+    if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1)
+    {
 
-		if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
-		_LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE, data);
+        uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
+                         _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE, data);
 
-		if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		return okFlag;
+        return okFlag;
 
-	}
-	return ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE, data);
+    }
+
+    return ldc1101_write_and_check_reg(ldc1101,
+                                       _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE, data);
 
 }
 
@@ -697,28 +748,33 @@ uint8_t ldc1101_enable_rp_dynamic_range(struct LDC1101 *ldc1101, uint8_t RP_MAX,
  * @note	na
  * @param	ldc1101 A pointer to a LDC1101 struct
  */
-uint8_t ldc1101_disable_rp_dynamic_range(struct LDC1101 *ldc1101) {
+uint8_t ldc1101_disable_rp_dynamic_range(struct LDC1101 *ldc1101)
+{
 
-	if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1) {
+    if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1)
+    {
 
-		if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
-		_LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE,
-		_LDC1101_RP_SET_RP_MAX_CURRENT_IS_IGNORED);
+        uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
+                         _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE,
+                         _LDC1101_RP_SET_RP_MAX_CURRENT_IS_IGNORED);
 
-		if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		return okFlag;
+        return okFlag;
 
-	}
-	return ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE,
-	_LDC1101_RP_SET_RP_MAX_CURRENT_IS_IGNORED);
+    }
+
+    return ldc1101_write_and_check_reg(ldc1101,
+                                       _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE,
+                                       _LDC1101_RP_SET_RP_MAX_CURRENT_IS_IGNORED);
 
 }
 
@@ -735,28 +791,33 @@ uint8_t ldc1101_disable_rp_dynamic_range(struct LDC1101 *ldc1101) {
  *
  */
 uint8_t ldc1101_configure_rp_dynamic_range(struct LDC1101 *ldc1101,
-		uint8_t RP_MAX, uint8_t RP_MIN) {
+        uint8_t RP_MAX, uint8_t RP_MIN)
+{
 
-	uint8_t data = _LDC1101_RP_SET_RP_MAX_IS_DRIVEN | RP_MAX | RP_MIN;
+    uint8_t data = _LDC1101_RP_SET_RP_MAX_IS_DRIVEN | RP_MAX | RP_MIN;
 
-	if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1) {
+    if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1)
+    {
 
-		if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
-		_LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE, data);
+        uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
+                         _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE, data);
 
-		if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		return okFlag;
+        return okFlag;
 
-	}
-	return ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE, data);
+    }
+
+    return ldc1101_write_and_check_reg(ldc1101,
+                                       _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE, data);
 
 }
 
@@ -765,30 +826,35 @@ uint8_t ldc1101_configure_rp_dynamic_range(struct LDC1101 *ldc1101,
  * @note	na
  * @param	ldc1101 A pointer to a LDC1101 struct
  */
-uint8_t ldc1101_enable_intb_mode(struct LDC1101 *ldc1101, uint8_t MODE) {
+uint8_t ldc1101_enable_intb_mode(struct LDC1101 *ldc1101, uint8_t MODE)
+{
 
-	ldc1101_status_set_bit(ldc1101, _LDC1101_STATUS_INTB_MODE);
+    ldc1101_status_set_bit(ldc1101, _LDC1101_STATUS_INTB_MODE);
 
-	uint8_t data = _LDC1101_INTB_MODE_REPORT_INTB_ON_SDO_PIN | MODE;
+    uint8_t data = _LDC1101_INTB_MODE_REPORT_INTB_ON_SDO_PIN | MODE;
 
-	if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1) {
+    if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1)
+    {
 
-		if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
-		_LDC1101_REG_CFG_INTB_MODE, data);
+        uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
+                         _LDC1101_REG_CFG_INTB_MODE, data);
 
-		if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		return okFlag;
+        return okFlag;
 
-	}
-	return ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_CFG_INTB_MODE, data);
+    }
+
+    return ldc1101_write_and_check_reg(ldc1101,
+                                       _LDC1101_REG_CFG_INTB_MODE, data);
 
 }
 
@@ -797,30 +863,35 @@ uint8_t ldc1101_enable_intb_mode(struct LDC1101 *ldc1101, uint8_t MODE) {
  * @note	na
  * @param	ldc1101 A pointer to a LDC1101 struct
  */
-uint8_t ldc1101_disable_intb_mode(struct LDC1101 *ldc1101) {
+uint8_t ldc1101_disable_intb_mode(struct LDC1101 *ldc1101)
+{
 
-	ldc1101_status_clear_bit(ldc1101, _LDC1101_STATUS_INTB_MODE);
+    ldc1101_status_clear_bit(ldc1101, _LDC1101_STATUS_INTB_MODE);
 
-	if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1) {
+    if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1)
+    {
 
-		if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
-		_LDC1101_REG_CFG_INTB_MODE,
-		_LDC1101_INTB_MODE_DONT_REPORT_INTB_ON_SDO_PIN);
+        uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
+                         _LDC1101_REG_CFG_INTB_MODE,
+                         _LDC1101_INTB_MODE_DONT_REPORT_INTB_ON_SDO_PIN);
 
-		if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		return okFlag;
+        return okFlag;
 
-	}
-	return ldc1101_write_and_check_reg(ldc1101,
-																		_LDC1101_REG_CFG_INTB_MODE,
-																		_LDC1101_INTB_MODE_DONT_REPORT_INTB_ON_SDO_PIN);
+    }
+
+    return ldc1101_write_and_check_reg(ldc1101,
+                                       _LDC1101_REG_CFG_INTB_MODE,
+                                       _LDC1101_INTB_MODE_DONT_REPORT_INTB_ON_SDO_PIN);
 
 }
 
@@ -832,28 +903,33 @@ uint8_t ldc1101_disable_intb_mode(struct LDC1101 *ldc1101) {
  * @param	C_VAL The capacitive component used to configure internal time constant 1
  */
 uint8_t ldc1101_configure_tc1(struct LDC1101 *ldc1101, uint8_t R_VAL,
-		uint8_t C_VAL) {
+                              uint8_t C_VAL)
+{
 
-	uint8_t data = R_VAL | C_VAL;
+    uint8_t data = R_VAL | C_VAL;
 
-	if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1) {
+    if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1)
+    {
 
-		if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
-		_LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_1, data);
+        uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
+                         _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_1, data);
 
-		if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		return okFlag;
+        return okFlag;
 
-	}
-	return ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_1, data);
+    }
+
+    return ldc1101_write_and_check_reg(ldc1101,
+                                       _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_1, data);
 
 }
 
@@ -865,28 +941,33 @@ uint8_t ldc1101_configure_tc1(struct LDC1101 *ldc1101, uint8_t R_VAL,
  * @param	C_VAL The capacitive component used to configure internal time constant 2
  */
 uint8_t ldc1101_configure_tc2(struct LDC1101 *ldc1101, uint8_t R_VAL,
-		uint8_t C_VAL) {
+                              uint8_t C_VAL)
+{
 
-	uint8_t data = R_VAL | C_VAL;
+    uint8_t data = R_VAL | C_VAL;
 
-	if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1) {
+    if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1)
+    {
 
-		if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
-		_LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_2, data);
+        uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
+                         _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_2, data);
 
-		if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		return okFlag;
+        return okFlag;
 
-	}
-	return ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_2, data);
+    }
+
+    return ldc1101_write_and_check_reg(ldc1101,
+                                       _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_2, data);
 
 }
 
@@ -903,28 +984,33 @@ uint8_t ldc1101_configure_tc2(struct LDC1101 *ldc1101, uint8_t R_VAL,
 					measurement, but not the High Resolution L measurement.
  */
 uint8_t ldc1101_configure_dig(struct LDC1101 *ldc1101, uint8_t MIN_FREQ,
-		uint8_t RESP_TIME) {
+                              uint8_t RESP_TIME)
+{
 
-	uint8_t data = MIN_FREQ | RESP_TIME;
+    uint8_t data = MIN_FREQ | RESP_TIME;
 
-	if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1) {
+    if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1)
+    {
 
-		if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
-		_LDC1101_REG_CFG_RP_L_CONVERSION_INTERVAL, data);
+        uint8_t okFlag = ldc1101_write_and_check_reg(ldc1101,
+                         _LDC1101_REG_CFG_RP_L_CONVERSION_INTERVAL, data);
 
-		if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		return okFlag;
+        return okFlag;
 
-	}
-	return ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_CFG_RP_L_CONVERSION_INTERVAL, data);
+    }
+
+    return ldc1101_write_and_check_reg(ldc1101,
+                                       _LDC1101_REG_CFG_RP_L_CONVERSION_INTERVAL, data);
 
 }
 
@@ -937,48 +1023,52 @@ uint8_t ldc1101_configure_dig(struct LDC1101 *ldc1101, uint8_t MIN_FREQ,
  * @parma	RP_THRESH_LOW The 16 bit value for the low threshold
  */
 uint8_t ldc1101_configure_rp_high_low_threshold(struct LDC1101 *ldc1101,
-		uint16_t RP_THRESH_HI, uint16_t RP_THRESH_LOW) {
+        uint16_t RP_THRESH_HI, uint16_t RP_THRESH_LOW)
+{
 
-	uint8_t hiLsb = RP_THRESH_HI;
-	uint8_t hiMsb = RP_THRESH_HI >> 8;
-	uint8_t lowLsb = RP_THRESH_LOW;
-	uint8_t lowMsb = RP_THRESH_LOW >> 8;
+    uint8_t hiLsb = RP_THRESH_HI;
+    uint8_t hiMsb = RP_THRESH_HI >> 8;
+    uint8_t lowLsb = RP_THRESH_LOW;
+    uint8_t lowMsb = RP_THRESH_LOW >> 8;
 
-	if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1) {
+    if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1)
+    {
 
-		if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		uint8_t okFlagHiLsb = ldc1101_write_and_check_reg(ldc1101,
-		_LDC1101_REG_RP_THRESH_H_LSB, hiLsb);
-		uint8_t okFlagHiMsb = ldc1101_write_and_check_reg(ldc1101,
-		_LDC1101_REG_RP_THRESH_H_MSB, hiMsb);
+        uint8_t okFlagHiLsb = ldc1101_write_and_check_reg(ldc1101,
+                              _LDC1101_REG_RP_THRESH_H_LSB, hiLsb);
+        uint8_t okFlagHiMsb = ldc1101_write_and_check_reg(ldc1101,
+                              _LDC1101_REG_RP_THRESH_H_MSB, hiMsb);
 
-		uint8_t okFlagLowLsb = ldc1101_write_and_check_reg(ldc1101,
-		_LDC1101_REG_RP_THRESH_L_LSB, lowLsb);
-		uint8_t okFlagLowMsb = ldc1101_write_and_check_reg(ldc1101,
-		_LDC1101_REG_RP_THRESH_L_MSB, lowMsb);
+        uint8_t okFlagLowLsb = ldc1101_write_and_check_reg(ldc1101,
+                               _LDC1101_REG_RP_THRESH_L_LSB, lowLsb);
+        uint8_t okFlagLowMsb = ldc1101_write_and_check_reg(ldc1101,
+                               _LDC1101_REG_RP_THRESH_L_MSB, lowMsb);
 
-		if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		return okFlagHiLsb | okFlagHiMsb | okFlagLowLsb | okFlagLowMsb;
+        return okFlagHiLsb | okFlagHiMsb | okFlagLowLsb | okFlagLowMsb;
 
-	}
+    }
 
-	uint8_t okFlagHiLsb = ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_RP_THRESH_H_LSB, hiLsb);
-	uint8_t okFlagHiMsb = ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_RP_THRESH_H_MSB, hiMsb);
+    uint8_t okFlagHiLsb = ldc1101_write_and_check_reg(ldc1101,
+                          _LDC1101_REG_RP_THRESH_H_LSB, hiLsb);
+    uint8_t okFlagHiMsb = ldc1101_write_and_check_reg(ldc1101,
+                          _LDC1101_REG_RP_THRESH_H_MSB, hiMsb);
 
-	uint8_t okFlagLowLsb = ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_RP_THRESH_L_LSB, lowLsb);
-	uint8_t okFlagLowMsb = ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_RP_THRESH_L_MSB, lowMsb);
+    uint8_t okFlagLowLsb = ldc1101_write_and_check_reg(ldc1101,
+                           _LDC1101_REG_RP_THRESH_L_LSB, lowLsb);
+    uint8_t okFlagLowMsb = ldc1101_write_and_check_reg(ldc1101,
+                           _LDC1101_REG_RP_THRESH_L_MSB, lowMsb);
 
-	return okFlagHiLsb | okFlagHiMsb | okFlagLowLsb | okFlagLowMsb;
+    return okFlagHiLsb | okFlagHiMsb | okFlagLowLsb | okFlagLowMsb;
 
 }
 
@@ -991,48 +1081,52 @@ uint8_t ldc1101_configure_rp_high_low_threshold(struct LDC1101 *ldc1101,
  * @parma	RP_THRESH_LOW The 16 bit value for the low threshold
  */
 uint8_t ldc1101_configure_l_high_low_threshold(struct LDC1101 *ldc1101,
-		uint16_t L_THRESH_HI, uint16_t L_THRESH_LOW) {
+        uint16_t L_THRESH_HI, uint16_t L_THRESH_LOW)
+{
 
-	uint8_t hiLsb = L_THRESH_HI;
-	uint8_t hiMsb = L_THRESH_HI >> 8;
-	uint8_t lowLsb = L_THRESH_LOW;
-	uint8_t lowMsb = L_THRESH_LOW >> 8;
+    uint8_t hiLsb = L_THRESH_HI;
+    uint8_t hiMsb = L_THRESH_HI >> 8;
+    uint8_t lowLsb = L_THRESH_LOW;
+    uint8_t lowMsb = L_THRESH_LOW >> 8;
 
-	if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1) {
+    if ((ldc1101->status & _LDC1101_STATUS_POWER_STATE) == 1)
+    {
 
-		if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_exit_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		uint8_t okFlagHiLsb = ldc1101_write_and_check_reg(ldc1101,
-		_LDC1101_REG_L_THRESH_HI_LSB, hiLsb);
-		uint8_t okFlagHiMsb = ldc1101_write_and_check_reg(ldc1101,
-		_LDC1101_REG_L_THRESH_HI_MSB, hiMsb);
+        uint8_t okFlagHiLsb = ldc1101_write_and_check_reg(ldc1101,
+                              _LDC1101_REG_L_THRESH_HI_LSB, hiLsb);
+        uint8_t okFlagHiMsb = ldc1101_write_and_check_reg(ldc1101,
+                              _LDC1101_REG_L_THRESH_HI_MSB, hiMsb);
 
-		uint8_t okFlagLowLsb = ldc1101_write_and_check_reg(ldc1101,
-		_LDC1101_REG_L_THRESH_LO_LSB, lowLsb);
-		uint8_t okFlagLowMsb = ldc1101_write_and_check_reg(ldc1101,
-		_LDC1101_REG_L_THRESH_LO_MSB, lowMsb);
+        uint8_t okFlagLowLsb = ldc1101_write_and_check_reg(ldc1101,
+                               _LDC1101_REG_L_THRESH_LO_LSB, lowLsb);
+        uint8_t okFlagLowMsb = ldc1101_write_and_check_reg(ldc1101,
+                               _LDC1101_REG_L_THRESH_LO_MSB, lowMsb);
 
-		if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK) {
-			return LDC1101_NOT_OK;
-		}
+        if (ldc1101_enter_sleep(ldc1101) == LDC1101_NOT_OK)
+        {
+            return LDC1101_NOT_OK;
+        }
 
-		return okFlagHiLsb | okFlagHiMsb | okFlagLowLsb | okFlagLowMsb;
+        return okFlagHiLsb | okFlagHiMsb | okFlagLowLsb | okFlagLowMsb;
 
-	}
+    }
 
-	uint8_t okFlagHiLsb = ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_L_THRESH_HI_LSB, hiLsb);
-	uint8_t okFlagHiMsb = ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_L_THRESH_HI_MSB, hiMsb);
+    uint8_t okFlagHiLsb = ldc1101_write_and_check_reg(ldc1101,
+                          _LDC1101_REG_L_THRESH_HI_LSB, hiLsb);
+    uint8_t okFlagHiMsb = ldc1101_write_and_check_reg(ldc1101,
+                          _LDC1101_REG_L_THRESH_HI_MSB, hiMsb);
 
-	uint8_t okFlagLowLsb = ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_L_THRESH_LO_LSB, lowLsb);
-	uint8_t okFlagLowMsb = ldc1101_write_and_check_reg(ldc1101,
-	_LDC1101_REG_L_THRESH_LO_MSB, lowMsb);
+    uint8_t okFlagLowLsb = ldc1101_write_and_check_reg(ldc1101,
+                           _LDC1101_REG_L_THRESH_LO_LSB, lowLsb);
+    uint8_t okFlagLowMsb = ldc1101_write_and_check_reg(ldc1101,
+                           _LDC1101_REG_L_THRESH_LO_MSB, lowMsb);
 
-	return okFlagHiLsb | okFlagHiMsb | okFlagLowLsb | okFlagLowMsb;
+    return okFlagHiLsb | okFlagHiMsb | okFlagLowLsb | okFlagLowMsb;
 
 }
 
@@ -1042,9 +1136,10 @@ uint8_t ldc1101_configure_l_high_low_threshold(struct LDC1101 *ldc1101,
  * @param
  * @param
  */
-uint8_t ldc1101_configure_lhr_rcount(struct LDC1101 *ldc1101, uint16_t RCOUNT) {
+uint8_t ldc1101_configure_lhr_rcount(struct LDC1101 *ldc1101, uint16_t RCOUNT)
+{
 
-	return 1; // TODO write lhr rcount config
+    return 1; // TODO write lhr rcount config
 }
 
 /**
@@ -1053,9 +1148,10 @@ uint8_t ldc1101_configure_lhr_rcount(struct LDC1101 *ldc1101, uint16_t RCOUNT) {
  * @param
  * @param
  */
-uint8_t ldc1101_configure_lhr_offset(struct LDC1101 *ldc1101, uint16_t OFFSET) {
+uint8_t ldc1101_configure_lhr_offset(struct LDC1101 *ldc1101, uint16_t OFFSET)
+{
 
-	return 1; // TODO write lhr_offset config
+    return 1; // TODO write lhr_offset config
 }
 
 /*
@@ -1069,18 +1165,19 @@ uint8_t ldc1101_configure_lhr_offset(struct LDC1101 *ldc1101, uint16_t OFFSET) {
  * 			are known constants ID: 0xd4, RID: 0x02
  * @param	ldc1101 A pointer to a LDC1101 struct
  */
-struct LDC1101_CHIP ldc1101_get_id(struct LDC1101 *ldc1101) {
+struct LDC1101_CHIP ldc1101_get_id(struct LDC1101 *ldc1101)
+{
 
-	struct LDC1101_CHIP chip;
+    struct LDC1101_CHIP chip;
 
-	uint8_t buf[2];
+    uint8_t buf[2];
 
-	ldc1101_read_consecutive_reg(ldc1101, _LDC1101_REG_DEVICE_RID, buf, 2);
+    ldc1101_read_consecutive_reg(ldc1101, _LDC1101_REG_DEVICE_RID, buf, 2);
 
-	chip.rid = buf[0];
-	chip.id = buf[1];
+    chip.rid = buf[0];
+    chip.id = buf[1];
 
-	return chip;
+    return chip;
 
 }
 
@@ -1092,28 +1189,29 @@ struct LDC1101_CHIP ldc1101_get_id(struct LDC1101 *ldc1101) {
  * @param	data The RPL_DATA struct to be updated
  */
 struct RPL_DATA ldc1101_read_rpl_data(struct LDC1101 *ldc1101,
-		                                  struct RPL_DATA data) {
+                                      struct RPL_DATA data)
+{
 
-	uint8_t buf[5];
+    uint8_t buf[5];
 
-	uint16_t rpCpy = data.rp;
-	uint16_t lCpy = data.l;
+    uint16_t rpCpy = data.rp;
+    uint16_t lCpy = data.l;
 
-	ldc1101_read_consecutive_reg(ldc1101, _LDC1101_REG_RP_L_MEASUREMENT_STATUS,
-			buf, 5);
+    ldc1101_read_consecutive_reg(ldc1101, _LDC1101_REG_RP_L_MEASUREMENT_STATUS,
+                                 buf, 5);
 
-	data.status = buf[0];
-	data.rp_lsb = buf[1];
-	data.rp_msb = buf[2];
-	data.l_lsb = buf[3];
-	data.l_msb = buf[4];
-	data.rp = buf[1] | buf[2] << 8;
-	data.l = buf[3] | buf[4] << 8;
+    data.status = buf[0];
+    data.rp_lsb = buf[1];
+    data.rp_msb = buf[2];
+    data.l_lsb = buf[3];
+    data.l_msb = buf[4];
+    data.rp = buf[1] | buf[2] << 8;
+    data.l = buf[3] | buf[4] << 8;
 
-	data.rp_avg = ldc1101_running_avg_16bit(rpCpy, data.rp, data.avg_delta);
-	data.l_avg = ldc1101_running_avg_16bit(lCpy, data.l, data.avg_delta);
+    data.rp_avg = ldc1101_running_avg_16bit(rpCpy, data.rp, data.avg_delta);
+    data.l_avg = ldc1101_running_avg_16bit(lCpy, data.l, data.avg_delta);
 
-	return data;
+    return data;
 }
 
 /**
@@ -1123,23 +1221,24 @@ struct RPL_DATA ldc1101_read_rpl_data(struct LDC1101 *ldc1101,
  * @param	data The LHR_DATA struct to be updated
  */
 struct LHR_DATA ldc1101_read_lhr_data(struct LDC1101 *ldc1101,
-		struct LHR_DATA data) {
+                                      struct LHR_DATA data)
+{
 
-	uint8_t buf[4];
+    uint8_t buf[4];
 
-	uint32_t lCpy = data.l;
+    uint32_t lCpy = data.l;
 
-	ldc1101_read_consecutive_reg(ldc1101, _LDC1101_REG_LHR_DATA_LSB, buf, 4);
+    ldc1101_read_consecutive_reg(ldc1101, _LDC1101_REG_LHR_DATA_LSB, buf, 4);
 
-	data.status = buf[3];
-	data.l_lsb = buf[0];
-	data.l_mid = buf[1];
-	data.l_msb = buf[2];
-	data.l = buf[0] | buf[1] << 8 | buf[2] << 16;
+    data.status = buf[3];
+    data.l_lsb = buf[0];
+    data.l_mid = buf[1];
+    data.l_msb = buf[2];
+    data.l = buf[0] | buf[1] << 8 | buf[2] << 16;
 
-	data.l_avg = ldc1101_running_avg_32bit(lCpy, data.l, data.avg_delta);
+    data.l_avg = ldc1101_running_avg_32bit(lCpy, data.l, data.avg_delta);
 
-	return data;
+    return data;
 }
 
 /* UART PRINT */
@@ -1153,16 +1252,17 @@ struct LHR_DATA ldc1101_read_lhr_data(struct LDC1101 *ldc1101,
  * @param	chip A ldc1101_chip struct
  */
 void ldc1101_print_chip(UART_HandleTypeDef *huart, struct LDC1101 *ldc1101,
-		struct LDC1101_CHIP chip) {
+                        struct LDC1101_CHIP chip)
+{
 
-	char msgRid[29];
-	char msgId[28];
+    char msgRid[29];
+    char msgId[28];
 
-	sprintf(msgRid, "Device RID value: %8u\n\r", chip.rid);
-	sprintf(msgId, "Device ID value: %8u\n\r", chip.id);
+    sprintf(msgRid, "Device RID value: %8u\n\r", chip.rid);
+    sprintf(msgId, "Device ID value: %8u\n\r", chip.id);
 
-	HAL_UART_Transmit(huart, (uint8_t*)msgRid, sizeof(msgRid), 100);
-	HAL_UART_Transmit(huart, (uint8_t*)msgId, sizeof(msgId), 100);
+    HAL_UART_Transmit(huart, (uint8_t*)msgRid, sizeof(msgRid), 100);
+    HAL_UART_Transmit(huart, (uint8_t*)msgId, sizeof(msgId), 100);
 
 }
 
@@ -1173,25 +1273,28 @@ void ldc1101_print_chip(UART_HandleTypeDef *huart, struct LDC1101 *ldc1101,
  * @param	ldc1101 A pointer to a LDC1101 struct
  * @param	reg The address of the reggister that is to be read
  */
-void ldc1101_print_reg(UART_HandleTypeDef *huart, 
-											 struct LDC1101 *ldc1101,
-		                   uint8_t reg) {
-	uint8_t returnData = ldc1101_read_reg(ldc1101, reg);
+void ldc1101_print_reg(UART_HandleTypeDef *huart,
+                       struct LDC1101 *ldc1101,
+                       uint8_t reg)
+{
+    uint8_t returnData = ldc1101_read_reg(ldc1101, reg);
 
-	char msg[43];
+    char msg[43];
 
-	uint8_t bin[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-	uint8_t i = 0;
-	while (returnData > 0) {
-		bin[i] = returnData % 2;
-		returnData = returnData / 2;
-		i++;
-	}
+    uint8_t bin[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    uint8_t i = 0;
 
-	sprintf(msg, "REG: %8u | VALUE: %u%u%u%u%u%u%u%u - 0x%4x\n\r", reg, bin[7],
-			bin[6], bin[5], bin[4], bin[3], bin[2], bin[1], bin[0], returnData);
+    while (returnData > 0)
+    {
+        bin[i] = returnData % 2;
+        returnData = returnData / 2;
+        i++;
+    }
 
-	HAL_UART_Transmit(huart, (uint8_t*)msg, sizeof(msg), 100);
+    sprintf(msg, "REG: %8u | VALUE: %u%u%u%u%u%u%u%u - 0x%4x\n\r", reg, bin[7],
+            bin[6], bin[5], bin[4], bin[3], bin[2], bin[1], bin[0], returnData);
+
+    HAL_UART_Transmit(huart, (uint8_t*)msg, sizeof(msg), 100);
 
 }
 
@@ -1201,13 +1304,15 @@ void ldc1101_print_reg(UART_HandleTypeDef *huart,
  * @param	huart A pointer to a huart struct
  * @param	ldc1101 A pointer to a LDC1101 struct
  */
-void ldc1101_print_all_reg(UART_HandleTypeDef *huart, struct LDC1101 *ldc1101) {
+void ldc1101_print_all_reg(UART_HandleTypeDef *huart, struct LDC1101 *ldc1101)
+{
 
-	HAL_UART_Transmit(huart, (uint8_t*)"===================================\n\r", 37, 100);
+    HAL_UART_Transmit(huart, (uint8_t*)"===================================\n\r", 37, 100);
 
-	for (uint8_t i = 0; i < NUMBER_OF_REGS; i++) {
-		ldc1101_print_reg(huart, ldc1101, _REG_ADRS[i]);
-	}
+    for (uint8_t i = 0; i < NUMBER_OF_REGS; i++)
+    {
+        ldc1101_print_reg(huart, ldc1101, _REG_ADRS[i]);
+    }
 }
 
 /**
@@ -1217,24 +1322,28 @@ void ldc1101_print_all_reg(UART_HandleTypeDef *huart, struct LDC1101 *ldc1101) {
  * @param	huart A pointer to a huart struct
  * @param	rplData A RPL_DATA struct
  */
-void ldc1101_print_rpl_data(UART_HandleTypeDef *huart, struct RPL_DATA rplData) {
+void ldc1101_print_rpl_data(UART_HandleTypeDef *huart, struct RPL_DATA rplData)
+{
 
-	char msg[85];
+    char msg[85];
 
-	uint8_t status = rplData.status;
-	uint8_t bin[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-	uint8_t i = 0;
-	while (status > 0) {
-		bin[i] = status % 2;
-		status /= 2;
-		i++;
-	}
-	sprintf(msg,
-			"Status: %u%u%u%u%u%u%u%u | RP: %8u, L: %8u |  RP_AVG: %8u, L_AVG: %8u \n\r",
-			bin[7], bin[6], bin[5], bin[4], bin[3], bin[2], bin[1], bin[0],
-			rplData.rp, rplData.l, rplData.rp_avg, rplData.l_avg);
+    uint8_t status = rplData.status;
+    uint8_t bin[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    uint8_t i = 0;
 
-	HAL_UART_Transmit(huart, (uint8_t*)msg, sizeof(msg), 100);
+    while (status > 0)
+    {
+        bin[i] = status % 2;
+        status /= 2;
+        i++;
+    }
+
+    sprintf(msg,
+            "Status: %u%u%u%u%u%u%u%u | RP: %8u, L: %8u |  RP_AVG: %8u, L_AVG: %8u \n\r",
+            bin[7], bin[6], bin[5], bin[4], bin[3], bin[2], bin[1], bin[0],
+            rplData.rp, rplData.l, rplData.rp_avg, rplData.l_avg);
+
+    HAL_UART_Transmit(huart, (uint8_t*)msg, sizeof(msg), 100);
 
 }
 
@@ -1245,24 +1354,27 @@ void ldc1101_print_rpl_data(UART_HandleTypeDef *huart, struct RPL_DATA rplData) 
  * @param	huart A pointer to a huart struct
  * @param	lhrData A lhr_data struct
  */
-void ldc1101_print_lhr_data(UART_HandleTypeDef *huart, struct LHR_DATA lhrData) {
+void ldc1101_print_lhr_data(UART_HandleTypeDef *huart, struct LHR_DATA lhrData)
+{
 
-	char msg[59];
+    char msg[59];
 
-	uint8_t status = lhrData.status;
-	uint8_t bin[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-	uint8_t i = 0;
-	while (status > 0) {
-		bin[i] = status % 2;
-		status /= 2;
-		i++;
-	}
+    uint8_t status = lhrData.status;
+    uint8_t bin[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    uint8_t i = 0;
 
-	sprintf(msg, "Status: %u%u%u%u%u%u%u%u | LHR: %10u | LHR_AVG: %10u\n\r",
-			bin[7], bin[6], bin[5], bin[4], bin[3], bin[2], bin[1], bin[0],
-			lhrData.l, lhrData.l_avg);
+    while (status > 0)
+    {
+        bin[i] = status % 2;
+        status /= 2;
+        i++;
+    }
 
-	HAL_UART_Transmit(huart, (uint8_t*)msg, sizeof(msg), 100);
+    sprintf(msg, "Status: %u%u%u%u%u%u%u%u | LHR: %10u | LHR_AVG: %10u\n\r",
+            bin[7], bin[6], bin[5], bin[4], bin[3], bin[2], bin[1], bin[0],
+            lhrData.l, lhrData.l_avg);
+
+    HAL_UART_Transmit(huart, (uint8_t*)msg, sizeof(msg), 100);
 
 }
 
@@ -1273,13 +1385,14 @@ void ldc1101_print_lhr_data(UART_HandleTypeDef *huart, struct LHR_DATA lhrData) 
  * @param	huart A pointer to a huart struct
  * @param	rplData A RPL_DATA struct
  */
-void ldc1101_quick_print_rpl(UART_HandleTypeDef *huart, struct RPL_DATA rplData) {
+void ldc1101_quick_print_rpl(UART_HandleTypeDef *huart, struct RPL_DATA rplData)
+{
 
-	char msg[28];
+    char msg[28];
 
-	sprintf(msg, "RP: %8u | L: %8u\r", rplData.rp, rplData.l);
+    sprintf(msg, "RP: %8u | L: %8u\r", rplData.rp, rplData.l);
 
-	HAL_UART_Transmit(huart, (uint8_t*)msg, sizeof(msg), 100);
+    HAL_UART_Transmit(huart, (uint8_t*)msg, sizeof(msg), 100);
 
 }
 
@@ -1289,13 +1402,14 @@ void ldc1101_quick_print_rpl(UART_HandleTypeDef *huart, struct RPL_DATA rplData)
  * @param
  * @param
  */
-void ldc1101_quick_print_lhr(UART_HandleTypeDef *huart, struct LHR_DATA lhrData) {
+void ldc1101_quick_print_lhr(UART_HandleTypeDef *huart, struct LHR_DATA lhrData)
+{
 
-	char msg[17];
+    char msg[17];
 
-	sprintf(msg, "LHR: %10u\r", lhrData.l);
+    sprintf(msg, "LHR: %10u\r", lhrData.l);
 
-	HAL_UART_Transmit(huart, (uint8_t*)msg, sizeof(msg), 100);
+    HAL_UART_Transmit(huart, (uint8_t*)msg, sizeof(msg), 100);
 
 }
 
@@ -1309,8 +1423,9 @@ void ldc1101_quick_print_lhr(UART_HandleTypeDef *huart, struct LHR_DATA lhrData)
  * @param
  * @param
  */
-uint8_t ldc1101_running_avg_8bit(uint8_t avg, uint8_t newValue, uint8_t delta) {
-	return (avg * ((delta - 1) / delta)) + (newValue / delta);
+uint8_t ldc1101_running_avg_8bit(uint8_t avg, uint8_t newValue, uint8_t delta)
+{
+    return (avg * ((delta - 1) / delta)) + (newValue / delta);
 }
 
 /**
@@ -1320,8 +1435,9 @@ uint8_t ldc1101_running_avg_8bit(uint8_t avg, uint8_t newValue, uint8_t delta) {
  * @param
  */
 uint16_t ldc1101_running_avg_16bit(uint16_t avg, uint16_t newValue,
-		uint16_t delta) {
-	return (avg * ((delta - 1) / delta)) + (newValue / delta);
+                                   uint16_t delta)
+{
+    return (avg * ((delta - 1) / delta)) + (newValue / delta);
 }
 
 /**
@@ -1330,10 +1446,11 @@ uint16_t ldc1101_running_avg_16bit(uint16_t avg, uint16_t newValue,
  * @param
  * @param
  */
-uint32_t ldc1101_running_avg_32bit(uint32_t avg, 
+uint32_t ldc1101_running_avg_32bit(uint32_t avg,
                                    uint32_t newValue,
-		                               uint32_t delta) {
-	return (avg * ((delta - 1) / delta)) + (newValue / delta);
+                                   uint32_t delta)
+{
+    return (avg * ((delta - 1) / delta)) + (newValue / delta);
 }
 
 /**
@@ -1342,9 +1459,10 @@ uint32_t ldc1101_running_avg_32bit(uint32_t avg,
  * @param
  * @param
  */
-void ldc1101_status_clear_bit(struct LDC1101 *ldc1101, uint8_t bit) {
-	uint8_t notBit = ~bit;
-	ldc1101->status &= notBit;
+void ldc1101_status_clear_bit(struct LDC1101 *ldc1101, uint8_t bit)
+{
+    uint8_t notBit = ~bit;
+    ldc1101->status &= notBit;
 }
 
 /**
@@ -1353,8 +1471,9 @@ void ldc1101_status_clear_bit(struct LDC1101 *ldc1101, uint8_t bit) {
  * @param
  * @param
  */
-void ldc1101_status_set_bit(struct LDC1101 *ldc1101, uint8_t bit) {
-	ldc1101->status |= bit;
+void ldc1101_status_set_bit(struct LDC1101 *ldc1101, uint8_t bit)
+{
+    ldc1101->status |= bit;
 }
 
 /**
@@ -1364,12 +1483,13 @@ void ldc1101_status_set_bit(struct LDC1101 *ldc1101, uint8_t bit) {
  * @param
  * @return	uint8_t boolean true of false
  */
-uint8_t ldc1101_status_check_bit(struct LDC1101 *ldc1101, uint8_t bit) {
+uint8_t ldc1101_status_check_bit(struct LDC1101 *ldc1101, uint8_t bit)
+{
 
-	if ((ldc1101->status & bit) == bit) 
-			return 1;
+    if ((ldc1101->status & bit) == bit)
+        return 1;
 
-	return 0;
+    return 0;
 }
 
 /**
@@ -1387,19 +1507,20 @@ uint8_t ldc1101_status_check_bit(struct LDC1101 *ldc1101, uint8_t bit) {
  * 		  	to oldData. All bits outside of the mask will stay the same.
  * @return	uint8_t Byte that has been edited
  */
-uint8_t ldc1101_mask_edit_byte(uint8_t oldData, uint8_t data, uint8_t mask) {
-	/**
-	 * Step by step method
-	 * uint8_t maskedData = data & mask;
-	 * uint8_t notMask = ~mask;
-	 * uint8_t newData = oldData | maskedData;
-	 * uint8_t notMaskedData = maskedData | notMask;
-	 * newData &= notMaskedData;
-	 * return newData;
-	 */
+uint8_t ldc1101_mask_edit_byte(uint8_t oldData, uint8_t data, uint8_t mask)
+{
+    /**
+     * Step by step method
+     * uint8_t maskedData = data & mask;
+     * uint8_t notMask = ~mask;
+     * uint8_t newData = oldData | maskedData;
+     * uint8_t notMaskedData = maskedData | notMask;
+     * newData &= notMaskedData;
+     * return newData;
+     */
 
-	// one liner
-	return (oldData | (data & mask)) & ((data & mask) | ~mask);
+    // one liner
+    return (oldData | (data & mask)) & ((data & mask) | ~mask);
 }
 
 /**

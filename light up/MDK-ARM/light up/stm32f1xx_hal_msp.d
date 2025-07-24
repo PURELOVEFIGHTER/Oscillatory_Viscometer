@@ -35,3 +35,5 @@ light up\stm32f1xx_hal_msp.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdio.h
 light up\stm32f1xx_hal_msp.o: ../Core/Inc/__ldc1101_driver.h
 light up\stm32f1xx_hal_msp.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdbool.h
 light up\stm32f1xx_hal_msp.o: ../Core/Inc/drv8833_driver.h
+light up\stm32f1xx_hal_msp.o: ../Core/Inc/oled.h
+light up\stm32f1xx_hal_msp.o: ../Core/Inc/oledfont.h

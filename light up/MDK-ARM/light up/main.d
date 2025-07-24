@@ -35,6 +35,8 @@ light up\main.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdio.h
 light up\main.o: ../Core/Inc/__ldc1101_driver.h
 light up\main.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdbool.h
 light up\main.o: ../Core/Inc/drv8833_driver.h
+light up\main.o: ../Core/Inc/oled.h
+light up\main.o: ../Core/Inc/oledfont.h
 light up\main.o: ../Core/Inc/i2c.h
 light up\main.o: ../Core/Inc/spi.h
 light up\main.o: ../Core/Inc/tim.h

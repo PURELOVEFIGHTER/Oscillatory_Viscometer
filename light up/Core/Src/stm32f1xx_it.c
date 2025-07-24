@@ -72,14 +72,15 @@ extern UART_HandleTypeDef huart1;
   */
 void NMI_Handler(void)
 {
-  /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
+    /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
 
-  /* USER CODE END NonMaskableInt_IRQn 0 */
-  /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
-   while (1)
-  {
-  }
-  /* USER CODE END NonMaskableInt_IRQn 1 */
+    /* USER CODE END NonMaskableInt_IRQn 0 */
+    /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
+    while (1)
+    {
+    }
+
+    /* USER CODE END NonMaskableInt_IRQn 1 */
 }
 
 /**
@@ -87,14 +88,14 @@ void NMI_Handler(void)
   */
 void HardFault_Handler(void)
 {
-  /* USER CODE BEGIN HardFault_IRQn 0 */
+    /* USER CODE BEGIN HardFault_IRQn 0 */
 
-  /* USER CODE END HardFault_IRQn 0 */
-  while (1)
-  {
-    /* USER CODE BEGIN W1_HardFault_IRQn 0 */
-    /* USER CODE END W1_HardFault_IRQn 0 */
-  }
+    /* USER CODE END HardFault_IRQn 0 */
+    while (1)
+    {
+        /* USER CODE BEGIN W1_HardFault_IRQn 0 */
+        /* USER CODE END W1_HardFault_IRQn 0 */
+    }
 }
 
 /**
@@ -102,14 +103,14 @@ void HardFault_Handler(void)
   */
 void MemManage_Handler(void)
 {
-  /* USER CODE BEGIN MemoryManagement_IRQn 0 */
+    /* USER CODE BEGIN MemoryManagement_IRQn 0 */
 
-  /* USER CODE END MemoryManagement_IRQn 0 */
-  while (1)
-  {
-    /* USER CODE BEGIN W1_MemoryManagement_IRQn 0 */
-    /* USER CODE END W1_MemoryManagement_IRQn 0 */
-  }
+    /* USER CODE END MemoryManagement_IRQn 0 */
+    while (1)
+    {
+        /* USER CODE BEGIN W1_MemoryManagement_IRQn 0 */
+        /* USER CODE END W1_MemoryManagement_IRQn 0 */
+    }
 }
 
 /**
@@ -117,14 +118,14 @@ void MemManage_Handler(void)
   */
 void BusFault_Handler(void)
 {
-  /* USER CODE BEGIN BusFault_IRQn 0 */
+    /* USER CODE BEGIN BusFault_IRQn 0 */
 
-  /* USER CODE END BusFault_IRQn 0 */
-  while (1)
-  {
-    /* USER CODE BEGIN W1_BusFault_IRQn 0 */
-    /* USER CODE END W1_BusFault_IRQn 0 */
-  }
+    /* USER CODE END BusFault_IRQn 0 */
+    while (1)
+    {
+        /* USER CODE BEGIN W1_BusFault_IRQn 0 */
+        /* USER CODE END W1_BusFault_IRQn 0 */
+    }
 }
 
 /**
@@ -132,14 +133,14 @@ void BusFault_Handler(void)
   */
 void UsageFault_Handler(void)
 {
-  /* USER CODE BEGIN UsageFault_IRQn 0 */
+    /* USER CODE BEGIN UsageFault_IRQn 0 */
 
-  /* USER CODE END UsageFault_IRQn 0 */
-  while (1)
-  {
-    /* USER CODE BEGIN W1_UsageFault_IRQn 0 */
-    /* USER CODE END W1_UsageFault_IRQn 0 */
-  }
+    /* USER CODE END UsageFault_IRQn 0 */
+    while (1)
+    {
+        /* USER CODE BEGIN W1_UsageFault_IRQn 0 */
+        /* USER CODE END W1_UsageFault_IRQn 0 */
+    }
 }
 
 /**
@@ -147,12 +148,12 @@ void UsageFault_Handler(void)
   */
 void SVC_Handler(void)
 {
-  /* USER CODE BEGIN SVCall_IRQn 0 */
+    /* USER CODE BEGIN SVCall_IRQn 0 */
 
-  /* USER CODE END SVCall_IRQn 0 */
-  /* USER CODE BEGIN SVCall_IRQn 1 */
+    /* USER CODE END SVCall_IRQn 0 */
+    /* USER CODE BEGIN SVCall_IRQn 1 */
 
-  /* USER CODE END SVCall_IRQn 1 */
+    /* USER CODE END SVCall_IRQn 1 */
 }
 
 /**
@@ -160,12 +161,12 @@ void SVC_Handler(void)
   */
 void DebugMon_Handler(void)
 {
-  /* USER CODE BEGIN DebugMonitor_IRQn 0 */
+    /* USER CODE BEGIN DebugMonitor_IRQn 0 */
 
-  /* USER CODE END DebugMonitor_IRQn 0 */
-  /* USER CODE BEGIN DebugMonitor_IRQn 1 */
+    /* USER CODE END DebugMonitor_IRQn 0 */
+    /* USER CODE BEGIN DebugMonitor_IRQn 1 */
 
-  /* USER CODE END DebugMonitor_IRQn 1 */
+    /* USER CODE END DebugMonitor_IRQn 1 */
 }
 
 /**
@@ -173,12 +174,12 @@ void DebugMon_Handler(void)
   */
 void PendSV_Handler(void)
 {
-  /* USER CODE BEGIN PendSV_IRQn 0 */
+    /* USER CODE BEGIN PendSV_IRQn 0 */
 
-  /* USER CODE END PendSV_IRQn 0 */
-  /* USER CODE BEGIN PendSV_IRQn 1 */
+    /* USER CODE END PendSV_IRQn 0 */
+    /* USER CODE BEGIN PendSV_IRQn 1 */
 
-  /* USER CODE END PendSV_IRQn 1 */
+    /* USER CODE END PendSV_IRQn 1 */
 }
 
 /**
@@ -186,13 +187,13 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-  /* USER CODE BEGIN SysTick_IRQn 0 */
+    /* USER CODE BEGIN SysTick_IRQn 0 */
 
-  /* USER CODE END SysTick_IRQn 0 */
-  HAL_IncTick();
-  /* USER CODE BEGIN SysTick_IRQn 1 */
+    /* USER CODE END SysTick_IRQn 0 */
+    HAL_IncTick();
+    /* USER CODE BEGIN SysTick_IRQn 1 */
 
-  /* USER CODE END SysTick_IRQn 1 */
+    /* USER CODE END SysTick_IRQn 1 */
 }
 
 /******************************************************************************/
@@ -207,13 +208,13 @@ void SysTick_Handler(void)
   */
 void EXTI0_IRQHandler(void)
 {
-  /* USER CODE BEGIN EXTI0_IRQn 0 */
+    /* USER CODE BEGIN EXTI0_IRQn 0 */
 
-  /* USER CODE END EXTI0_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
-  /* USER CODE BEGIN EXTI0_IRQn 1 */
+    /* USER CODE END EXTI0_IRQn 0 */
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
+    /* USER CODE BEGIN EXTI0_IRQn 1 */
 
-  /* USER CODE END EXTI0_IRQn 1 */
+    /* USER CODE END EXTI0_IRQn 1 */
 }
 
 /**
@@ -221,27 +222,29 @@ void EXTI0_IRQHandler(void)
   */
 void TIM2_IRQHandler(void)
 {
-  /* USER CODE BEGIN TIM2_IRQn 0 */
-		// 方向控制波形
-		static uint32_t tim2_cnt_drv;
-		if(tim2_cnt_drv < ((uint32_t)drv_PWM_CNT * drv_PWM_DR / 100))
-				DRV_Forward(&(drv1.channel_A));
-		else if (tim2_cnt_drv < ((uint32_t)drv_PWM_CNT))
-				DRV_Reverse(&(drv1.channel_A));
-		else
-		{
-				tim2_cnt_drv = 0;
-				DRV_Forward(&(drv1.channel_A));
-		}
-		tim2_cnt_drv++;
-		
+    /* USER CODE BEGIN TIM2_IRQn 0 */
+    // 方向控制波形
+    static uint32_t tim2_cnt_drv;
+
+    if(tim2_cnt_drv < ((uint32_t)drv_PWM_CNT * drv_PWM_DR / 100))
+        DRV_Forward(&(drv1.channel_A));
+    else if (tim2_cnt_drv < ((uint32_t)drv_PWM_CNT))
+        DRV_Reverse(&(drv1.channel_A));
+    else
+    {
+        tim2_cnt_drv = 0;
+        DRV_Forward(&(drv1.channel_A));
+    }
+
+    tim2_cnt_drv++;
+
 //		static uint32_t tim2_cnt_ldc;
 
-  /* USER CODE END TIM2_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim2);
-  /* USER CODE BEGIN TIM2_IRQn 1 */
+    /* USER CODE END TIM2_IRQn 0 */
+    HAL_TIM_IRQHandler(&htim2);
+    /* USER CODE BEGIN TIM2_IRQn 1 */
 
-  /* USER CODE END TIM2_IRQn 1 */
+    /* USER CODE END TIM2_IRQn 1 */
 }
 
 /**
@@ -249,13 +252,13 @@ void TIM2_IRQHandler(void)
   */
 void SPI1_IRQHandler(void)
 {
-  /* USER CODE BEGIN SPI1_IRQn 0 */
+    /* USER CODE BEGIN SPI1_IRQn 0 */
 
-  /* USER CODE END SPI1_IRQn 0 */
-  HAL_SPI_IRQHandler(&hspi1);
-  /* USER CODE BEGIN SPI1_IRQn 1 */
+    /* USER CODE END SPI1_IRQn 0 */
+    HAL_SPI_IRQHandler(&hspi1);
+    /* USER CODE BEGIN SPI1_IRQn 1 */
 
-  /* USER CODE END SPI1_IRQn 1 */
+    /* USER CODE END SPI1_IRQn 1 */
 }
 
 /**
@@ -263,13 +266,13 @@ void SPI1_IRQHandler(void)
   */
 void SPI2_IRQHandler(void)
 {
-  /* USER CODE BEGIN SPI2_IRQn 0 */
+    /* USER CODE BEGIN SPI2_IRQn 0 */
 
-  /* USER CODE END SPI2_IRQn 0 */
-  HAL_SPI_IRQHandler(&hspi2);
-  /* USER CODE BEGIN SPI2_IRQn 1 */
+    /* USER CODE END SPI2_IRQn 0 */
+    HAL_SPI_IRQHandler(&hspi2);
+    /* USER CODE BEGIN SPI2_IRQn 1 */
 
-  /* USER CODE END SPI2_IRQn 1 */
+    /* USER CODE END SPI2_IRQn 1 */
 }
 
 /**
@@ -277,22 +280,23 @@ void SPI2_IRQHandler(void)
   */
 void USART1_IRQHandler(void)
 {
-  /* USER CODE BEGIN USART1_IRQn 0 */
- 
-  /* USER CODE END USART1_IRQn 0 */
-  HAL_UART_IRQHandler(&huart1);
-  /* USER CODE BEGIN USART1_IRQn 1 */
+    /* USER CODE BEGIN USART1_IRQn 0 */
 
-  /* USER CODE END USART1_IRQn 1 */
+    /* USER CODE END USART1_IRQn 0 */
+    HAL_UART_IRQHandler(&huart1);
+    /* USER CODE BEGIN USART1_IRQn 1 */
+
+    /* USER CODE END USART1_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	static uint8_t index = 0;
-	if(huart->Instance == USART1)
-	{
-				if (RX_BYTE == '\n' || RX_BYTE == '\r')  // 一条命令接收完毕
+    static uint8_t index = 0;
+
+    if(huart->Instance == USART1)
+    {
+        if (RX_BYTE == '\n' || RX_BYTE == '\r')  // 一条命令接收完毕
         {
             RX_BUFFER[index] = '\0';
             Command_Parse();     // 你自己写的函数

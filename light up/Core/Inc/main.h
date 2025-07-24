@@ -36,6 +36,7 @@ extern "C" {
 #include "stdio.h"
 #include "__ldc1101_driver.h"
 #include "drv8833_driver.h"
+#include "oled.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
