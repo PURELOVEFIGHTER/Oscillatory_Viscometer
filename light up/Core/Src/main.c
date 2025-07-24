@@ -258,7 +258,7 @@ int main(void)
 	HAL_NVIC_SetPriority(EXTI0_IRQn, 1, 0);                  // DRV8833 报错优先级设定
 	
 	HAL_UART_Receive_IT(&huart1, (uint8_t*)&RX_BYTE, 1);     // 串口通讯开启
-	if(ldc1101_init(&ldc1,_LDC1101_RP_SET_RP_MIN_0_75KOhm)||ldc1101_init(&ldc2,_LDC1101_RP_SET_RP_MIN_1_5KOhm))             // LDC1101 初始化
+	if(ldc1101_init(&ldc1,_LDC1101_RP_SET_RP_MIN_0_75KOhm)||ldc1101_init(&ldc2,_LDC1101_RP_SET_RP_MIN_0_75KOhm))             // LDC1101 初始化
 	{
 			sprintf(TX_BUFFER, "LDC1101 Initialize Failed.\r\n");
 			HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
@@ -268,6 +268,7 @@ int main(void)
 			HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
 	}
 	ldc1101_writeByte(&ldc1, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE);// 开始测量
+	ldc1101_writeByte(&ldc2, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE);// 开始测量
 
   /* USER CODE END 2 */
 
