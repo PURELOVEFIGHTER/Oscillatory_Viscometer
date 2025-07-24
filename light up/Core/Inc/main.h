@@ -68,16 +68,12 @@ void Error_Handler(void);
 #define AIN1_GPIO_Port GPIOA
 #define AIN2_Pin GPIO_PIN_1
 #define AIN2_GPIO_Port GPIOA
-#define BIN1_Pin GPIO_PIN_2
-#define BIN1_GPIO_Port GPIOA
-#define BIN2_Pin GPIO_PIN_3
-#define BIN2_GPIO_Port GPIOA
-#define SPI1_CS_Pin GPIO_PIN_4
-#define SPI1_CS_GPIO_Port GPIOA
+#define SPI1_CS1_Pin GPIO_PIN_4
+#define SPI1_CS1_GPIO_Port GPIOA
+#define SPI_CS2_Pin GPIO_PIN_0
+#define SPI_CS2_GPIO_Port GPIOB
 #define DRV_nSLEEP_Pin GPIO_PIN_1
 #define DRV_nSLEEP_GPIO_Port GPIOB
-#define SPI2_CS_Pin GPIO_PIN_12
-#define SPI2_CS_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 /**************************************DRV8833**************************************/
