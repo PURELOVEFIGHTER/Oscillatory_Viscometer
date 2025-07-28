@@ -49,7 +49,7 @@ uint8_t ldc1101_init(LDC1101_Device *dev, uint8_t RP_MIN)
     // 设置 RP 测量动态范围(0x01,0x57)
     // LHR 模式下只关注 RPMIN
     ldc1101_writeByte(dev, _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE, RP_MIN |
-                      _LDC1101_RP_SET_RP_MAX_3KOhm);
+																																					_LDC1101_RP_SET_RP_MAX_3KOhm);
 
     // LHR 模式设置必需(0x05,0x01)(0x0C,0x01)
     ldc1101_writeByte(dev, _LDC1101_REG_CFG_ADDITIONAL_DEVICE, _LDC1101_ALT_CFG_L_OPTIMAL_ENABLE);
@@ -59,7 +59,7 @@ uint8_t ldc1101_init(LDC1101_Device *dev, uint8_t RP_MIN)
     ldc1101_writeByte(dev, _LDC1101_REG_CFG_INTB_MODE, _LDC1101_INTB_MODE_REPORT_INTB_ON_SDO_PIN |
                       _LDC1101_INTB_MODE_REPORT_LHR_DATA_READY);
 
-    //
+    // 计数周期
     ldc1101_writeByte(dev, _LDC1101_REG_LHR_RCOUNT_LSB, 0x49);
     ldc1101_writeByte(dev, _LDC1101_REG_LHR_RCOUNT_MSB, 0x01);
 
@@ -80,35 +80,36 @@ uint8_t ldc1101_init(LDC1101_Device *dev, uint8_t RP_MIN)
 
 
 //// 为读取 RP 值以设置 RP_MIN
-//uint8_t ldc1101_init(LDC1101_Device *dev)
+//uint8_t ldc1101_init(LDC1101_Device *dev, uint8_t RP_MIN)
 //{
-//	  // 设置为 SLEEP 模式，开始初始化
+//    // 设置为 SLEEP 模式，开始初始化
 //    ldc1101_writeByte(dev, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_SLEEP_MODE);// 0x01
-//
-//		// 先读取 CHIP ID，确认 SPI 和芯片正常
+
+//    // 先读取 CHIP ID，确认 SPI 和芯片正常
 //    uint8_t chip_id = ldc1101_readByte(dev, _LDC1101_REG_CHIP_ID);
-//    if (chip_id != 0xD4) {
+//    if(chip_id != 0xD4)
+//    {
 //        return DEVICE_ERROR;
 //    }
-//
-//	  // 设置 RP 测量动态范围(0x01,0x07)[设置为最宽避免无法检测]
-//    ldc1101_writeByte(dev, _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE, _LDC1101_RP_SET_RP_MIN_0_75KOhm |
-//																																				  _LDC1101_RP_SET_RP_MAX_3KOhm);
-//
-//	  // 配置内部时间常数(0x02,0x9A)(0x03,0xFD)
+
+//    // 设置 RP 测量动态范围(0x01,0x47)
+//    ldc1101_writeByte(dev, _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE, RP_MIN |
+//																																					_LDC1101_RP_SET_RP_MAX_6KOhm);
+
+//    // 配置内部时间常数(0x02,0x9A)(0x03,0xFD)
 //    ldc1101_writeByte(dev, _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_1, 0x9A);
 //    ldc1101_writeByte(dev, _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_2, 0xFD);
 
 //    // 配置 RPL 转换时间(0x04,0xC4)
-//    ldc1101_writeByte(dev, _LDC1101_REG_CFG_RP_L_CONVERSION_INTERVAL,0xC4);
-//
-//		// 配置事件报告
-//		ldc1101_writeByte(dev, _LDC1101_REG_CFG_INTB_MODE, _LDC1101_INTB_MODE_DONT_REPORT_INTB_ON_SDO_PIN);
+//    ldc1101_writeByte(dev, _LDC1101_REG_CFG_RP_L_CONVERSION_INTERVAL, 0xC4);
+
+//    // 配置事件报告
+//    ldc1101_writeByte(dev, _LDC1101_REG_CFG_INTB_MODE, _LDC1101_INTB_MODE_DONT_REPORT_INTB_ON_SDO_PIN);
 
 
 //    // 关闭其他辅助功能
 //    ldc1101_writeByte(dev, _LDC1101_REG_CFG_ADDITIONAL_DEVICE, _LDC1101_ALT_CFG_L_OPTIMAL_DISABLED |
-//											                                     		 _LDC1101_ALT_CFG_SHUTDOWN_DISABLE);// 0x00
+//																															 _LDC1101_ALT_CFG_SHUTDOWN_DISABLE);// 0x00
 
 //    // 关闭门限功能（初次调试不使用）
 //    ldc1101_writeByte(dev, _LDC1101_REG_RP_THRESH_H_MSB, 0x00);
@@ -125,13 +126,13 @@ uint8_t ldc1101_init(LDC1101_Device *dev, uint8_t RP_MIN)
 
 //    // 切换到 ACTIVE CONVERSION 模式开始测量
 //    ldc1101_writeByte(dev, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE);
-//
-//		isLHR = 0;
+
+//    isLHR = 0;
 
 //    // 等待测量稳定
 //    HAL_Delay(100);
-//
-//		return DEVICE_OK;
+
+//    return DEVICE_OK;
 //}
 
 
@@ -169,7 +170,7 @@ uint16_t ldc1101_getLData(LDC1101_Device *dev)
 {
     uint16_t data;
     data = ldc1101_readByte(dev, _LDC1101_REG_L_DATA_LSB);
-    data = data | (ldc1101_readByte(dev, _LDC1101_REG_L_DATA_MSB) << 8 );
+    data = data | (ldc1101_readByte(dev, _LDC1101_REG_L_DATA_MSB) << 8);
     return data;
 }
 

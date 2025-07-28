@@ -60,15 +60,15 @@ uint16_t drv_PWM_CNT ;
 char RX_BYTE = 1;
 char RX_BUFFER[MSG_LEN];
 char TX_BUFFER[MSG_LEN];
-uint8_t uart_state = 0;
 
 
 //LDC1101 相关变量
-LDC1101_Device ldc1 = { &hspi1, GPIOA, GPIO_PIN_4 };
-LDC1101_Device ldc2 = { &hspi1, GPIOB, GPIO_PIN_0 };
-uint16_t RP_DATA = 0;
-uint16_t L_DATA = 0;
-uint32_t LHR_DATA = 0;
+LDC1101_Device ldc1 = { &hspi1, SPI1_CS1_GPIO_Port, SPI1_CS1_Pin };
+LDC1101_Device ldc2 = { &hspi1, SPI1_CS2_GPIO_Port, SPI1_CS2_Pin };
+uint16_t RP_DATA[2] = {0,0};
+uint16_t L_DATA[2] = {0,0};
+uint32_t LHR_DATA[2] = {0,0};
+uint8_t STATUS = 0;
 
 /* USER CODE END PV */
 
@@ -166,19 +166,19 @@ void Command_Parse(void)
     {
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 
-        uint8_t rpl_status = ldc1101_readByte(&ldc2, _LDC1101_REG_RP_L_MEASUREMENT_STATUS);
+        STATUS = ldc1101_readByte(&ldc2, _LDC1101_REG_RP_L_MEASUREMENT_STATUS);
 
         // 将 rpl_status 转成二进制字符串
         sprintf(TX_BUFFER, "RP+L Measurement Status: "
                            "%d%d%d%d%d%d%d%d\r\n",
-                (rpl_status >> 7) & 0x01,
-                (rpl_status >> 6) & 0x01,
-                (rpl_status >> 5) & 0x01,
-                (rpl_status >> 4) & 0x01,
-                (rpl_status >> 3) & 0x01,
-                (rpl_status >> 2) & 0x01,
-                (rpl_status >> 1) & 0x01,
-                (rpl_status >> 0) & 0x01);
+                (STATUS >> 7) & 0x01,
+                (STATUS >> 6) & 0x01,
+                (STATUS >> 5) & 0x01,
+                (STATUS >> 4) & 0x01,
+                (STATUS >> 3) & 0x01,
+                (STATUS >> 2) & 0x01,
+                (STATUS >> 1) & 0x01,
+                (STATUS >> 0) & 0x01);
 
         HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
     }
@@ -186,25 +186,20 @@ void Command_Parse(void)
     {
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 
-        uint8_t lhr_status = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
+        STATUS = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
 
         // 将 rpl_status 转成二进制字符串
         sprintf(TX_BUFFER, "LHR Measurement Status: "
                            "%d%d%d%d%d%d%d%d\r\n",
-                (lhr_status >> 7) & 0x01,
-                (lhr_status >> 6) & 0x01,
-                (lhr_status >> 5) & 0x01,
-                (lhr_status >> 4) & 0x01,
-                (lhr_status >> 3) & 0x01,
-                (lhr_status >> 2) & 0x01,
-                (lhr_status >> 1) & 0x01,
-                (lhr_status >> 0) & 0x01);
+                (STATUS >> 7) & 0x01,
+                (STATUS >> 6) & 0x01,
+                (STATUS >> 5) & 0x01,
+                (STATUS >> 4) & 0x01,
+                (STATUS >> 3) & 0x01,
+                (STATUS >> 2) & 0x01,
+                (STATUS >> 1) & 0x01,
+                (STATUS >> 0) & 0x01);
 
-        HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-    }
-    else
-    {
-        sprintf(TX_BUFFER, "Invalid command, try again:\r\n");
         HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
     }
 
@@ -260,7 +255,8 @@ int main(void)
     OLED_Init();
     OLED_Display_On();
     OLED_Clear();
-    OLED_ShowChar(0, 0, 'A', 16, 0);
+    OLED_ShowChar(0, 0, 'B', 16, 0);
+
     // DRV8833设置
     DRV8833_Init(&drv1,
                  GPIOA, GPIO_PIN_0,
@@ -272,7 +268,7 @@ int main(void)
     DRV_Wake(&drv1);	                                       // DRV8833 唤醒
     HAL_TIM_Base_Start_IT(&htim2);                           // DRV8833 驱动波形开启
     // LDC1101设置
-    if(ldc1101_init(&ldc1, _LDC1101_RP_SET_RP_MIN_0_75KOhm) || ldc1101_init(&ldc2, _LDC1101_RP_SET_RP_MIN_0_75KOhm))         // LDC1101 初始化
+    if(ldc1101_init(&ldc1, _LDC1101_RP_SET_RP_MIN_1_5KOhm) || ldc1101_init(&ldc2, _LDC1101_RP_SET_RP_MIN_1_5KOhm))         // LDC1101 初始化
     {
         sprintf(TX_BUFFER, "LDC1101 Initialize Failed.\r\n");
         HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
@@ -295,15 +291,17 @@ int main(void)
         HAL_Delay(20);
 
 
-        uint8_t status = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
+        STATUS = ldc1101_readByte(&ldc1, _LDC1101_REG_LHR_STATUS);
 
         // 判断 LHR_Data_Ready == 0，表示有新数据
-        if((status & 0x01) == 0)
+        if((STATUS & 0x01) == 0)
         {
-            uint32_t lhr_data = ldc1101_getLHRData(&ldc1);
+            LHR_DATA[0] = ldc1101_getLHRData(&ldc1);
+					  LHR_DATA[1] = ldc1101_getLHRData(&ldc2);
 
             // 输出 LHR 数据（十进制 + 十六进制）
-            sprintf(TX_BUFFER, "LHR: %lu (0x%08lX)\r\n", lhr_data, lhr_data);
+//            sprintf(TX_BUFFER, "LHR: %lu (0x%08lX)\r\n", LHR_DATA[0], LHR_DATA[0]);
+					  sprintf(TX_BUFFER, "%lu,0x%lX,%lu,0x%lX\r\n", LHR_DATA[0], LHR_DATA[0], LHR_DATA[1], LHR_DATA[1]);
             HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
         }
 
@@ -323,19 +321,23 @@ int main(void)
 
 
 
-//				uint8_t status = ldc1101_readByte(&ldc1, _LDC1101_REG_RP_L_MEASUREMENT_STATUS);
+//				STATUS = ldc1101_readByte(&ldc2, _LDC1101_REG_RP_L_MEASUREMENT_STATUS);
 
-//				if ((status & (1 << 6)) == 0)  // 第6位为0，表示有新数据
+//				if ((STATUS & (1 << 6)) == 0)  // 第6位为0，表示有新数据
 //				{
-//						uint16_t rp_data = ldc1101_getRPData(&ldc2);
-//						uint16_t l_data = ldc1101_getLData(&ldc2);
+//						RP_DATA[0] = ldc1101_getRPData(&ldc1);
+//						L_DATA[0] = ldc1101_getLData(&ldc1);
+//						RP_DATA[1] = ldc1101_getRPData(&ldc2);
+//						L_DATA[1] = ldc1101_getLData(&ldc2);
 
-////					sprintf(TX_BUFFER, "RP: %u, L: %u\r\n", rp_data, l_data);
-//						sprintf(TX_BUFFER, "%u\r\n", rp_data);
+//						sprintf(TX_BUFFER, "%u,%u,%u,%u\r\n", RP_DATA[0],L_DATA[0],RP_DATA[1],L_DATA[1]);
 //						HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
 //				}
-//
+
 //				HAL_Delay(100);
+				
+				
+				
     }
 
     /* USER CODE END WHILE */

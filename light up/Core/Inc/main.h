@@ -62,18 +62,18 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define STATE_LED_Pin GPIO_PIN_13
-#define STATE_LED_GPIO_Port GPIOC
-#define AIN1_Pin GPIO_PIN_0
-#define AIN1_GPIO_Port GPIOA
-#define AIN2_Pin GPIO_PIN_1
-#define AIN2_GPIO_Port GPIOA
-#define SPI1_CS1_Pin GPIO_PIN_4
-#define SPI1_CS1_GPIO_Port GPIOA
-#define SPI_CS2_Pin GPIO_PIN_0
-#define SPI_CS2_GPIO_Port GPIOB
-#define DRV_nSLEEP_Pin GPIO_PIN_1
-#define DRV_nSLEEP_GPIO_Port GPIOB
+#define STATE_LED_Pin         GPIO_PIN_13
+#define STATE_LED_GPIO_Port   GPIOC
+#define AIN1_Pin              GPIO_PIN_0
+#define AIN1_GPIO_Port        GPIOA
+#define AIN2_Pin              GPIO_PIN_1
+#define AIN2_GPIO_Port        GPIOA
+#define SPI1_CS1_Pin          GPIO_PIN_4
+#define SPI1_CS1_GPIO_Port    GPIOA
+#define SPI1_CS2_Pin          GPIO_PIN_0
+#define SPI1_CS2_GPIO_Port    GPIOB
+#define DRV_nSLEEP_Pin        GPIO_PIN_1
+#define DRV_nSLEEP_GPIO_Port  GPIOB
 
 /* USER CODE BEGIN Private defines */
 /**************************************DRV8833**************************************/
@@ -91,15 +91,20 @@ void FREQ_Scan(void);
 #define DR_STEP 5
 void DR_Scan(void);
 
-// 控制波形
-extern uint16_t drv_PWM_FREQ;  // PWM频率
-extern uint16_t drv_PWM_CNT;   // PWM所需中断计数值
-extern uint16_t drv_PWM_DR;    // PWM占空比
+// 控制波形设置
+extern uint16_t drv_PWM_FREQ;  // PWM 频率
+extern uint16_t drv_PWM_CNT;   // PWM 所需中断计数值
+extern uint16_t drv_PWM_DR;    // PWM 占空比
 /************************************************************************************/
 
 /**************************************LDC1101**************************************/
 extern LDC1101_Device ldc1;
 extern LDC1101_Device ldc2;
+
+extern uint16_t RP_DATA[2];
+extern uint16_t L_DATA[2];
+extern uint32_t LHR_DATA[2];
+extern uint8_t  STATUS;
 /************************************************************************************/
 
 /**************************************蓝牙串口**************************************/

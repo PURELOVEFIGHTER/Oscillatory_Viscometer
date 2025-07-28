@@ -207,12 +207,12 @@ extern bool isLHR;
 #define _LDC1101_DIG_CFG_MIN_FREQ_7_5MHz     0xE0 
 #define _LDC1101_DIG_CFG_MIN_FREQ_8MHz       0xF0 
 
-#define _LDC1101_DIG_CFG_RESP_TIME_192s      0x02 
-#define _LDC1101_DIG_CFG_RESP_TIME_384s      0x03 
-#define _LDC1101_DIG_CFG_RESP_TIME_768s      0x04 
-#define _LDC1101_DIG_CFG_RESP_TIME_1536s     0x05 
-#define _LDC1101_DIG_CFG_RESP_TIME_3072s     0x06 
-#define _LDC1101_DIG_CFG_RESP_TIME_6144s     0x07 
+#define _LDC1101_DIG_CFG_RESP_TIME_192      0x02 
+#define _LDC1101_DIG_CFG_RESP_TIME_384      0x03 
+#define _LDC1101_DIG_CFG_RESP_TIME_768      0x04 
+#define _LDC1101_DIG_CFG_RESP_TIME_1536     0x05 
+#define _LDC1101_DIG_CFG_RESP_TIME_3072     0x06 
+#define _LDC1101_DIG_CFG_RESP_TIME_6144     0x07 
 
 /* Configure additional device settings (RW) */
 #define _LDC1101_ALT_CFG_SHUTDOWN_ENABLE       0x02 
