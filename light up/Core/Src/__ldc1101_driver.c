@@ -64,7 +64,7 @@ uint8_t ldc1101_init(LDC1101_Device *dev, uint8_t RP_MIN)
     ldc1101_writeByte(dev, _LDC1101_REG_LHR_RCOUNT_MSB, 0x01);
 
     // 在静止状态下读取偏移量再进行设置
-    ldc1101_writeByte(dev, _LDC1101_REG_LHR_OFFSET_LSB, 0x00);
+    ldc1101_writeByte(dev, _LDC1101_REG_LHR_OFFSET_LSB, 0x900);
     ldc1101_writeByte(dev, _LDC1101_REG_LHR_OFFSET_MSB, 0x00);
 
     // 不分频

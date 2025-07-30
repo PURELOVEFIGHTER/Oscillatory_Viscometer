@@ -64,7 +64,7 @@ char TX_BUFFER[MSG_LEN];
 
 //LDC1101 相关变量
 LDC1101_Device ldc1 = { &hspi1, SPI1_CS1_GPIO_Port, SPI1_CS1_Pin };
-LDC1101_Device ldc2 = { &hspi1, SPI1_CS2_GPIO_Port, SPI1_CS2_Pin };
+LDC1101_Device ldc2 = { &hspi1, GPIOB, GPIO_PIN_0 };
 uint16_t RP_DATA[2] = {0,0};
 uint16_t L_DATA[2] = {0,0};
 uint32_t LHR_DATA[2] = {0,0};
@@ -246,6 +246,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM2_Init();
   MX_I2C1_Init();
+  MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
     // 片上外设
     HAL_UART_Receive_IT(&huart1, (uint8_t*)&RX_BYTE, 1);     // 串口通讯开启
