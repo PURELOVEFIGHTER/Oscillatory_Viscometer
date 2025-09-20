@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2025 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2025 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -48,28 +48,32 @@
 
 /* USER CODE BEGIN PV */
 
-// DRV8833相关变量
+/* DRV8833相关变量 */
 DRV8833_HandleTypeDef drv1;
 
 uint16_t drv_PWM_FREQ = 100;
 uint16_t drv_PWM_DR = 30;
-uint16_t drv_PWM_CNT ;
+uint16_t drv_PWM_CNT;
 
-
-// 串口相关变量
+/* 串口相关变量 */
 char RX_BYTE = 1;
 char RX_BUFFER[MSG_LEN];
 char TX_BUFFER[MSG_LEN];
 
-
-//LDC1101 相关变量
-LDC1101_Device ldc1 = { &hspi1, SPI1_CS1_GPIO_Port, SPI1_CS1_Pin };
-LDC1101_Device ldc2 = { &hspi1, GPIOB, GPIO_PIN_0 };
-uint16_t RP_DATA[2] = {0,0};
-uint16_t L_DATA[2] = {0,0};
-uint32_t LHR_DATA[2] = {0,0};
+/* LDC1101 相关变量 */
+LDC1101_Device ldc1 = {
+    &hspi1,
+    LDC1_CS_GPIO_Port,
+    LDC1_CS_Pin};
+LDC1101_Device ldc2 = {
+    &hspi2,
+    LDC2_CS_GPIO_Port,
+    LDC2_CS_Pin,
+};
+uint16_t RP_DATA[2] = {0, 0};
+uint16_t L_DATA[2] = {0, 0};
+uint32_t LHR_DATA[2] = {0, 0};
 uint8_t STATUS = 0;
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -78,132 +82,127 @@ void SystemClock_Config(void);
 // 扫频
 void FREQ_Scan(void)
 {
-//		for (drv_PWM_FREQ = FREQ_MIN; drv_PWM_FREQ <= FREQ_MAX; drv_PWM_FREQ += FREQ_STEP)
-//				HAL_Delay(5000);  // 等待系统稳定（振动建立）
+  //		for (drv_PWM_FREQ = FREQ_MIN; drv_PWM_FREQ <= FREQ_MAX; drv_PWM_FREQ += FREQ_STEP)
+  //				HAL_Delay(5000);  // 等待系统稳定（振动建立）
 }
 
 // 占空比扫描
 void DR_Scan(void)
 {
-    for(; drv_PWM_DR <= DR_MAX; drv_PWM_DR += DR_STEP)
-        HAL_Delay(10000);  // 等待系统稳定（振动建立）
+  for (; drv_PWM_DR <= DR_MAX; drv_PWM_DR += DR_STEP)
+    HAL_Delay(10000); // 等待系统稳定（振动建立）
 }
-
-
-
 
 void Command_Parse(void)
 {
-    // 简单协议,例:输入 "DR:80" 设置占空比为 80，"FR:1000" 设置频率为 1000Hz
-    if(strncmp(RX_BUFFER, "DR:", 3) == 0)
+  // 简单协议,例:输入 "DR:80" 设置占空比为 80，"FR:1000" 设置频率为 1000Hz
+  if (strncmp(RX_BUFFER, "DR:", 3) == 0)
+  {
+    drv_PWM_DR = atoi(&RX_BUFFER[3]); // 提取并转换占空比
+
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+
+    sprintf(TX_BUFFER, "PWM_DR set to %d\r\n", drv_PWM_DR);
+    HAL_UART_Transmit(&huart1, (uint8_t *)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+  }
+  else if (strncmp(RX_BUFFER, "FR:", 3) == 0)
+  {
+    drv_PWM_FREQ = atoi(&RX_BUFFER[3]); // 提取并转换频率
+
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+
+    sprintf(TX_BUFFER, "PWM_FREQ set to %dHz\r\n", drv_PWM_FREQ);
+    HAL_UART_Transmit(&huart1, (uint8_t *)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+  }
+  else if (strncmp(RX_BUFFER, "FR Scan", 7) == 0)
+  {
+    sprintf(TX_BUFFER, "Frequency Scan begin.\r\n");
+    HAL_UART_Transmit(&huart1, (uint8_t *)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+
+    for (drv_PWM_FREQ = FREQ_MIN; drv_PWM_FREQ <= FREQ_MAX; drv_PWM_FREQ += FREQ_STEP)
     {
-        drv_PWM_DR = atoi(&RX_BUFFER[3]);  // 提取并转换占空比
-
-        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-
-        sprintf(TX_BUFFER, "PWM_DR set to %d\r\n", drv_PWM_DR);
-        HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-    }
-    else if(strncmp(RX_BUFFER, "FR:", 3) == 0)
-    {
-        drv_PWM_FREQ = atoi(&RX_BUFFER[3]);  // 提取并转换频率
-
-        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-
-        sprintf(TX_BUFFER, "PWM_FREQ set to %dHz\r\n", drv_PWM_FREQ);
-        HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-    }
-    else if(strncmp(RX_BUFFER, "FR Scan", 7) == 0)
-    {
-        sprintf(TX_BUFFER, "Frequency Scan begin.\r\n");
-        HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-
-        for(drv_PWM_FREQ = FREQ_MIN; drv_PWM_FREQ <= FREQ_MAX; drv_PWM_FREQ += FREQ_STEP)
-        {
-            HAL_Delay(5000);  // 等待系统稳定（振动建立）
-            sprintf(TX_BUFFER, "PWM_FREQ:%dHz\r\n", drv_PWM_FREQ);
-            HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-        }
-
-        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-    }
-    else if(strncmp(RX_BUFFER, "DR Scan", 7) == 0)
-    {
-//				HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-//				sprintf(TX_BUFFER, "Please set PWM_DR:");
-//				HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-//				drv_PWM_FREQ = atoi(&RX_BUFFER[3]);  // 提取并转换频率
-//				DR_Scan();
+      HAL_Delay(5000); // 等待系统稳定（振动建立）
+      sprintf(TX_BUFFER, "PWM_FREQ:%dHz\r\n", drv_PWM_FREQ);
+      HAL_UART_Transmit(&huart1, (uint8_t *)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
     }
 
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+  }
+  else if (strncmp(RX_BUFFER, "DR Scan", 7) == 0)
+  {
+    //				HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+    //				sprintf(TX_BUFFER, "Please set PWM_DR:");
+    //				HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+    //				drv_PWM_FREQ = atoi(&RX_BUFFER[3]);  // 提取并转换频率
+    //				DR_Scan();
+  }
+  // 检查SPI通讯状态
+  else if (strncmp(RX_BUFFER, "SPI Check", 9) == 0)
+  {
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 
-    // 检查SPI通讯状态
-    else if(strncmp(RX_BUFFER, "SPI Check", 9) == 0)
-    {
-        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+    uint8_t chip_id = ldc1101_readByte(&ldc1, _LDC1101_REG_CHIP_ID);
 
-        uint8_t chip_id = ldc1101_readByte(&ldc1, _LDC1101_REG_CHIP_ID);
+    sprintf(TX_BUFFER, "LDC1101 Device ID: 0x%02X\r\n", chip_id);
+    HAL_UART_Transmit(&huart1, (uint8_t *)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+  }
+  // 读取寄存器数值
+  else if (strncmp(RX_BUFFER, "Read:", 5) == 0)
+  {
+    uint8_t reg_addr;
+    uint8_t reg_val;
 
-        sprintf(TX_BUFFER, "LDC1101 Device ID: 0x%02X\r\n", chip_id);
-        HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-    }
-    // 读取寄存器数值
-    else if(strncmp(RX_BUFFER, "Read:", 5) == 0)
-    {
-        uint8_t reg_addr;
-        uint8_t reg_val;
+    // 直接解析寄存器地址，默认格式为 0xXX
+    sscanf(&RX_BUFFER[5], "%hhx", &reg_addr);
 
-        // 直接解析寄存器地址，默认格式为 0xXX
-        sscanf(&RX_BUFFER[5], "%hhx", &reg_addr);
+    reg_val = ldc1101_readByte(&ldc1, reg_addr);
 
-        reg_val = ldc1101_readByte(&ldc1, reg_addr);
+    sprintf(TX_BUFFER, "[0x%02X] = 0x%02X\r\n", reg_addr, reg_val);
+    HAL_UART_Transmit(&huart1, (uint8_t *)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+  }
+  // 检查 RP+L 模式工作状态
+  else if ((strncmp(RX_BUFFER, "RPL Check", 9) == 0) && (isLHR == 0))
+  {
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 
-        sprintf(TX_BUFFER, "[0x%02X] = 0x%02X\r\n", reg_addr, reg_val);
-        HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-    }
-    // 检查 RP+L 模式工作状态
-    else if((strncmp(RX_BUFFER, "RPL Check", 9) == 0) && (isLHR == 0))
-    {
-        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+    STATUS = ldc1101_readByte(&ldc2, _LDC1101_REG_RP_L_MEASUREMENT_STATUS);
 
-        STATUS = ldc1101_readByte(&ldc2, _LDC1101_REG_RP_L_MEASUREMENT_STATUS);
+    // 将 rpl_status 转成二进制字符串
+    sprintf(TX_BUFFER, "RP+L Measurement Status: "
+                       "%d%d%d%d%d%d%d%d\r\n",
+            (STATUS >> 7) & 0x01,
+            (STATUS >> 6) & 0x01,
+            (STATUS >> 5) & 0x01,
+            (STATUS >> 4) & 0x01,
+            (STATUS >> 3) & 0x01,
+            (STATUS >> 2) & 0x01,
+            (STATUS >> 1) & 0x01,
+            (STATUS >> 0) & 0x01);
 
-        // 将 rpl_status 转成二进制字符串
-        sprintf(TX_BUFFER, "RP+L Measurement Status: "
-                           "%d%d%d%d%d%d%d%d\r\n",
-                (STATUS >> 7) & 0x01,
-                (STATUS >> 6) & 0x01,
-                (STATUS >> 5) & 0x01,
-                (STATUS >> 4) & 0x01,
-                (STATUS >> 3) & 0x01,
-                (STATUS >> 2) & 0x01,
-                (STATUS >> 1) & 0x01,
-                (STATUS >> 0) & 0x01);
+    HAL_UART_Transmit(&huart1, (uint8_t *)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+  }
+  else if ((strncmp(RX_BUFFER, "LHR Check", 9) == 0) && (isLHR == 1))
+  {
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 
-        HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-    }
-    else if((strncmp(RX_BUFFER, "LHR Check", 9) == 0) && (isLHR == 1))
-    {
-        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+    STATUS = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
 
-        STATUS = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
+    // 将 rpl_status 转成二进制字符串
+    sprintf(TX_BUFFER, "LHR Measurement Status: "
+                       "%d%d%d%d%d%d%d%d\r\n",
+            (STATUS >> 7) & 0x01,
+            (STATUS >> 6) & 0x01,
+            (STATUS >> 5) & 0x01,
+            (STATUS >> 4) & 0x01,
+            (STATUS >> 3) & 0x01,
+            (STATUS >> 2) & 0x01,
+            (STATUS >> 1) & 0x01,
+            (STATUS >> 0) & 0x01);
 
-        // 将 rpl_status 转成二进制字符串
-        sprintf(TX_BUFFER, "LHR Measurement Status: "
-                           "%d%d%d%d%d%d%d%d\r\n",
-                (STATUS >> 7) & 0x01,
-                (STATUS >> 6) & 0x01,
-                (STATUS >> 5) & 0x01,
-                (STATUS >> 4) & 0x01,
-                (STATUS >> 3) & 0x01,
-                (STATUS >> 2) & 0x01,
-                (STATUS >> 1) & 0x01,
-                (STATUS >> 0) & 0x01);
+    HAL_UART_Transmit(&huart1, (uint8_t *)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+  }
 
-        HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-    }
-
-    memset(RX_BUFFER, 0, sizeof(RX_BUFFER));
+  memset(RX_BUFFER, 0, sizeof(RX_BUFFER));
 }
 /* USER CODE END PFP */
 
@@ -213,9 +212,9 @@ void Command_Parse(void)
 /* USER CODE END 0 */
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
+ * @brief  The application entry point.
+ * @retval int
+ */
 int main(void)
 {
 
@@ -237,7 +236,6 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
 
-
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -248,118 +246,100 @@ int main(void)
   MX_I2C1_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-    // 片上外设
-    HAL_UART_Receive_IT(&huart1, (uint8_t*)&RX_BYTE, 1);     // 串口通讯开启
+  /* 片上外设 */
+  HAL_UART_Receive_IT(&huart1, (uint8_t *)&RX_BYTE, 1); // 串口通讯开启
 
-    // 片外外设
-    // OLED设置
-    OLED_Init();
-    OLED_Display_On();
-    OLED_Clear();
-    OLED_ShowChar(0, 0, 'B', 16, 0);
+  /* 片外外设 */
+  // OLED设置
+  OLED_Init();
+  OLED_Display_On();
+  OLED_Clear();
+  OLED_ShowChar(0, 0, 'C', 16, 0);
 
-    // DRV8833设置
-    DRV8833_Init(&drv1,
-                 GPIOA, GPIO_PIN_0,
-                 GPIOA, GPIO_PIN_1,
-                 NULL, 0,
-                 NULL, 0,
-                 GPIOB, GPIO_PIN_1,
-                 NULL, 0);
-    DRV_Wake(&drv1);	                                       // DRV8833 唤醒
-    HAL_TIM_Base_Start_IT(&htim2);                           // DRV8833 驱动波形开启
-    // LDC1101设置
-    if(ldc1101_init(&ldc1, _LDC1101_RP_SET_RP_MIN_1_5KOhm) || ldc1101_init(&ldc2, _LDC1101_RP_SET_RP_MIN_1_5KOhm))         // LDC1101 初始化
-    {
-        sprintf(TX_BUFFER, "LDC1101 Initialize Failed.\r\n");
-        HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-    }
-    else
-    {
-        sprintf(TX_BUFFER, "LDC1101 Initialize Done.\r\n");
-        HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-    }
+  // DRV8833设置
+  DRV8833_Init(&drv1,
+               DRV_AIN1_GPIO_Port, DRV_AIN1_Pin,
+               DRV_AIN2_GPIO_Port, DRV_AIN2_Pin,
+               NULL, 0,
+               NULL, 0,
+               DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin,
+               NULL, 0);
+  DRV_Wake(&drv1);               // DRV8833 唤醒
+  HAL_TIM_Base_Start_IT(&htim2); // DRV8833 驱动波形开启
+  // LDC1101设置
+  if (ldc1101_init(&ldc1, _LDC1101_RP_SET_RP_MIN_1_5KOhm) || ldc1101_init(&ldc2, _LDC1101_RP_SET_RP_MIN_1_5KOhm)) // LDC1101 初始化
+  {
+    sprintf(TX_BUFFER, "LDC1101 Initialize Failed.\r\n");
+    HAL_UART_Transmit(&huart1, (uint8_t *)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+  }
+  else
+  {
+    sprintf(TX_BUFFER, "LDC1101 Initialize Done.\r\n");
+    HAL_UART_Transmit(&huart1, (uint8_t *)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+  }
 
-    ldc1101_writeByte(&ldc1, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE);
-    ldc1101_writeByte(&ldc2, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE);
+  ldc1101_writeByte(&ldc1, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE);
+  ldc1101_writeByte(&ldc2, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-    while(1)
+  while (1)
+  {
+    drv_PWM_CNT = 100000 / drv_PWM_FREQ;
+    HAL_Delay(20);
+
+    STATUS = ldc1101_readByte(&ldc1, _LDC1101_REG_LHR_STATUS);
+
+    // 判断 LHR_Data_Ready == 0，表示有新数据
+    if ((STATUS & 0x01) == 0)
     {
-        drv_PWM_CNT = 100000 / drv_PWM_FREQ;
-        HAL_Delay(20);
+      LHR_DATA[0] = ldc1101_getLHRData(&ldc1);
+      LHR_DATA[1] = ldc1101_getLHRData(&ldc2);
 
-
-        STATUS = ldc1101_readByte(&ldc1, _LDC1101_REG_LHR_STATUS);
-
-        // 判断 LHR_Data_Ready == 0，表示有新数据
-        if((STATUS & 0x01) == 0)
-        {
-            LHR_DATA[0] = ldc1101_getLHRData(&ldc1);
-					  LHR_DATA[1] = ldc1101_getLHRData(&ldc2);
-
-            // 输出 LHR 数据（十进制 + 十六进制）
-//            sprintf(TX_BUFFER, "LHR: %lu (0x%08lX)\r\n", LHR_DATA[0], LHR_DATA[0]);
-					  sprintf(TX_BUFFER, "%lu,0x%lX,%lu,0x%lX\r\n", LHR_DATA[0], LHR_DATA[0], LHR_DATA[1], LHR_DATA[1]);
-            HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-        }
-
-        HAL_Delay(100);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//				STATUS = ldc1101_readByte(&ldc2, _LDC1101_REG_RP_L_MEASUREMENT_STATUS);
-
-//				if ((STATUS & (1 << 6)) == 0)  // 第6位为0，表示有新数据
-//				{
-//						RP_DATA[0] = ldc1101_getRPData(&ldc1);
-//						L_DATA[0] = ldc1101_getLData(&ldc1);
-//						RP_DATA[1] = ldc1101_getRPData(&ldc2);
-//						L_DATA[1] = ldc1101_getLData(&ldc2);
-
-//						sprintf(TX_BUFFER, "%u,%u,%u,%u\r\n", RP_DATA[0],L_DATA[0],RP_DATA[1],L_DATA[1]);
-//						HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
-//				}
-
-//				HAL_Delay(100);
-				
-				
-				
+      // 输出 LHR 数据（十进制 + 十六进制）
+      //            sprintf(TX_BUFFER, "LHR: %lu (0x%08lX)\r\n", LHR_DATA[0], LHR_DATA[0]);
+      sprintf(TX_BUFFER, "%lu,0x%lX,%lu,0x%lX\r\n", LHR_DATA[0], LHR_DATA[0], LHR_DATA[1], LHR_DATA[1]);
+      HAL_UART_Transmit(&huart1, (uint8_t *)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
     }
 
-    /* USER CODE END WHILE */
+    HAL_Delay(100);
 
-    /* USER CODE BEGIN 3 */
+    //				STATUS = ldc1101_readByte(&ldc2, _LDC1101_REG_RP_L_MEASUREMENT_STATUS);
+
+    //				if ((STATUS & (1 << 6)) == 0)  // 第6位为0，表示有新数据
+    //				{
+    //						RP_DATA[0] = ldc1101_getRPData(&ldc1);
+    //						L_DATA[0] = ldc1101_getLData(&ldc1);
+    //						RP_DATA[1] = ldc1101_getRPData(&ldc2);
+    //						L_DATA[1] = ldc1101_getLData(&ldc2);
+
+    //						sprintf(TX_BUFFER, "%u,%u,%u,%u\r\n", RP_DATA[0],L_DATA[0],RP_DATA[1],L_DATA[1]);
+    //						HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+    //				}
+
+    //				HAL_Delay(100);
+  }
+
+  /* USER CODE END WHILE */
+
+  /* USER CODE BEGIN 3 */
 
   /* USER CODE END 3 */
 }
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
+ * @brief System Clock Configuration
+ * @retval None
+ */
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
   /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
+   * in the RCC_OscInitTypeDef structure.
+   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
@@ -373,9 +353,8 @@ void SystemClock_Config(void)
   }
 
   /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+   */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
@@ -392,35 +371,35 @@ void SystemClock_Config(void)
 /* USER CODE END 4 */
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-    /* User can add his own implementation to report the HAL error return state */
-    __disable_irq();
+  /* User can add his own implementation to report the HAL error return state */
+  __disable_irq();
 
-    while(1)
-    {
-    }
+  while (1)
+  {
+  }
 
   /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
+ * @brief  Reports the name of the source file and the source line number
+ *         where the assert_param error has occurred.
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @retval None
+ */
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
-    /* User can add his own implementation to report the file name and line number,
-       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* User can add his own implementation to report the file name and line number,
+     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
