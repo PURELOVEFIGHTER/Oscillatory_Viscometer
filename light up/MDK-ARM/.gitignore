@@ -1,47 +1,62 @@
-# ===========================
-# Keil / ARM MDK 编译临时文件
-# ===========================
+# ---- 通用系统文件 ----
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+
+# ---- VSCode 配置 ----
+.vscode/
+.history/
+
+# ---- EIDE (Embedded IDE) ----
+.eide/
+
+# ---- Keil (MDK-ARM) 生成文件 ----
 *.axf
-*.o
-*.d
-*.crf
-*.elf
 *.htm
 *.lnp
 *.lst
 *.map
-*.sct
-*.tra
-*.bin
+*.o
+*.d
+*.crf
+*.elf
 *.hex
+*.sct
+*.uvguix.*
+*.uvopt.*
+*.uvgui.*
+*.uvprojx.user
 *.build_log.htm
 
-# Keil 编译输出文件夹（比如 "Objects"）
+# Keil 临时目录
+*.dep
+*.plg
+*.bak
+*.iex
+*.uvguix.*
+*.uvoptx
+
+# ---- STM32CubeMX ----
+# CubeMX 自动生成的工程配置文件不要忽略
+# 只忽略输出目录和临时缓存
+.ioc-backup/
+MX_*/        # 旧版 CubeMX 可能生成的缓存目录
+*.launch     # 有时 CubeMX 生成 Eclipse 配置文件
+
+# ---- 编译生成目录 ----
+/build/
+/Debug/
+/Release/
 /Objects/
 /Listings/
 /Output/
-/DebugConfig/
+/RTE/
+*.scvd
+*.bin
 
-# ===========================
-# VSCode 自动生成配置
-# ===========================
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-
-# ===========================
-# 操作系统垃圾文件
-# ===========================
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# ===========================
-# 备份文件
-# ===========================
-*~
-*.bak
+# ---- 其他 IDE ----
+.idea/
 *.swp
 *.swo
+*.user
