@@ -254,7 +254,6 @@ int main(void)
   OLED_Init();
   OLED_Display_On();
   OLED_Clear();
-  OLED_ShowChar(0, 0, 'C', 16, 0);
 
   // DRV8833设置
   DRV8833_Init(&drv1,
@@ -266,6 +265,7 @@ int main(void)
                NULL, 0);
   DRV_Wake(&drv1);               // DRV8833 唤醒
   HAL_TIM_Base_Start_IT(&htim2); // DRV8833 驱动波形开启
+
   // LDC1101设置
   if (ldc1101_init(&ldc1, _LDC1101_RP_SET_RP_MIN_1_5KOhm) || ldc1101_init(&ldc2, _LDC1101_RP_SET_RP_MIN_1_5KOhm)) // LDC1101 初始化
   {
