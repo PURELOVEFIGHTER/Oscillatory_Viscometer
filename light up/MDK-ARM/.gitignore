@@ -1,15 +1,47 @@
-# dot files
-/.vscode/launch.json
-/.settings
-/.eide/log
-/.eide.usr.ctx.json
+# ===========================
+# Keil / ARM MDK 编译临时文件
+# ===========================
+*.axf
+*.o
+*.d
+*.crf
+*.elf
+*.htm
+*.lnp
+*.lst
+*.map
+*.sct
+*.tra
+*.bin
+*.hex
+*.build_log.htm
 
-# project out
-/build
-/bin
-/obj
-/out
+# Keil 编译输出文件夹（比如 "Objects"）
+/Objects/
+/Listings/
+/Output/
+/DebugConfig/
 
-# eide template
-*.ept
-*.eide-template
+# ===========================
+# VSCode 自动生成配置
+# ===========================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# ===========================
+# 操作系统垃圾文件
+# ===========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===========================
+# 备份文件
+# ===========================
+*~
+*.bak
+*.swp
+*.swo
