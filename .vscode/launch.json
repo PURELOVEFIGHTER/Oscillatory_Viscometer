@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "cwd": "${workspaceRoot}",
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "openocd-launch",
+            "servertype": "openocd",
+            "executable": "${workspaceRoot}/build/light_up/light_up.elf",
+            "runToEntryPoint": "main",
+            "configFiles": [
+                "interface/cmsis-dap.cfg",
+                "target/stm32f1x.cfg"
+            ],
+            "searchDir": [
+                "C:/Users/Administrator/.eide/tools/openocd/scripts"
+            ]
+        }
+    ]
+}

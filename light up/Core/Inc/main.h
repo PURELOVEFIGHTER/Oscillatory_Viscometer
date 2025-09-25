@@ -23,8 +23,7 @@
 #define __MAIN_H
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -32,92 +31,82 @@ extern "C"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "string.h"
-#include "stdlib.h"
-#include "stdio.h"
-#include "__ldc1101_driver.h"
+#include "ldc1101_driver.h"
 #include "drv8833_driver.h"
+#include "drv8833_config.h"
 #include "oled.h"
-  /* USER CODE END Includes */
+#include "stdio.h"
+#include "stdlib.h"
+#include "string.h"
+/* USER CODE END Includes */
 
-  /* Exported types ------------------------------------------------------------*/
-  /* USER CODE BEGIN ET */
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
 
-  /* USER CODE END ET */
+/* USER CODE END ET */
 
-  /* Exported constants --------------------------------------------------------*/
-  /* USER CODE BEGIN EC */
+/* Exported constants --------------------------------------------------------*/
+/* USER CODE BEGIN EC */
 
-  /* USER CODE END EC */
+/* USER CODE END EC */
 
-  /* Exported macro ------------------------------------------------------------*/
-  /* USER CODE BEGIN EM */
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
 
-  /* USER CODE END EM */
+/* USER CODE END EM */
 
-  /* Exported functions prototypes ---------------------------------------------*/
-  void Error_Handler(void);
+/* Exported functions prototypes ---------------------------------------------*/
+void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define STATE_LED_Pin GPIO_PIN_13
+#define STATE_LED_Pin       GPIO_PIN_13
 #define STATE_LED_GPIO_Port GPIOC
+#define LDC1_CS_Pin         GPIO_PIN_4
+#define LDC1_CS_GPIO_Port   GPIOA
+#define LDC2_CS_Pin         GPIO_PIN_12
+#define LDC2_CS_GPIO_Port   GPIOB
 
-#define DRV_AIN1_Pin GPIO_PIN_0
-#define DRV_AIN1_GPIO_Port GPIOA
-#define DRV_AIN2_Pin GPIO_PIN_1
-#define DRV_AIN2_GPIO_Port GPIOA
-#define DRV_nSLEEP_Pin GPIO_PIN_1
-#define DRV_nSLEEP_GPIO_Port GPIOB
-
-#define LDC1_CS_Pin GPIO_PIN_4
-#define LDC1_CS_GPIO_Port GPIOA
-#define LDC2_CS_Pin GPIO_PIN_12
-#define LDC2_CS_GPIO_Port GPIOB
-
-  /* USER CODE BEGIN Private defines */
-  /**************************************DRV8833**************************************/
-  extern DRV8833_HandleTypeDef drv1;
+/* USER CODE BEGIN Private defines */
+/* DRV8833 --------------------------------------------------------*/
+extern DRV8833_HandleTypeDef drv1;
 
 // 频率扫描设置
-#define FREQ_MIN 5
-#define FREQ_MAX 1000
+#define FREQ_MIN  5
+#define FREQ_MAX  1000
 #define FREQ_STEP 5
-  void FREQ_Scan(void);
+void FREQ_Scan(void);
 
 // 占空比扫描设置
-#define DR_MIN 5
-#define DR_MAX 50
+#define DR_MIN  5
+#define DR_MAX  50
 #define DR_STEP 5
-  void DR_Scan(void);
+void DR_Scan(void);
 
-  // 控制波形设置
-  extern uint16_t drv_PWM_FREQ; // PWM 频率
-  extern uint16_t drv_PWM_CNT;  // PWM 所需中断计数值
-  extern uint16_t drv_PWM_DR;   // PWM 占空比
-  /************************************************************************************/
+// 控制波形设置
+extern uint16_t drv_PWM_FREQ; // PWM 频率
+extern uint16_t drv_PWM_CNT;  // PWM 所需中断计数值
+extern uint16_t drv_PWM_DR;   // PWM 占空比
 
-  /**************************************LDC1101**************************************/
-  extern LDC1101_Device ldc1;
-  extern LDC1101_Device ldc2;
+/* LDC1101 --------------------------------------------------------*/
+extern LDC1101_HandleTypeDef ldc1;
+extern LDC1101_HandleTypeDef ldc2;
 
-  extern uint16_t RP_DATA[2];
-  extern uint16_t L_DATA[2];
-  extern uint32_t LHR_DATA[2];
-  extern uint8_t STATUS;
-/************************************************************************************/
+extern uint16_t RP_DATA[2];
+extern uint16_t L_DATA[2];
+extern uint32_t LHR_DATA[2];
+extern uint8_t ldcStatus[2];
 
-/**************************************蓝牙串口**************************************/
+/* Bluetooth Serial Port --------------------------------------------------------*/
 #define MSG_LEN 64
-  extern char RX_BYTE;
-  extern char RX_BUFFER[MSG_LEN];
-  extern char TX_BUFFER[MSG_LEN];
-  void Command_Parse(void);
-  /************************************************************************************/
-  /* USER CODE END Private defines */
+extern char RX_BYTE;
+extern char RX_BUFFER[MSG_LEN];
+extern char TX_BUFFER[MSG_LEN];
+void Command_Parse(void);
+/* USER CODE END Private defines */
 
 #ifdef __cplusplus
 }

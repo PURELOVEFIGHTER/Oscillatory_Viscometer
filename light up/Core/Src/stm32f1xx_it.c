@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file    stm32f1xx_it.c
-  * @brief   Interrupt Service Routines.
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2025 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file    stm32f1xx_it.c
+ * @brief   Interrupt Service Routines.
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2025 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
@@ -57,6 +57,7 @@
 
 /* External variables --------------------------------------------------------*/
 extern SPI_HandleTypeDef hspi1;
+extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
 extern UART_HandleTypeDef huart1;
 /* USER CODE BEGIN EV */
@@ -75,8 +76,7 @@ void NMI_Handler(void)
 
   /* USER CODE END NonMaskableInt_IRQn 0 */
   /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
-    while (1)
-    {
+    while (1) {
     }
 
   /* USER CODE END NonMaskableInt_IRQn 1 */
@@ -203,6 +203,51 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles TIM1 update interrupt.
+  */
+void TIM1_UP_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM1_UP_IRQn 0 */
+    ldcStatus[1] = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
+    // 判断 LHR_Data_Ready == 0，表示有新数据
+    if ((ldcStatus[1] & 0x01) == 0) {
+        LHR_DATA[0] = ldc1101_getLHRData(&ldc1);
+        LHR_DATA[1] = ldc1101_getLHRData(&ldc2);
+
+        // 输出 LHR 数据（十进制 + 十六进制）
+        //            sprintf(TX_BUFFER, "LHR: %lu (0x%08lX)\r\n", LHR_DATA[0],
+        //            LHR_DATA[0]);
+        sprintf(TX_BUFFER, "%lu,0x%lX,%lu,0x%lX\r\n", LHR_DATA[0], LHR_DATA[0], LHR_DATA[1], LHR_DATA[1]);
+        HAL_UART_Transmit(&huart1, (uint8_t *)TX_BUFFER, strlen(TX_BUFFER), HAL_MAX_DELAY);
+    }
+
+    HAL_Delay(100);
+
+    //				STATUS = ldc1101_readByte(&ldc2,
+    //_LDC1101_REG_RP_L_MEASUREMENT_STATUS);
+
+    //				if ((STATUS & (1 << 6)) == 0)  // 第6位为0，表示有新数据
+    //				{
+    //						RP_DATA[0] = ldc1101_getRPData(&ldc1);
+    //						L_DATA[0] = ldc1101_getLData(&ldc1);
+    //						RP_DATA[1] = ldc1101_getRPData(&ldc2);
+    //						L_DATA[1] = ldc1101_getLData(&ldc2);
+
+    //						sprintf(TX_BUFFER, "%u,%u,%u,%u\r\n",
+    // RP_DATA[0],L_DATA[0],RP_DATA[1],L_DATA[1]);
+    // HAL_UART_Transmit(&huart1, (uint8_t*)TX_BUFFER, strlen(TX_BUFFER),
+    // HAL_MAX_DELAY);
+    //				}
+
+    //				HAL_Delay(100);
+  /* USER CODE END TIM1_UP_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim1);
+  /* USER CODE BEGIN TIM1_UP_IRQn 1 */
+
+  /* USER CODE END TIM1_UP_IRQn 1 */
+}
+
+/**
   * @brief This function handles TIM2 global interrupt.
   */
 void TIM2_IRQHandler(void)
@@ -211,20 +256,16 @@ void TIM2_IRQHandler(void)
     // 方向控制波形
     static uint32_t tim2_cnt_drv;
 
-    if(tim2_cnt_drv < ((uint32_t)drv_PWM_CNT * drv_PWM_DR / 100))
-        DRV_Forward(&(drv1.channel_A));
+    if (tim2_cnt_drv < ((uint32_t)drv_PWM_CNT * drv_PWM_DR / 100))
+        DRV_Forward(&(drv1.CHANNEL_A));
     else if (tim2_cnt_drv < ((uint32_t)drv_PWM_CNT))
-        DRV_Reverse(&(drv1.channel_A));
-    else
-    {
+        DRV_Reverse(&(drv1.CHANNEL_A));
+    else {
         tim2_cnt_drv = 0;
-        DRV_Forward(&(drv1.channel_A));
+        DRV_Forward(&(drv1.CHANNEL_A));
     }
 
     tim2_cnt_drv++;
-
-//		static uint32_t tim2_cnt_ldc;
-
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
   /* USER CODE BEGIN TIM2_IRQn 1 */
@@ -261,25 +302,21 @@ void USART1_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     static uint8_t index = 0;
 
-    if(huart->Instance == USART1)
-    {
-        if (RX_BYTE == '\n' || RX_BYTE == '\r')  // 一条命令接收完毕
+    if (huart->Instance == USART1) {
+        if (RX_BYTE == '\n' || RX_BYTE == '\r') // 一条命令接收完毕
         {
             RX_BUFFER[index] = '\0';
-            Command_Parse();     // 你自己写的函数
-            index = 0;  // 重置
-        }
-        else
-        {
+            Command_Parse();
+            index = 0;
+        } else {
             if (index < MSG_LEN - 1)
                 RX_BUFFER[index++] = RX_BYTE;
         }
 
-        HAL_UART_Receive_IT(&huart1, (uint8_t*)&RX_BYTE, 1);
+        HAL_UART_Receive_IT(&huart1, (uint8_t *)&RX_BYTE, 1);
     }
 }
 /* USER CODE END 1 */
