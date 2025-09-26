@@ -1,10 +1,10 @@
-[2025-09-21 16:59:50]	[info] incremental build: 30 source files changed
+[2025-09-26 21:16:50]	[info] incremental build: 30 source files changed
 These source files will be recompiled
 ---
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\__ldc1101_driver.c': object (.o) file not exist
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\drv8833_driver.c': object (.o) file not exist
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': object (.o) file not exist
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': object (.o) file not exist
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\ldc1101_driver.c': object (.o) file not exist
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': object (.o) file not exist
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\oled.c': object (.o) file not exist
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\oledfont.c': object (.o) file not exist
@@ -32,13 +32,10 @@ These source files will be recompiled
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_uart.c': object (.o) file not exist
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': object (.o) file not exist
 
-[2025-09-21 16:59:57]	[done]
+[2025-09-26 21:16:59]	[done]
 	build successfully !
 
-[2025-09-21 18:42:00]	[done]
-	build successfully !
-
-[2025-09-23 11:09:34]	[info] incremental build: 9 source files changed
+[2025-09-26 21:21:43]	[info] incremental build: 8 source files changed
 These source files will be recompiled
 ---
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
@@ -47,812 +44,98 @@ These source files will be recompiled
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
 
-[2025-09-23 11:09:36]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c", exit code: 1
+[2025-09-26 21:21:51]	[done]
+	build successfully !
+
+[2025-09-26 22:11:20]	[info] incremental build: 9 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\ldc1101_driver.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+
+[2025-09-26 22:11:26]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c", exit code: 1
 command: 
   "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\main.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\main.d" ".\..\light up\Core\Src\main.c"
    at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
    at unify_builder.Program.Main(String[] args_)
 ---
-".\..\light up\Core\Src\main.c", line 168: Error:  #137: expression must be a modifiable lvalue
-      STATUS = ldc1101_readByte(&ldc2, _LDC1101_REG_RP_L_MEASUREMENT_STATUS);
-      ^
-".\..\light up\Core\Src\main.c", line 173: Error:  #1460: expression must have integral or fixed-point type
-              (STATUS >> 7) & 0x01,
-               ^
-".\..\light up\Core\Src\main.c", line 174: Error:  #1460: expression must have integral or fixed-point type
-              (STATUS >> 6) & 0x01,
-               ^
-".\..\light up\Core\Src\main.c", line 175: Error:  #1460: expression must have integral or fixed-point type
-              (STATUS >> 5) & 0x01,
-               ^
-".\..\light up\Core\Src\main.c", line 176: Error:  #1460: expression must have integral or fixed-point type
-              (STATUS >> 4) & 0x01,
-               ^
-".\..\light up\Core\Src\main.c", line 177: Error:  #1460: expression must have integral or fixed-point type
-              (STATUS >> 3) & 0x01,
-               ^
-".\..\light up\Core\Src\main.c", line 178: Error:  #1460: expression must have integral or fixed-point type
-              (STATUS >> 2) & 0x01,
-               ^
-".\..\light up\Core\Src\main.c", line 179: Error:  #1460: expression must have integral or fixed-point type
-              (STATUS >> 1) & 0x01,
-               ^
-".\..\light up\Core\Src\main.c", line 180: Error:  #1460: expression must have integral or fixed-point type
-              (STATUS >> 0) & 0x01);
-               ^
-".\..\light up\Core\Src\main.c", line 188: Error:  #137: expression must be a modifiable lvalue
-      STATUS = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
-      ^
-".\..\light up\Core\Src\main.c", line 193: Error:  #1460: expression must have integral or fixed-point type
-              (STATUS >> 7) & 0x01,
-               ^
-".\..\light up\Core\Src\main.c", line 194: Error:  #1460: expression must have integral or fixed-point type
-              (STATUS >> 6) & 0x01,
-               ^
-".\..\light up\Core\Src\main.c", line 195: Error:  #1460: expression must have integral or fixed-point type
-              (STATUS >> 5) & 0x01,
-               ^
-".\..\light up\Core\Src\main.c", line 196: Error:  #1460: expression must have integral or fixed-point type
-              (STATUS >> 4) & 0x01,
-               ^
-".\..\light up\Core\Src\main.c", line 197: Error:  #1460: expression must have integral or fixed-point type
-              (STATUS >> 3) & 0x01,
-               ^
-".\..\light up\Core\Src\main.c", line 198: Error:  #1460: expression must have integral or fixed-point type
-              (STATUS >> 2) & 0x01,
-               ^
-".\..\light up\Core\Src\main.c", line 199: Error:  #1460: expression must have integral or fixed-point type
-              (STATUS >> 1) & 0x01,
-               ^
-".\..\light up\Core\Src\main.c", line 200: Error:  #1460: expression must have integral or fixed-point type
-              (STATUS >> 0) & 0x01);
-               ^
-.\..\light up\Core\Src\main.c: 0 warnings, 18 errors
-
-[2025-09-23 11:53:07]	[info] incremental build: 9 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
-
-[2025-09-23 11:53:08]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c", exit code: 1
-command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\stm32f1xx_it.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\stm32f1xx_it.d" ".\..\light up\Core\Src\stm32f1xx_it.c"
-   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
-   at unify_builder.Program.Main(String[] args_)
----
-".\..\light up\Core\Src\stm32f1xx_it.c", line 212: Error:  #20: identifier "STATUS" is undefined
-    STATUS = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
-    ^
-.\..\light up\Core\Src\stm32f1xx_it.c: 0 warnings, 1 error
-
-[2025-09-23 11:54:20]	[info] incremental build: 4 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
-
-[2025-09-23 11:54:22]	[done]
-	build successfully !
-
-[2025-09-23 17:39:55]	[info] incremental build: 8 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-
-[2025-09-23 17:40:02]	link failed !, exit code: 1
-   at unify_builder.Program.Main(String[] args_)
----
-Error: L6218E: Undefined symbol isLHR (referred from main.o).
-Error: L6218E: Undefined symbol ldc1101_init (referred from main.o).
-Error: L6218E: Undefined symbol ldc1101_readByte (referred from main.o).
-Error: L6218E: Undefined symbol ldc1101_writeByte (referred from main.o).
-Error: L6218E: Undefined symbol ldc1101_getLHRData (referred from stm32f1xx_it.o).
-Not enough information to list image symbols.
-Finished: 1 information, 0 warning and 5 error messages.
-
-
-[2025-09-23 17:42:28]	[info] incremental build: 8 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-
-[2025-09-23 17:42:37]	link failed !, exit code: 1
-   at unify_builder.Program.Main(String[] args_)
----
-Error: L6218E: Undefined symbol isLHR (referred from main.o).
-Error: L6218E: Undefined symbol ldc1101_init (referred from main.o).
-Error: L6218E: Undefined symbol ldc1101_readByte (referred from main.o).
-Error: L6218E: Undefined symbol ldc1101_writeByte (referred from main.o).
-Error: L6218E: Undefined symbol ldc1101_getLHRData (referred from stm32f1xx_it.o).
-Not enough information to list image symbols.
-Finished: 1 information, 0 warning and 5 error messages.
-
-
-[2025-09-23 17:43:12]	[info] incremental build: 8 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-
-[2025-09-23 17:43:14]	link failed !, exit code: 1
-   at unify_builder.Program.Main(String[] args_)
----
-Error: L6218E: Undefined symbol isLHR (referred from main.o).
-Error: L6218E: Undefined symbol ldc1101_init (referred from main.o).
-Error: L6218E: Undefined symbol ldc1101_readByte (referred from main.o).
-Error: L6218E: Undefined symbol ldc1101_writeByte (referred from main.o).
-Error: L6218E: Undefined symbol ldc1101_getLHRData (referred from stm32f1xx_it.o).
-Not enough information to list image symbols.
-Finished: 1 information, 0 warning and 5 error messages.
-
-
-[2025-09-23 17:47:17]	[info] incremental build: 8 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-
-[2025-09-23 17:47:19]	link failed !, exit code: 1
-   at unify_builder.Program.Main(String[] args_)
----
-Error: L6218E: Undefined symbol isLHR (referred from main.o).
-Error: L6218E: Undefined symbol ldc1101_init (referred from main.o).
-Error: L6218E: Undefined symbol ldc1101_readByte (referred from main.o).
-Error: L6218E: Undefined symbol ldc1101_writeByte (referred from main.o).
-Error: L6218E: Undefined symbol ldc1101_getLHRData (referred from stm32f1xx_it.o).
-Not enough information to list image symbols.
-Finished: 1 information, 0 warning and 5 error messages.
-
-
-[2025-09-23 19:40:19]	[info] incremental build: 9 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\ldc1101_driver.c': object (.o) file not exist
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\ldc1101_driver.h' has been changed.
-
-[2025-09-23 19:40:24]	[done]
-	build successfully !
-
-[2025-09-23 22:20:30]	[info] incremental build: 10 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\drv8833_driver.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\ldc1101_driver.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-
-[2025-09-23 22:20:31]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\drv8833_driver.c", exit code: 1
-command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\drv8833_driver.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\drv8833_driver.d" ".\..\light up\Core\Src\drv8833_driver.c"
-   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
-   at unify_builder.Program.Main(String[] args_)
----
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN1_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                             ^
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN2_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                                          ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_GPIO_Port" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                      ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_Pin" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                                            ^
-.\..\light up\Core\Src\gpio.c: 0 warnings, 4 errors
-".\..\light up\Core\Src\drv8833_driver.c", line 16: Error:  #136: struct "<unnamed>"  has no field "channel_B"
-      hdrv->channel_B.IN1_Port = BIN1_Port;
-            ^
-".\..\light up\Core\Src\drv8833_driver.c", line 17: Error:  #136: struct "<unnamed>"  has no field "channel_B"
-      hdrv->channel_B.IN1_Pin  = BIN1_Pin;
-            ^
-".\..\light up\Core\Src\drv8833_driver.c", line 19: Error:  #136: struct "<unnamed>"  has no field "channel_B"
-      hdrv->channel_B.IN2_Port = BIN1_Port;
-            ^
-".\..\light up\Core\Src\drv8833_driver.c", line 20: Error:  #136: struct "<unnamed>"  has no field "channel_B"
-      hdrv->channel_B.IN2_Pin  = BIN1_Pin;
-            ^
-.\..\light up\Core\Src\drv8833_driver.c: 0 warnings, 4 errors
-
-[2025-09-23 22:55:17]	[info] incremental build: 10 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\drv8833_driver.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\drv8833_driver.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\ldc1101_driver.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-
-[2025-09-23 22:55:19]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\drv8833_driver.c", exit code: 1
-command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\drv8833_driver.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\drv8833_driver.d" ".\..\light up\Core\Src\drv8833_driver.c"
-   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
-   at unify_builder.Program.Main(String[] args_)
----
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN1_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                             ^
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN2_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                                          ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_GPIO_Port" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                      ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_Pin" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                                            ^
-.\..\light up\Core\Src\gpio.c: 0 warnings, 4 errors
-".\..\light up\Core\Src\drv8833_driver.c", line 8: Error:  #136: struct "<unnamed>"  has no field "AIN1_Port"
-      HAL_GPIO_WritePin(hdrv->AIN1_Port, hdrv->AIN1_Pin, GPIO_PIN_RESET);
-                              ^
-".\..\light up\Core\Src\drv8833_driver.c", line 8: Error:  #136: struct "<unnamed>"  has no field "AIN1_Pin"
-      HAL_GPIO_WritePin(hdrv->AIN1_Port, hdrv->AIN1_Pin, GPIO_PIN_RESET);
-                                               ^
-".\..\light up\Core\Src\drv8833_driver.c", line 9: Error:  #136: struct "<unnamed>"  has no field "AIN2_Port"
-      HAL_GPIO_WritePin(hdrv->AIN2_Port, hdrv->AIN2_Pin, GPIO_PIN_RESET);
-                              ^
-".\..\light up\Core\Src\drv8833_driver.c", line 9: Error:  #136: struct "<unnamed>"  has no field "AIN2_Pin"
-      HAL_GPIO_WritePin(hdrv->AIN2_Port, hdrv->AIN2_Pin, GPIO_PIN_RESET);
-                                               ^
-.\..\light up\Core\Src\drv8833_driver.c: 0 warnings, 4 errors
-
-[2025-09-23 22:58:05]	[info] incremental build: 9 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\drv8833_driver.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\ldc1101_driver.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-
-[2025-09-23 22:58:06]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c", exit code: 1
-command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\gpio.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\gpio.d" ".\..\light up\Core\Src\gpio.c"
-   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
-   at unify_builder.Program.Main(String[] args_)
----
-".\..\light up\Core\Src\drv8833_driver.c", line 6: Error:  #5: cannot open source input file "drv8833.h": No such file or directory
-  #include "drv8833.h"
-                      ^
-.\..\light up\Core\Src\drv8833_driver.c: 0 warnings, 1 error
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN1_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                             ^
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN2_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                                          ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_GPIO_Port" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                      ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_Pin" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                                            ^
-.\..\light up\Core\Src\gpio.c: 0 warnings, 4 errors
-
-[2025-09-23 22:58:37]	[info] incremental build: 8 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\drv8833_driver.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-
-[2025-09-23 22:58:38]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c", exit code: 1
-command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\main.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\main.d" ".\..\light up\Core\Src\main.c"
-   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
-   at unify_builder.Program.Main(String[] args_)
----
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN1_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                             ^
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN2_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                                          ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_GPIO_Port" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                      ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_Pin" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                                            ^
-.\..\light up\Core\Src\gpio.c: 0 warnings, 4 errors
-".\..\light up\Core\Src\main.c", line 52: Error:  #136: struct "<unnamed>"  has no field "AIN1_Port"
-      .AIN1_Port = DRV8833_A_IN1_PORT,
-       ^
+".\..\light up\Core\Src\main.c", line 282: Error:  #127: expected a statement
+              else drv_PWM_cnt = 100000 / drv_PWM_freq; // ·ÀÖ¹³ý 0 ´íÎó
+              ^
 .\..\light up\Core\Src\main.c: 0 warnings, 1 error
 
-[2025-09-23 23:30:15]	[info] incremental build: 11 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\drv8833_driver.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\ldc1101_driver.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
-
-[2025-09-23 23:30:17]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c", exit code: 1
-command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\gpio.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\gpio.d" ".\..\light up\Core\Src\gpio.c"
-   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
-   at unify_builder.Program.Main(String[] args_)
----
-".\..\light up\Core\Src\drv8833_driver.c", line 8: Error:  #136: struct "<unnamed>"  has no field "channel_A"
-      HAL_GPIO_WritePin(hdrv->channel_A.IN1_Port, hdrv->channel_A.IN1_Pin, GPIO_PIN_RESET);
-                              ^
-".\..\light up\Core\Src\drv8833_driver.c", line 8: Error:  #136: struct "<unnamed>"  has no field "channel_A"
-      HAL_GPIO_WritePin(hdrv->channel_A.IN1_Port, hdrv->channel_A.IN1_Pin, GPIO_PIN_RESET);
-                                                        ^
-".\..\light up\Core\Src\drv8833_driver.c", line 9: Error:  #136: struct "<unnamed>"  has no field "channel_A"
-      HAL_GPIO_WritePin(hdrv->channel_A.IN2_Port, hdrv->channel_A.IN2_Pin, GPIO_PIN_RESET);
-                              ^
-".\..\light up\Core\Src\drv8833_driver.c", line 9: Error:  #136: struct "<unnamed>"  has no field "channel_A"
-      HAL_GPIO_WritePin(hdrv->channel_A.IN2_Port, hdrv->channel_A.IN2_Pin, GPIO_PIN_RESET);
-                                                        ^
-".\..\light up\Core\Src\drv8833_driver.c", line 18: Error:  #136: struct "<unnamed>"  has no field "SLEEP_Port"
-      HAL_GPIO_WritePin(hdrv->SLEEP_Port, hdrv->SLEEP_Pin, GPIO_PIN_SET);
-                              ^
-".\..\light up\Core\Src\drv8833_driver.c", line 18: Error:  #136: struct "<unnamed>"  has no field "SLEEP_Pin"
-      HAL_GPIO_WritePin(hdrv->SLEEP_Port, hdrv->SLEEP_Pin, GPIO_PIN_SET);
-                                                ^
-.\..\light up\Core\Src\drv8833_driver.c: 0 warnings, 6 errors
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN1_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                             ^
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN2_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                                          ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_GPIO_Port" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                      ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_Pin" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                                            ^
-.\..\light up\Core\Src\gpio.c: 0 warnings, 4 errors
-
-[2025-09-23 23:31:07]	[info] incremental build: 10 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\drv8833_driver.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\ldc1101_driver.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
-
-[2025-09-23 23:31:08]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c", exit code: 1
-command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\gpio.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\gpio.d" ".\..\light up\Core\Src\gpio.c"
-   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
-   at unify_builder.Program.Main(String[] args_)
----
-".\..\light up\Core\Src\drv8833_driver.c", line 18: Error:  #136: struct "<unnamed>"  has no field "SLEEP_Port"
-      HAL_GPIO_WritePin(hdrv->SLEEP_Port, hdrv->SLEEP_Pin, GPIO_PIN_SET);
-                              ^
-".\..\light up\Core\Src\drv8833_driver.c", line 18: Error:  #136: struct "<unnamed>"  has no field "SLEEP_Pin"
-      HAL_GPIO_WritePin(hdrv->SLEEP_Port, hdrv->SLEEP_Pin, GPIO_PIN_SET);
-                                                ^
-.\..\light up\Core\Src\drv8833_driver.c: 0 warnings, 2 errors
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN1_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                             ^
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN2_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                                          ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_GPIO_Port" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                      ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_Pin" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                                            ^
-.\..\light up\Core\Src\gpio.c: 0 warnings, 4 errors
-
-[2025-09-23 23:31:23]	[info] incremental build: 9 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\drv8833_driver.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
-
-[2025-09-23 23:31:24]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c", exit code: 1
-command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\gpio.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\gpio.d" ".\..\light up\Core\Src\gpio.c"
-   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
-   at unify_builder.Program.Main(String[] args_)
----
-".\..\light up\Core\Src\main.c", line 53: Error:  #136: struct "<unnamed>"  has no field "AIN1_Port"
-      .AIN1_Port = DRV_AIN1_GPIO_PORT,
-       ^
-".\..\light up\Core\Src\main.c", line 81: Error:  #20: identifier "LDC1101_Device" is undefined
-  LDC1101_Device ldc1  = {&hspi1, LDC1_CS_GPIO_Port, LDC1_CS_Pin};
-  ^
-".\..\light up\Core\Src\main.c", line 82: Error:  #20: identifier "LDC1101_Device" is undefined
-  LDC1101_Device ldc2  = {&hspi2, LDC2_CS_GPIO_Port, LDC2_CS_Pin};
-  ^
-.\..\light up\Core\Src\main.c: 0 warnings, 3 errors
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN1_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                             ^
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN2_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                                          ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_GPIO_Port" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                      ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_Pin" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                                            ^
-.\..\light up\Core\Src\gpio.c: 0 warnings, 4 errors
-
-[2025-09-23 23:32:32]	[info] incremental build: 8 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
-
-[2025-09-23 23:32:35]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c", exit code: 1
-command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\gpio.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\gpio.d" ".\..\light up\Core\Src\gpio.c"
-   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
-   at unify_builder.Program.Main(String[] args_)
----
-".\..\light up\Core\Src\main.c", line 53: Error:  #136: struct "<unnamed>"  has no field "AIN1_Port"
-      .AIN1_Port = DRV_AIN1_GPIO_PORT,
-       ^
-".\..\light up\Core\Src\main.c", line 81: Error:  #20: identifier "LDC1101_HandleTyeDef" is undefined
-  LDC1101_HandleTyeDef ldc1  = {&hspi1, LDC1_CS_GPIO_Port, LDC1_CS_Pin};
-  ^
-".\..\light up\Core\Src\main.c", line 82: Error:  #20: identifier "LDC1101_HandleTyeDef" is undefined
-  LDC1101_HandleTyeDef ldc2  = {&hspi2, LDC2_CS_GPIO_Port, LDC2_CS_Pin};
-  ^
-.\..\light up\Core\Src\main.c: 0 warnings, 3 errors
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN1_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                             ^
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN2_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                                          ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_GPIO_Port" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                      ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_Pin" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                                            ^
-.\..\light up\Core\Src\gpio.c: 0 warnings, 4 errors
-
-[2025-09-23 23:33:06]	[info] incremental build: 7 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
-
-[2025-09-23 23:33:06]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c", exit code: 1
-command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\gpio.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\gpio.d" ".\..\light up\Core\Src\gpio.c"
-   at unify_builder.Program.Main(String[] args_)
----
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN1_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                             ^
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN2_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                                          ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_GPIO_Port" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                      ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_Pin" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                                            ^
-.\..\light up\Core\Src\gpio.c: 0 warnings, 4 errors
-
-[2025-09-23 23:36:07]	[info] incremental build: 10 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\drv8833_driver.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\drv8833_config.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
-
-[2025-09-23 23:36:08]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c", exit code: 1
-command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\gpio.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\gpio.d" ".\..\light up\Core\Src\gpio.c"
-   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
-   at unify_builder.Program.Main(String[] args_)
----
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN1_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                             ^
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "DRV_AIN2_Pin" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                                          ^
-".\..\light up\Core\Src\gpio.c", line 63: Error:  #20: identifier "DRV_nSLEEP_Pin" is undefined
-    HAL_GPIO_WritePin(DRV_nSLEEP_GPIO_Port, DRV_nSLEEP_Pin, GPIO_PIN_RESET);
-                                            ^
-.\..\light up\Core\Src\gpio.c: 0 warnings, 3 errors
-
-[2025-09-23 23:36:38]	[info] incremental build: 10 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\drv8833_driver.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\drv8833_config.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\drv8833_config.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
-
-[2025-09-23 23:36:38]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c", exit code: 1
-command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\gpio.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\gpio.d" ".\..\light up\Core\Src\gpio.c"
-   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
-   at unify_builder.Program.Main(String[] args_)
----
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "GPIO_Pin_0" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                             ^
-".\..\light up\Core\Src\gpio.c", line 57: Error:  #20: identifier "GPIO_Pin_1" is undefined
-    HAL_GPIO_WritePin(GPIOA, DRV_AIN1_Pin|DRV_AIN2_Pin, GPIO_PIN_RESET);
-                                          ^
-.\..\light up\Core\Src\gpio.c: 0 warnings, 2 errors
-
-[2025-09-23 23:38:13]	[info] incremental build: 10 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\drv8833_driver.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\drv8833_config.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\drv8833_config.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
-
-[2025-09-23 23:38:14]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c", exit code: 1
-command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\main.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\main.d" ".\..\light up\Core\Src\main.c"
-   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
-   at unify_builder.Program.Main(String[] args_)
----
-".\..\light up\Core\Src\main.c", line 53: Error:  #20: identifier "DRV_AIN1_GPIO_PORT" is undefined
-      .AIN1_Port = DRV_AIN1_GPIO_PORT,
-                   ^
-".\..\light up\Core\Src\main.c", line 54: Error:  #20: identifier "DRV_AIN1_PIN" is undefined
-      .AIN1_Pin  = DRV_AIN1_PIN,
-                   ^
-".\..\light up\Core\Src\main.c", line 55: Error:  #20: identifier "DRV_AIN2_GPIO_PORT" is undefined
-      .AIN2_Port = DRV_AIN2_GPIO_PORT,
-                   ^
-".\..\light up\Core\Src\main.c", line 56: Error:  #20: identifier "DRV_AIN2_PIN" is undefined
-      .AIN2_Pin  = DRV_AIN2_PIN,
-                   ^
-".\..\light up\Core\Src\main.c", line 63: Error:  #20: identifier "DRV_nSLEEP_GPIO_PORT" is undefined
-      .SLEEP_Port = DRV_nSLEEP_GPIO_PORT,
-                    ^
-".\..\light up\Core\Src\main.c", line 64: Error:  #20: identifier "DRV_nSLEEP_PIN" is undefined
-      .SLEEP_Pin  = DRV_nSLEEP_PIN,
-                    ^
-".\..\light up\Core\Src\main.c", line 53: Error:  #136: struct "<unnamed>"  has no field "AIN1_Port"
-      .AIN1_Port = DRV_AIN1_GPIO_PORT,
-       ^
-".\..\light up\Core\Src\main.c", line 81: Error:  #20: identifier "LDC1101_HandleTyeDef" is undefined
-  LDC1101_HandleTyeDef ldc1  = {&hspi1, LDC1_CS_GPIO_Port, LDC1_CS_Pin};
-  ^
-".\..\light up\Core\Src\main.c", line 82: Error:  #20: identifier "LDC1101_HandleTyeDef" is undefined
-  LDC1101_HandleTyeDef ldc2  = {&hspi2, LDC2_CS_GPIO_Port, LDC2_CS_Pin};
-  ^
-.\..\light up\Core\Src\main.c: 0 warnings, 9 errors
-
-[2025-09-23 23:38:37]	[info] incremental build: 5 source files changed
+[2025-09-26 22:12:10]	[info] incremental build: 4 source files changed
 These source files will be recompiled
 ---
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
 
-[2025-09-23 23:38:38]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c", exit code: 1
+[2025-09-26 22:12:10]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c", exit code: 1
 command: 
   "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\main.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\main.d" ".\..\light up\Core\Src\main.c"
    at unify_builder.Program.Main(String[] args_)
 ---
-".\..\light up\Core\Src\main.c", line 53: Error:  #20: identifier "DRV_AIN1_GPIO_PORT" is undefined
-      .AIN1_Port = DRV_AIN1_GPIO_PORT,
-                   ^
-".\..\light up\Core\Src\main.c", line 54: Error:  #20: identifier "DRV_AIN1_PIN" is undefined
-      .AIN1_Pin  = DRV_AIN1_PIN,
-                   ^
-".\..\light up\Core\Src\main.c", line 55: Error:  #20: identifier "DRV_AIN2_GPIO_PORT" is undefined
-      .AIN2_Port = DRV_AIN2_GPIO_PORT,
-                   ^
-".\..\light up\Core\Src\main.c", line 56: Error:  #20: identifier "DRV_AIN2_PIN" is undefined
-      .AIN2_Pin  = DRV_AIN2_PIN,
-                   ^
-".\..\light up\Core\Src\main.c", line 63: Error:  #20: identifier "DRV_nSLEEP_GPIO_PORT" is undefined
-      .SLEEP_Port = DRV_nSLEEP_GPIO_PORT,
-                    ^
-".\..\light up\Core\Src\main.c", line 64: Error:  #20: identifier "DRV_nSLEEP_PIN" is undefined
-      .SLEEP_Pin  = DRV_nSLEEP_PIN,
-                    ^
-".\..\light up\Core\Src\main.c", line 53: Error:  #136: struct "<unnamed>"  has no field "AIN1_Port"
-      .AIN1_Port = DRV_AIN1_GPIO_PORT,
-       ^
-.\..\light up\Core\Src\main.c: 0 warnings, 7 errors
-
-[2025-09-23 23:39:42]	[info] incremental build: 5 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
-
-[2025-09-23 23:39:42]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c", exit code: 1
-command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\main.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\main.d" ".\..\light up\Core\Src\main.c"
-   at unify_builder.Program.Main(String[] args_)
----
-".\..\light up\Core\Src\main.c", line 53: Error:  #136: struct "<unnamed>"  has no field "AIN1_Port"
-      .AIN1_Port = DRV_AIN1_GPIO_Port,
-       ^
+".\..\light up\Core\Src\main.c", line 282: Error:  #127: expected a statement
+          else drv_PWM_cnt = 100000 / drv_PWM_freq; // ·ÀÖ¹³ý 0 ´íÎó
+          ^
 .\..\light up\Core\Src\main.c: 0 warnings, 1 error
 
-[2025-09-23 23:40:49]	[info] incremental build: 5 source files changed
+[2025-09-26 22:12:22]	[info] incremental build: 4 source files changed
 These source files will be recompiled
 ---
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
 
-[2025-09-23 23:40:50]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c", exit code: 1
+[2025-09-26 22:12:22]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c", exit code: 1
 command: 
   "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\main.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\main.d" ".\..\light up\Core\Src\main.c"
    at unify_builder.Program.Main(String[] args_)
 ---
-".\..\light up\Core\Src\main.c", line 53: Error:  #136: struct "<unnamed>"  has no field "IN1_Port"
-      .IN1_Port = DRV_AIN1_GPIO_Port,
-       ^
+".\..\light up\Core\Src\main.c", line 282: Error:  #127: expected a statement
+          else
+          ^
 .\..\light up\Core\Src\main.c: 0 warnings, 1 error
 
-[2025-09-23 23:41:34]	[info] incremental build: 5 source files changed
+[2025-09-26 22:13:16]	[info] incremental build: 4 source files changed
 These source files will be recompiled
 ---
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
 
-[2025-09-23 23:41:37]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c", exit code: 1
+[2025-09-26 22:13:16]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c", exit code: 1
 command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\stm32f1xx_it.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\stm32f1xx_it.d" ".\..\light up\Core\Src\stm32f1xx_it.c"
+  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\main.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\main.d" ".\..\light up\Core\Src\main.c"
    at unify_builder.Program.Main(String[] args_)
 ---
-".\..\light up\Core\Src\stm32f1xx_it.c", line 260: Error:  #136: struct "<unnamed>"  has no field "channel_A"
-          DRV_Forward(&(drv1.channel_A));
-                             ^
-".\..\light up\Core\Src\stm32f1xx_it.c", line 262: Error:  #136: struct "<unnamed>"  has no field "channel_A"
-          DRV_Reverse(&(drv1.channel_A));
-                             ^
-".\..\light up\Core\Src\stm32f1xx_it.c", line 265: Error:  #136: struct "<unnamed>"  has no field "channel_A"
-          DRV_Forward(&(drv1.channel_A));
-                             ^
-.\..\light up\Core\Src\stm32f1xx_it.c: 0 warnings, 3 errors
+".\..\light up\Core\Src\main.c", line 283: Error:  #65: expected a ";"
+          else
+          ^
+.\..\light up\Core\Src\main.c: 0 warnings, 1 error
 
-[2025-09-23 23:42:27]	[info] incremental build: 4 source files changed
+[2025-09-26 22:13:27]	[info] incremental build: 4 source files changed
 These source files will be recompiled
 ---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
 
-[2025-09-23 23:42:36]	[done]
+[2025-09-26 22:13:31]	[done]
 	build successfully !
 

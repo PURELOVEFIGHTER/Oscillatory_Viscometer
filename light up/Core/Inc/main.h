@@ -63,12 +63,18 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define STATE_LED_Pin       GPIO_PIN_13
+#define STATE_LED_Pin GPIO_PIN_13
 #define STATE_LED_GPIO_Port GPIOC
-#define LDC1_CS_Pin         GPIO_PIN_4
-#define LDC1_CS_GPIO_Port   GPIOA
-#define LDC2_CS_Pin         GPIO_PIN_12
-#define LDC2_CS_GPIO_Port   GPIOB
+#define DRV_AIN1_Pin GPIO_PIN_0
+#define DRV_AIN1_GPIO_Port GPIOA
+#define DRV_AIN2_Pin GPIO_PIN_1
+#define DRV_AIN2_GPIO_Port GPIOA
+#define LDC1_CS_Pin GPIO_PIN_4
+#define LDC1_CS_GPIO_Port GPIOA
+#define DRV_nSLEEP_Pin GPIO_PIN_1
+#define DRV_nSLEEP_GPIO_Port GPIOB
+#define LDC2_CS_Pin GPIO_PIN_12
+#define LDC2_CS_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 /* DRV8833 --------------------------------------------------------*/
@@ -87,24 +93,24 @@ void FREQ_Scan(void);
 void DR_Scan(void);
 
 // 控制波形设置
-extern uint16_t drv_PWM_FREQ; // PWM 频率
-extern uint16_t drv_PWM_CNT;  // PWM 所需中断计数值
+extern uint16_t drv_PWM_freq; // PWM 频率
+extern uint16_t drv_PWM_cnt;  // PWM 所需中断计数值
 extern uint16_t drv_PWM_DR;   // PWM 占空比
 
 /* LDC1101 --------------------------------------------------------*/
 extern LDC1101_HandleTypeDef ldc1;
 extern LDC1101_HandleTypeDef ldc2;
 
-extern uint16_t RP_DATA[2];
-extern uint16_t L_DATA[2];
-extern uint32_t LHR_DATA[2];
-extern uint8_t ldcStatus[2];
+extern uint16_t Rp_data[2];
+extern uint16_t L_data[2];
+extern uint32_t LHR_data[2];
+extern uint8_t LDC_status[2];
 
 /* Bluetooth Serial Port --------------------------------------------------------*/
 #define MSG_LEN 64
-extern char RX_BYTE;
-extern char RX_BUFFER[MSG_LEN];
-extern char TX_BUFFER[MSG_LEN];
+extern char RX_byte;
+extern char RX_buffer[MSG_LEN];
+extern char TX_buffer[MSG_LEN];
 void Command_Parse(void);
 /* USER CODE END Private defines */
 
