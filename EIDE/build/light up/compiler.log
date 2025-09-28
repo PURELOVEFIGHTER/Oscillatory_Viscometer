@@ -2,9 +2,8 @@
 
 
 
-
-
-
 >>> ld
 
-Program Size: Code=14136 RO-data=624 RW-data=136 ZI-data=2152  
+Error: L6218E: Undefined symbol main (referred from __rtentry2.o).
+Not enough information to list image symbols.
+Finished: 1 information, 0 warning and 1 error messages.

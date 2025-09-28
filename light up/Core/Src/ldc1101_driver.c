@@ -2,7 +2,6 @@
 
 bool isLHR = 0;
 
-/*******************************LDC1101驱动层Begin*********************************/
 // SPI 写寄存器
 void ldc1101_writeByte(LDC1101_HandleTypeDef *dev, uint8_t addr, uint8_t _data) {
     uint8_t writeReg[2] = {addr & 0x7F, _data};
@@ -26,9 +25,7 @@ uint8_t ldc1101_readByte(LDC1101_HandleTypeDef *dev, uint8_t addr) {
 
     return rx_data[1]; // 第二个字节是寄存器值
 }
-/*******************************LDC1101驱动层End*********************************/
 
-/*******************************LDC1101模块层Begin*********************************/
 uint8_t ldc1101_init(LDC1101_HandleTypeDef *dev, uint8_t RP_MIN) {
     // 设置为 SLEEP 模式，开始初始化
     ldc1101_writeByte(dev, _LDC1101_REG_CFG_POWER_STATE,
@@ -47,19 +44,17 @@ uint8_t ldc1101_init(LDC1101_HandleTypeDef *dev, uint8_t RP_MIN) {
 
     // LHR 模式设置必需(0x05,0x01)(0x0C,0x01)
     ldc1101_writeByte(dev, _LDC1101_REG_CFG_ADDITIONAL_DEVICE, _LDC1101_ALT_CFG_L_OPTIMAL_ENABLE);
-    ldc1101_writeByte(dev, _LDC1101_REG_AMPLITUDE_CONTROL_REQUIREMENT,
-                      0x01); // LHR 持续转换
+    ldc1101_writeByte(dev, _LDC1101_REG_AMPLITUDE_CONTROL_REQUIREMENT, 0x01); // LHR 持续转换
 
     // LHR Data Ready 报告(0x0A,0xA0)
-    ldc1101_writeByte(dev, _LDC1101_REG_CFG_INTB_MODE,
-                      _LDC1101_INTB_MODE_REPORT_INTB_ON_SDO_PIN | _LDC1101_INTB_MODE_REPORT_LHR_DATA_READY);
+    ldc1101_writeByte(dev, _LDC1101_REG_CFG_INTB_MODE, _LDC1101_INTB_MODE_DONT_REPORT_INTB_ON_SDO_PIN);
 
     // 计数周期
     ldc1101_writeByte(dev, _LDC1101_REG_LHR_RCOUNT_LSB, 0x49);
     ldc1101_writeByte(dev, _LDC1101_REG_LHR_RCOUNT_MSB, 0x01);
 
     // 在静止状态下读取偏移量再进行设置
-    ldc1101_writeByte(dev, _LDC1101_REG_LHR_OFFSET_LSB, 0x900);
+    ldc1101_writeByte(dev, _LDC1101_REG_LHR_OFFSET_LSB, 0x00);
     ldc1101_writeByte(dev, _LDC1101_REG_LHR_OFFSET_MSB, 0x00);
 
     // 不分频
@@ -175,9 +170,3 @@ uint32_t ldc1101_getLHRData(LDC1101_HandleTypeDef *dev) {
 
     return data & 0x00FFFFFF; // 返回24位数据，低24位有效
 }
-
-/*******************************LDC1101模块层End*********************************/
-
-/*******************************Temp Begin*********************************/
-
-/*******************************Temp End***********************************/

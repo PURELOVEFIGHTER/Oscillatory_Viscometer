@@ -56,9 +56,9 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern DMA_HandleTypeDef hdma_spi2_rx;
-extern SPI_HandleTypeDef hspi1;
 extern TIM_HandleTypeDef htim2;
+extern DMA_HandleTypeDef hdma_usart1_rx;
+extern DMA_HandleTypeDef hdma_usart1_tx;
 extern UART_HandleTypeDef huart1;
 /* USER CODE BEGIN EV */
 
@@ -203,6 +203,20 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles EXTI line0 interrupt.
+  */
+void EXTI0_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI0_IRQn 0 */
+
+  /* USER CODE END EXTI0_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
+  /* USER CODE BEGIN EXTI0_IRQn 1 */
+
+  /* USER CODE END EXTI0_IRQn 1 */
+}
+
+/**
   * @brief This function handles DMA1 channel4 global interrupt.
   */
 void DMA1_Channel4_IRQHandler(void)
@@ -210,10 +224,24 @@ void DMA1_Channel4_IRQHandler(void)
   /* USER CODE BEGIN DMA1_Channel4_IRQn 0 */
 
   /* USER CODE END DMA1_Channel4_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_spi2_rx);
+  HAL_DMA_IRQHandler(&hdma_usart1_tx);
   /* USER CODE BEGIN DMA1_Channel4_IRQn 1 */
 
   /* USER CODE END DMA1_Channel4_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA1 channel5 global interrupt.
+  */
+void DMA1_Channel5_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel5_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel5_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart1_rx);
+  /* USER CODE BEGIN DMA1_Channel5_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel5_IRQn 1 */
 }
 
 /**
@@ -222,43 +250,12 @@ void DMA1_Channel4_IRQHandler(void)
 void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
-    // 方向控制波形
-    static uint32_t tim2_drv_cnt = 0;
 
-    if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt * drv_PWM_DR / 100))
-        DRV_Forward(&(drv1.CHANNEL_A));
-    else if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt))
-        DRV_Reverse(&(drv1.CHANNEL_A));
-    else {
-        tim2_drv_cnt = 0;
-        DRV_Forward(&(drv1.CHANNEL_A));
-    }
-
-    tim2_drv_cnt++;
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
   /* USER CODE BEGIN TIM2_IRQn 1 */
-    static int led_cnt = 0;
-    if (led_cnt == 100000) {
-        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-        led_cnt = 0;
-    }
-    led_cnt++;
+
   /* USER CODE END TIM2_IRQn 1 */
-}
-
-/**
-  * @brief This function handles SPI1 global interrupt.
-  */
-void SPI1_IRQHandler(void)
-{
-  /* USER CODE BEGIN SPI1_IRQn 0 */
-
-  /* USER CODE END SPI1_IRQn 0 */
-  HAL_SPI_IRQHandler(&hspi1);
-  /* USER CODE BEGIN SPI1_IRQn 1 */
-
-  /* USER CODE END SPI1_IRQn 1 */
 }
 
 /**
@@ -276,6 +273,32 @@ void USART1_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+// void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+    if (htim->Instance == TIM2) {
+        // 方向控制波形
+        static uint32_t tim2_drv_cnt = 0;
+        if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt * drv_PWM_DR / 100))
+            DRV_Forward(&(drv1.CHANNEL_A));
+        else if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt))
+            DRV_Reverse(&(drv1.CHANNEL_A));
+        else {
+            tim2_drv_cnt = 0;
+            DRV_Forward(&(drv1.CHANNEL_A));
+        }
+        tim2_drv_cnt++;
+
+        // LED 心跳
+        static int tim2_led_cnt = 0;
+        if (tim2_led_cnt == 100000) {
+            HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+            tim2_led_cnt = 0;
+        }
+        tim2_led_cnt++;
+    }
+}
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     static uint8_t index = 0;
 
@@ -293,4 +316,5 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
         HAL_UART_Receive_IT(&huart1, (uint8_t *)&RX_byte, 1);
     }
 }
+
 /* USER CODE END 1 */

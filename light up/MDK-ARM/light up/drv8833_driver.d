@@ -29,3 +29,4 @@ light up\drv8833_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi
 light up\drv8833_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 light up\drv8833_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 light up\drv8833_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+light up\drv8833_driver.o: ../Core/Inc/drv8833_config.h

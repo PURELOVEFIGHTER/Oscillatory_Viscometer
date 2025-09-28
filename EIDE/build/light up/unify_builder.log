@@ -1,4 +1,4 @@
-[2025-09-26 21:16:50]	[info] incremental build: 30 source files changed
+[2025-09-28 23:41:30]	[info] incremental build: 30 source files changed
 These source files will be recompiled
 ---
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\drv8833_driver.c': object (.o) file not exist
@@ -32,110 +32,50 @@ These source files will be recompiled
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_uart.c': object (.o) file not exist
 'd:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': object (.o) file not exist
 
-[2025-09-26 21:16:59]	[done]
+[2025-09-28 23:41:36]	link failed !, exit code: 1
+   at unify_builder.Program.Main(String[] args_)
+---
+Error: L6218E: Undefined symbol MX_DMA_Init (referred from main.o).
+Error: L6218E: Undefined symbol Command_Parse (referred from stm32f1xx_it.o).
+Not enough information to list image symbols.
+Finished: 1 information, 0 warning and 2 error messages.
+
+
+[2025-09-28 23:45:56]	link failed !, exit code: 1
+   at unify_builder.Program.Main(String[] args_)
+---
+Error: L6218E: Undefined symbol MX_DMA_Init (referred from main.o).
+Error: L6218E: Undefined symbol Command_Parse (referred from stm32f1xx_it.o).
+Not enough information to list image symbols.
+Finished: 1 information, 0 warning and 2 error messages.
+
+
+[2025-09-28 23:46:09]	link failed !, exit code: 1
+   at unify_builder.Program.Main(String[] args_)
+---
+Error: L6218E: Undefined symbol MX_DMA_Init (referred from main.o).
+Error: L6218E: Undefined symbol Command_Parse (referred from stm32f1xx_it.o).
+Not enough information to list image symbols.
+Finished: 1 information, 0 warning and 2 error messages.
+
+
+[2025-09-28 23:47:22]	[info] incremental build: 2 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': object (.o) file not exist
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\dma.c': object (.o) file not exist
+
+[2025-09-28 23:47:23]	[done]
 	build successfully !
 
-[2025-09-26 21:21:43]	[info] incremental build: 8 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-
-[2025-09-26 21:21:51]	[done]
+[2025-09-28 23:51:48]	[done]
 	build successfully !
 
-[2025-09-26 22:11:20]	[info] incremental build: 9 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\ldc1101_driver.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-
-[2025-09-26 22:11:26]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c", exit code: 1
-command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\main.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\main.d" ".\..\light up\Core\Src\main.c"
-   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
+[2025-09-28 23:52:18]	link failed !, exit code: 1
    at unify_builder.Program.Main(String[] args_)
 ---
-".\..\light up\Core\Src\main.c", line 282: Error:  #127: expected a statement
-              else drv_PWM_cnt = 100000 / drv_PWM_freq; // ·ÀÖ¹³ý 0 ´íÎó
-              ^
-.\..\light up\Core\Src\main.c: 0 warnings, 1 error
+Error: L6218E: Undefined symbol main (referred from __rtentry2.o).
+Not enough information to list image symbols.
+Finished: 1 information, 0 warning and 1 error messages.
 
-[2025-09-26 22:12:10]	[info] incremental build: 4 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-
-[2025-09-26 22:12:10]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c", exit code: 1
-command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\main.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\main.d" ".\..\light up\Core\Src\main.c"
-   at unify_builder.Program.Main(String[] args_)
----
-".\..\light up\Core\Src\main.c", line 282: Error:  #127: expected a statement
-          else drv_PWM_cnt = 100000 / drv_PWM_freq; // ·ÀÖ¹³ý 0 ´íÎó
-          ^
-.\..\light up\Core\Src\main.c: 0 warnings, 1 error
-
-[2025-09-26 22:12:22]	[info] incremental build: 4 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-
-[2025-09-26 22:12:22]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c", exit code: 1
-command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\main.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\main.d" ".\..\light up\Core\Src\main.c"
-   at unify_builder.Program.Main(String[] args_)
----
-".\..\light up\Core\Src\main.c", line 282: Error:  #127: expected a statement
-          else
-          ^
-.\..\light up\Core\Src\main.c: 0 warnings, 1 error
-
-[2025-09-26 22:13:16]	[info] incremental build: 4 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-
-[2025-09-26 22:13:16]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c", exit code: 1
-command: 
-  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\main.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\main.d" ".\..\light up\Core\Src\main.c"
-   at unify_builder.Program.Main(String[] args_)
----
-".\..\light up\Core\Src\main.c", line 283: Error:  #65: expected a ";"
-          else
-          ^
-.\..\light up\Core\Src\main.c: 0 warnings, 1 error
-
-[2025-09-26 22:13:27]	[info] incremental build: 4 source files changed
-These source files will be recompiled
----
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
-
-[2025-09-26 22:13:31]	[done]
-	build successfully !
 

@@ -30,5 +30,7 @@
 .\build\light up\.obj\__\light up\Core\Src\stm32f1xx_hal_msp.o: ../light up/Core/Inc/ldc1101_driver.h
 .\build\light up\.obj\__\light up\Core\Src\stm32f1xx_hal_msp.o: ../light up/Core/Inc/drv8833_driver.h
 .\build\light up\.obj\__\light up\Core\Src\stm32f1xx_hal_msp.o: ../light up/Core/Inc/drv8833_config.h
+.\build\light up\.obj\__\light up\Core\Src\stm32f1xx_hal_msp.o: ../light up/Core/Inc/command.h
+.\build\light up\.obj\__\light up\Core\Src\stm32f1xx_hal_msp.o: ../light up/Core/Inc/main.h
 .\build\light up\.obj\__\light up\Core\Src\stm32f1xx_hal_msp.o: ../light up/Core/Inc/oled.h
 .\build\light up\.obj\__\light up\Core\Src\stm32f1xx_hal_msp.o: ../light up/Core/Inc/oledfont.h

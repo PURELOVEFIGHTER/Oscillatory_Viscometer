@@ -34,6 +34,7 @@ extern "C" {
 #include "ldc1101_driver.h"
 #include "drv8833_driver.h"
 #include "drv8833_config.h"
+#include "command.h"
 #include "oled.h"
 #include "stdio.h"
 #include "stdlib.h"
@@ -93,9 +94,9 @@ void FREQ_Scan(void);
 void DR_Scan(void);
 
 // 控制波形设置
-extern uint16_t drv_PWM_freq; // PWM 频率
-extern uint16_t drv_PWM_cnt;  // PWM 所需中断计数值
-extern uint16_t drv_PWM_DR;   // PWM 占空比
+extern uint16_t drv_PWM_freq;  // PWM 频率
+extern uint16_t drv_PWM_cnt;   // PWM 所需中断计数值
+extern uint16_t drv_PWM_DR;    // PWM 占空比
 
 /* LDC1101 --------------------------------------------------------*/
 extern LDC1101_HandleTypeDef ldc1;
@@ -111,7 +112,7 @@ extern uint8_t LDC_status[2];
 extern char RX_byte;
 extern char RX_buffer[MSG_LEN];
 extern char TX_buffer[MSG_LEN];
-void Command_Parse(void);
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

@@ -28,40 +28,7 @@
                 "name": "Core",
                 "files": [
                   {
-                    "path": "../light up/Core/Src/drv8833_driver.c"
-                  },
-                  {
-                    "path": "../light up/Core/Src/ldc1101_driver.c"
-                  },
-                  {
-                    "path": "../light up/Core/Src/oled.c"
-                  },
-                  {
-                    "path": "../light up/Core/Src/oledfont.c"
-                  },
-                  {
-                    "path": "../light up/Core/Src/main.c"
-                  },
-                  {
-                    "path": "../light up/Core/Src/gpio.c"
-                  },
-                  {
-                    "path": "../light up/Core/Src/i2c.c"
-                  },
-                  {
-                    "path": "../light up/Core/Src/spi.c"
-                  },
-                  {
-                    "path": "../light up/Core/Src/tim.c"
-                  },
-                  {
-                    "path": "../light up/Core/Src/usart.c"
-                  },
-                  {
-                    "path": "../light up/Core/Src/stm32f1xx_it.c"
-                  },
-                  {
-                    "path": "../light up/Core/Src/stm32f1xx_hal_msp.c"
+                    "path": "../light up/Core/Src/*.c"
                   }
                 ],
                 "folders": []
@@ -213,14 +180,13 @@
       "custom_dep": {
         "name": "default",
         "incList": [
-          "../light up/Core/Inc",
           "../light up/Drivers/STM32F1xx_HAL_Driver/Inc",
           "../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy",
           "../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include",
           "../light up/Drivers/CMSIS/Include",
           "../light up/MDK-ARM",
-          ".cmsis/include",
-          "../light up/MDK-ARM/RTE/_light up"
+          "../light up/MDK-ARM/RTE/_light up",
+          "../light up/Core/Inc"
         ],
         "libList": [],
         "defineList": [

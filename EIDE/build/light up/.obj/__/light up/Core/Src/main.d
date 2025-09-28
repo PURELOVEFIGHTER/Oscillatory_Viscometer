@@ -30,8 +30,11 @@
 .\build\light up\.obj\__\light up\Core\Src\main.o: ../light up/Core/Inc/ldc1101_driver.h
 .\build\light up\.obj\__\light up\Core\Src\main.o: ../light up/Core/Inc/drv8833_driver.h
 .\build\light up\.obj\__\light up\Core\Src\main.o: ../light up/Core/Inc/drv8833_config.h
+.\build\light up\.obj\__\light up\Core\Src\main.o: ../light up/Core/Inc/command.h
+.\build\light up\.obj\__\light up\Core\Src\main.o: ../light up/Core/Inc/main.h
 .\build\light up\.obj\__\light up\Core\Src\main.o: ../light up/Core/Inc/oled.h
 .\build\light up\.obj\__\light up\Core\Src\main.o: ../light up/Core/Inc/oledfont.h
+.\build\light up\.obj\__\light up\Core\Src\main.o: ../light up/Core/Inc/dma.h
 .\build\light up\.obj\__\light up\Core\Src\main.o: ../light up/Core/Inc/i2c.h
 .\build\light up\.obj\__\light up\Core\Src\main.o: ../light up/Core/Inc/spi.h
 .\build\light up\.obj\__\light up\Core\Src\main.o: ../light up/Core/Inc/tim.h

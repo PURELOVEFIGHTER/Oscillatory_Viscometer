@@ -13,14 +13,13 @@
     "ram": 20480,
     "rom": 65536,
     "incDirs": [
-        "../light up/Core/Inc",
         "../light up/Drivers/STM32F1xx_HAL_Driver/Inc",
         "../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy",
         "../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include",
         "../light up/Drivers/CMSIS/Include",
         "../light up/MDK-ARM",
-        ".cmsis/include",
-        "../light up/MDK-ARM/RTE/_light up"
+        "../light up/MDK-ARM/RTE/_light up",
+        "../light up/Core/Inc"
     ],
     "libDirs": [],
     "defines": [
@@ -28,19 +27,8 @@
         "STM32F103xB"
     ],
     "sourceList": [
-        "../light up/Core/Src/drv8833_driver.c",
-        "../light up/Core/Src/gpio.c",
-        "../light up/Core/Src/i2c.c",
-        "../light up/Core/Src/ldc1101_driver.c",
-        "../light up/Core/Src/main.c",
-        "../light up/Core/Src/oled.c",
-        "../light up/Core/Src/oledfont.c",
-        "../light up/Core/Src/spi.c",
-        "../light up/Core/Src/stm32f1xx_hal_msp.c",
-        "../light up/Core/Src/stm32f1xx_it.c",
+        "../light up/Core/Src/*.c",
         "../light up/Core/Src/system_stm32f1xx.c",
-        "../light up/Core/Src/tim.c",
-        "../light up/Core/Src/usart.c",
         "../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c",
         "../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c",
         "../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c",
