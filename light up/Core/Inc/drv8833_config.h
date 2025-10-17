@@ -2,8 +2,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+/* IT Priority Configuration Begin ------------------------------ */
 
-/* USER CODE BEGIN DRV8833_Config ------------------------------ */
+/* IT Priority Configuration End -------------------------------- */
+
+/* DRV8833_Configuration Begin ------------------------------ */
 #define DRV_USE_CHANNEL_B 0 // 如果使用DRV8833的B通道，置1，否则置0
 #define DRV_USE_nFAULT    0 // 如果使用DRV8833的FAULT引脚，置1，否则置0
 
@@ -26,7 +29,7 @@ extern "C" {
     #define DRV_nFAULT_GPIO_Port NULL
     #define DRV_nFAULT_Pin       0
 #endif
-/* USER CODE END DRV_Config ------------------------------ */
+/* DRV8833_Configuration End ------------------------------ */
 
 #ifdef __cplusplus
 }

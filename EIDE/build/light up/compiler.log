@@ -4,6 +4,4 @@
 
 >>> ld
 
-Error: L6218E: Undefined symbol main (referred from __rtentry2.o).
-Not enough information to list image symbols.
-Finished: 1 information, 0 warning and 1 error messages.
+Program Size: Code=15148 RO-data=624 RW-data=120 ZI-data=2456  

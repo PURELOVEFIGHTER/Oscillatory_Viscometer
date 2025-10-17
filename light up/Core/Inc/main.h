@@ -64,18 +64,16 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define STATE_LED_Pin GPIO_PIN_13
-#define STATE_LED_GPIO_Port GPIOC
-#define DRV_AIN1_Pin GPIO_PIN_0
-#define DRV_AIN1_GPIO_Port GPIOA
-#define DRV_AIN2_Pin GPIO_PIN_1
-#define DRV_AIN2_GPIO_Port GPIOA
-#define LDC1_CS_Pin GPIO_PIN_4
-#define LDC1_CS_GPIO_Port GPIOA
-#define DRV_nSLEEP_Pin GPIO_PIN_1
+#define STATE_LED_Pin        GPIO_PIN_13
+#define STATE_LED_GPIO_Port  GPIOC
+#define DRV_AIN1_Pin         GPIO_PIN_0
+#define DRV_AIN1_GPIO_Port   GPIOA
+#define DRV_AIN2_Pin         GPIO_PIN_1
+#define DRV_AIN2_GPIO_Port   GPIOA
+#define DRV_nSLEEP_Pin       GPIO_PIN_1
 #define DRV_nSLEEP_GPIO_Port GPIOB
-#define LDC2_CS_Pin GPIO_PIN_12
-#define LDC2_CS_GPIO_Port GPIOB
+#define LDC2_CS_Pin          GPIO_PIN_12
+#define LDC2_CS_GPIO_Port    GPIOB
 
 /* USER CODE BEGIN Private defines */
 /* DRV8833 --------------------------------------------------------*/
@@ -94,25 +92,31 @@ void FREQ_Scan(void);
 void DR_Scan(void);
 
 // 控制波形设置
-extern uint16_t drv_PWM_freq;  // PWM 频率
-extern uint16_t drv_PWM_cnt;   // PWM 所需中断计数值
-extern uint16_t drv_PWM_DR;    // PWM 占空比
+extern uint16_t drv_PWM_freq; // PWM 频率
+extern uint16_t drv_PWM_cnt;  // PWM 所需中断计数值
+extern uint16_t drv_PWM_DR;   // PWM 占空比
 
 /* LDC1101 --------------------------------------------------------*/
-extern LDC1101_HandleTypeDef ldc1;
 extern LDC1101_HandleTypeDef ldc2;
 
-extern uint16_t Rp_data[2];
-extern uint16_t L_data[2];
-extern uint32_t LHR_data[2];
-extern uint8_t LDC_status[2];
+extern volatile bool ldc2_isWorking;
+extern uint16_t Rp_data;
+extern uint16_t L_data;
+extern uint32_t LHR_data;
+extern uint8_t LDC_status;
 
-/* Bluetooth Serial Port --------------------------------------------------------*/
+/* UART -----------------------------------------------------------*/
 #define MSG_LEN 64
-extern char RX_byte;
-extern char RX_buffer[MSG_LEN];
-extern char TX_buffer[MSG_LEN];
-
+extern char UART1_RX_buffer[MSG_LEN];
+extern char UART1_TX_buffer[2][MSG_LEN];
+extern volatile bool UART1_TX_isBusy;           // 发送DMA忙标志
+extern volatile bool UART1_TX_isPending;        // 有待发送数据
+extern volatile uint8_t UART1_TX_activeBuffer;  // 当前活跃发送缓冲
+extern char UART3_DMA_buffer[2][MSG_LEN];
+extern uint8_t UART3_activeBufferIndex;
+extern uint8_t UART3_sendingBufferIndex;
+extern volatile bool UART3_DMA_isBusy;
+extern volatile bool UART3_DMA_isPending;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

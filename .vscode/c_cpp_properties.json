@@ -10,7 +10,8 @@
                 "UNICODE",
                 "_UNICODE"
             ],
-            "configurationProvider": "cl.eide"
+            "configurationProvider": "cl.eide",
+            "compilerPath": "\"D:\\GNU\\10 2021.10\\bin\\arm-none-eabi-gcc.exe\""
         }
     ],
     "version": 4

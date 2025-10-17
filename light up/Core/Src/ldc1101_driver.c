@@ -61,6 +61,9 @@ uint8_t ldc1101_init(LDC1101_HandleTypeDef *dev, uint8_t RP_MIN) {
     ldc1101_writeByte(dev, _LDC1101_REG_CFG_LHR, _LDC1101_LHR_CFG_FREQUENCY_NOT_DIVIDED);
 
     isLHR = 1;
+    
+    // 开始工作  
+    ldc1101_writeByte(dev, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE);
 
     // 等待测量稳定
     HAL_Delay(100);

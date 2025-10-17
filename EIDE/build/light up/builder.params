@@ -3,7 +3,7 @@
     "target": "light up",
     "toolchain": "AC5",
     "toolchainLocation": "D:\\Keil528a\\ARM\\ARMCC",
-    "toolchainCfgFile": "c:\\Users\\Administrator\\.vscode\\extensions\\cl.eide-3.25.6\\res\\data\\models/arm.v5.model.json",
+    "toolchainCfgFile": "c:\\Users\\Administrator\\.vscode\\extensions\\cl.eide-3.26.1\\res\\data\\models/arm.v5.model.json",
     "buildMode": "fast|multhread",
     "showRepathOnLog": true,
     "threadNum": 6,
@@ -13,13 +13,14 @@
     "ram": 20480,
     "rom": 65536,
     "incDirs": [
+        "../light up/Core/Inc",
         "../light up/Drivers/STM32F1xx_HAL_Driver/Inc",
         "../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy",
         "../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include",
         "../light up/Drivers/CMSIS/Include",
         "../light up/MDK-ARM",
-        "../light up/MDK-ARM/RTE/_light up",
-        "../light up/Core/Inc"
+        ".cmsis/include",
+        "../light up/MDK-ARM/RTE/_light up"
     ],
     "libDirs": [],
     "defines": [
@@ -27,8 +28,21 @@
         "STM32F103xB"
     ],
     "sourceList": [
-        "../light up/Core/Src/*.c",
+        "../light up/Core/Src/command.c",
+        "../light up/Core/Src/dma.c",
+        "../light up/Core/Src/drv8833_driver.c",
+        "../light up/Core/Src/gpio.c",
+        "../light up/Core/Src/i2c.c",
+        "../light up/Core/Src/ldc1101_driver.c",
+        "../light up/Core/Src/main.c",
+        "../light up/Core/Src/oled.c",
+        "../light up/Core/Src/oledfont.c",
+        "../light up/Core/Src/spi.c",
+        "../light up/Core/Src/stm32f1xx_hal_msp.c",
+        "../light up/Core/Src/stm32f1xx_it.c",
         "../light up/Core/Src/system_stm32f1xx.c",
+        "../light up/Core/Src/tim.c",
+        "../light up/Core/Src/usart.c",
         "../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c",
         "../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c",
         "../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c",
@@ -51,16 +65,25 @@
     "sourceParams": {},
     "options": {
         "version": 4,
-        "beforeBuildTasks": [],
         "afterBuildTasks": [
             {
                 "name": "axf to elf",
                 "command": "axf2elf -d \"${ToolchainRoot}\" -i \"${OutDir}/${ProjectName}.axf\" -o \"${OutDir}/${ProjectName}.elf\" > \"${OutDir}/axf2elf.log\""
             }
         ],
+        "asm-compiler": {},
+        "beforeBuildTasks": [],
+        "c/cpp-compiler": {
+            "CXX_FLAGS": "--diag_suppress=1 --diag_suppress=1295",
+            "C_FLAGS": "--diag_suppress=1 --diag_suppress=1295",
+            "c99-mode": true,
+            "one-elf-section-per-function": true,
+            "optimization": "level-3",
+            "warnings": "all-warnings"
+        },
         "global": {
-            "use-microLIB": false,
             "output-debug-info": "enable",
+            "use-microLIB": false,
             "microcontroller-cpu": "cortex-m3",
             "microcontroller-fpu": "cortex-m3",
             "microcontroller-float": "cortex-m3",
@@ -68,23 +91,14 @@
             "$clang-arch-extensions": "",
             "$armlink-arch-extensions": ""
         },
-        "c/cpp-compiler": {
-            "optimization": "level-3",
-            "one-elf-section-per-function": true,
-            "c99-mode": true,
-            "C_FLAGS": "--diag_suppress=1 --diag_suppress=1295",
-            "CXX_FLAGS": "--diag_suppress=1 --diag_suppress=1295",
-            "warnings": "all-warnings"
-        },
-        "asm-compiler": {},
         "linker": {
             "$outputTaskExcludes": [
                 ".bin"
             ],
             "output-format": "elf",
-            "xo-base": "",
             "ro-base": "0x08000000",
             "rw-base": "0x20000000",
+            "xo-base": "",
             "link-scatter": [
                 "\"d:/STM32CUBE MX/Oscillating Viscometer/EIDE/build/light up/light up.sct\""
             ]
@@ -109,7 +123,7 @@
         "SYS_PathSep": ";",
         "SYS_PathSeparator": ";",
         "SYS_EOL": "\r\n",
-        "EIDE_BUILDER_DIR": "c:\\Users\\Administrator\\.vscode\\extensions\\cl.eide-3.25.6\\res\\tools\\win32\\unify_builder",
+        "EIDE_BUILDER_DIR": "c:\\Users\\Administrator\\.vscode\\extensions\\cl.eide-3.26.1\\res\\tools\\win32\\unify_builder",
         "EIDE_BINARIES_VER": "12.1.1",
         "EIDE_MSYS": "C:\\Users\\Administrator\\.eide\\bin\\builder\\msys\\bin",
         "EIDE_PY3_CMD": "C:\\Users\\Administrator\\.eide\\bin\\python36\\python3.exe",
