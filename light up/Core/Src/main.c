@@ -69,7 +69,7 @@ DRV8833_HandleTypeDef drv1 = {
 };
 
 uint16_t drv_PWM_freq = 100;
-uint16_t drv_PWM_DR   = 30;
+uint16_t drv_PWM_DR   = 10;
 uint16_t drv_PWM_cnt;
 
 /* LDC1101 --------------------------------------------------------*/
@@ -87,11 +87,10 @@ volatile uint8_t UART1_RX_activeBuffer = 0;
 
 char UART1_TX_buffer[MSG_LEN];
 /* UART3 */
-char UART3_TX_DMA_buffer[2][MSG_LEN];
-volatile uint8_t UART3_activeBufferIndex  = 0;     // 当前写入缓冲区索引
-volatile uint8_t UART3_sendingBufferIndex = 0;     // 当前正在 DMA 发送的缓冲区索引
-volatile bool UART3_DMA_isBusy            = false; // DMA忙标志
-volatile bool UART3_DMA_isPending         = false; // DMA待处理标志
+char UART3_TX_DMA_buffer[UART3_TX_QUEUE_SIZE][MSG_LEN];
+volatile bool UART3_DMA_isBusy = false;
+volatile uint8_t UART3_TX_head = 0;
+volatile uint8_t UART3_TX_tail = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -201,15 +200,17 @@ int main(void) {
             LDC_status = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
             if (!(LDC_status & 0x01)) {
                 LHR_data = ldc1101_getLHRData(&ldc2);
-                sprintf(UART3_TX_DMA_buffer[UART3_activeBufferIndex], "L=%lu,%lu\r\n", LHR_data, LHR_data);
-                if (!UART3_DMA_isBusy) {
-                    UART3_DMA_isBusy         = true;                        // DMA正在发送消息
-                    UART3_sendingBufferIndex = UART3_activeBufferIndex;     // 发送刚写入数据
-                    UART3_activeBufferIndex  = 1 - UART3_activeBufferIndex; // 将活跃缓冲区切换到另一个缓冲区
-                    HAL_UART_Transmit_DMA(&huart3, (uint8_t *)UART3_TX_DMA_buffer[UART3_sendingBufferIndex],
-                                          strlen(UART3_TX_DMA_buffer[UART3_sendingBufferIndex]));
-                } else {
-                    UART3_DMA_isPending = true;
+
+                uint8_t next_head = (UART3_TX_head + 1) % UART3_TX_QUEUE_SIZE;
+                if (next_head != UART3_TX_tail) {
+                    sprintf(UART3_TX_DMA_buffer[UART3_TX_head], "L=%lu,%lu\r\n", LHR_data, LHR_data);
+                    UART3_TX_head = next_head;
+                }
+                if (!UART3_DMA_isBusy && UART3_TX_tail != UART3_TX_head) {
+                    UART3_DMA_isBusy = true;
+                    HAL_UART_Transmit_DMA(&huart3, (uint8_t *)UART3_TX_DMA_buffer[UART3_TX_tail],
+                                          strlen(UART3_TX_DMA_buffer[UART3_TX_tail]));
+                    UART3_TX_tail = (UART3_TX_tail + 1) % UART3_TX_QUEUE_SIZE;
                 }
             }
         }

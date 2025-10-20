@@ -28,8 +28,7 @@ uint8_t ldc1101_readByte(LDC1101_HandleTypeDef *dev, uint8_t addr) {
 
 uint8_t ldc1101_init(LDC1101_HandleTypeDef *dev, uint8_t RP_MIN) {
     // 设置为 SLEEP 模式，开始初始化
-    ldc1101_writeByte(dev, _LDC1101_REG_CFG_POWER_STATE,
-                      _LDC1101_FUNC_MODE_SLEEP_MODE); // 0x01
+    ldc1101_writeByte(dev, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_SLEEP_MODE); // 0x01
 
     // 先读取 CHIP ID，确认 SPI 和芯片正常
     uint8_t chip_id = ldc1101_readByte(dev, _LDC1101_REG_CHIP_ID);
@@ -51,7 +50,7 @@ uint8_t ldc1101_init(LDC1101_HandleTypeDef *dev, uint8_t RP_MIN) {
 
     // 计数周期
     ldc1101_writeByte(dev, _LDC1101_REG_LHR_RCOUNT_LSB, 0x49);
-    ldc1101_writeByte(dev, _LDC1101_REG_LHR_RCOUNT_MSB, 0x01);
+    ldc1101_writeByte(dev, _LDC1101_REG_LHR_RCOUNT_MSB, 0x31); 
 
     // 在静止状态下读取偏移量再进行设置
     ldc1101_writeByte(dev, _LDC1101_REG_LHR_OFFSET_LSB, 0x00);
@@ -61,8 +60,8 @@ uint8_t ldc1101_init(LDC1101_HandleTypeDef *dev, uint8_t RP_MIN) {
     ldc1101_writeByte(dev, _LDC1101_REG_CFG_LHR, _LDC1101_LHR_CFG_FREQUENCY_NOT_DIVIDED);
 
     isLHR = 1;
-    
-    // 开始工作  
+
+    // 开始工作
     ldc1101_writeByte(dev, _LDC1101_REG_CFG_POWER_STATE, _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE);
 
     // 等待测量稳定

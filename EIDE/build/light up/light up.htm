@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\build\light up\light up.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\build\light up\light up.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Mon Oct 20 11:58:04 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Mon Oct 20 20:15:13 2025
 <BR><P>
 <H3>Maximum Stack Usage =        304 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -746,16 +746,16 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[84]"></a>DRV_Coast</STRONG> (Thumb, 28 bytes, Stack size 8 bytes, drv8833_driver.o(i.DRV_Coast))
-<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = DRV_Coast
+<P><STRONG><a name="[84]"></a>DRV_Forward</STRONG> (Thumb, 28 bytes, Stack size 8 bytes, drv8833_driver.o(i.DRV_Forward))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = DRV_Forward
 </UL>
 <BR>[Calls]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
 </UL>
 <BR>[Called By]<UL><LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_PeriodElapsedCallback
 </UL>
 
-<P><STRONG><a name="[85]"></a>DRV_Forward</STRONG> (Thumb, 28 bytes, Stack size 8 bytes, drv8833_driver.o(i.DRV_Forward))
-<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = DRV_Forward
+<P><STRONG><a name="[85]"></a>DRV_Reverse</STRONG> (Thumb, 28 bytes, Stack size 8 bytes, drv8833_driver.o(i.DRV_Reverse))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = DRV_Reverse
 </UL>
 <BR>[Calls]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
 </UL>
@@ -834,8 +834,8 @@ Global Symbols
 <P><STRONG><a name="[83]"></a>HAL_GPIO_WritePin</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, stm32f1xx_hal_gpio.o(i.HAL_GPIO_WritePin))
 <BR><BR>[Called By]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ldc1101_writeByte
 <LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_GPIO_Init
-<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DRV_Forward
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DRV_Coast
+<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DRV_Reverse
+<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DRV_Forward
 <LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DRV8833_Init
 <LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ldc1101_readByte
 </UL>
@@ -1065,7 +1065,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[ab]"></a>HAL_TIM_IRQHandler</STRONG> (Thumb, 358 bytes, Stack size 16 bytes, stm32f1xx_hal_tim.o(i.HAL_TIM_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = HAL_TIM_IRQHandler &rArr; HAL_TIM_PeriodElapsedCallback &rArr; DRV_Forward
+<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = HAL_TIM_IRQHandler &rArr; HAL_TIM_PeriodElapsedCallback &rArr; DRV_Reverse
 </UL>
 <BR>[Calls]<UL><LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_PeriodElapsedCallback
 <LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_TriggerCallback
@@ -1087,10 +1087,10 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[af]"></a>HAL_TIM_PeriodElapsedCallback</STRONG> (Thumb, 92 bytes, Stack size 16 bytes, stm32f1xx_it.o(i.HAL_TIM_PeriodElapsedCallback))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = HAL_TIM_PeriodElapsedCallback &rArr; DRV_Forward
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = HAL_TIM_PeriodElapsedCallback &rArr; DRV_Reverse
 </UL>
-<BR>[Calls]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DRV_Forward
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DRV_Coast
+<BR>[Calls]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DRV_Reverse
+<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DRV_Forward
 <LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_TogglePin
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_IRQHandler
@@ -1201,7 +1201,7 @@ Global Symbols
 <LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_TxCpltCallback
 </UL>
 
-<P><STRONG><a name="[bc]"></a>HAL_UART_TxCpltCallback</STRONG> (Thumb, 78 bytes, Stack size 16 bytes, stm32f1xx_it.o(i.HAL_UART_TxCpltCallback))
+<P><STRONG><a name="[bc]"></a>HAL_UART_TxCpltCallback</STRONG> (Thumb, 74 bytes, Stack size 16 bytes, stm32f1xx_it.o(i.HAL_UART_TxCpltCallback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 60<LI>Call Chain = HAL_UART_TxCpltCallback &rArr; HAL_UART_Transmit_DMA &rArr; HAL_DMA_Start_IT &rArr; DMA_SetConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Transmit_DMA
@@ -1369,7 +1369,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f103xb.o(.text)
 </UL>
 <P><STRONG><a name="[29]"></a>TIM2_IRQHandler</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, stm32f1xx_it.o(i.TIM2_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = TIM2_IRQHandler &rArr; HAL_TIM_IRQHandler &rArr; HAL_TIM_PeriodElapsedCallback &rArr; DRV_Forward
+<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = TIM2_IRQHandler &rArr; HAL_TIM_IRQHandler &rArr; HAL_TIM_PeriodElapsedCallback &rArr; DRV_Reverse
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_IRQHandler
 </UL>
@@ -1461,7 +1461,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ldc1101_init
 </UL>
 
-<P><STRONG><a name="[5b]"></a>main</STRONG> (Thumb, 294 bytes, Stack size 0 bytes, main.o(i.main))
+<P><STRONG><a name="[5b]"></a>main</STRONG> (Thumb, 334 bytes, Stack size 0 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 168 + Unknown Stack Size
 <LI>Call Chain = main &rArr; OLED_Init &rArr; WriteCmd &rArr; HAL_I2C_Mem_Write &rArr; I2C_RequestMemoryWrite &rArr; I2C_WaitOnMasterAddressFlagUntilTimeout
 </UL>

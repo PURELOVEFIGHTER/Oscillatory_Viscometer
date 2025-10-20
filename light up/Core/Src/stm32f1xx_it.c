@@ -266,7 +266,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt * drv_PWM_DR / 100))
             DRV_Forward(&(drv1.CHANNEL_A));
         else if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt))
-            DRV_Coast(&(drv1.CHANNEL_A));
+            DRV_Reverse(&(drv1.CHANNEL_A));
+            // DRV_Coast(&(drv1.CHANNEL_A));
         else {
             tim2_drv_cnt = 0;
             DRV_Forward(&(drv1.CHANNEL_A));
@@ -285,15 +286,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == USART3) {
-        UART3_DMA_isBusy = false;
-
-        if (UART3_DMA_isPending) {
-            UART3_DMA_isPending      = false;
-            UART3_DMA_isBusy         = true;
-            UART3_sendingBufferIndex = UART3_activeBufferIndex;
-            UART3_activeBufferIndex  = 1 - UART3_activeBufferIndex;
-            HAL_UART_Transmit_DMA(&huart3, (uint8_t *)UART3_TX_DMA_buffer[UART3_sendingBufferIndex],
-                                  strlen(UART3_TX_DMA_buffer[UART3_sendingBufferIndex]));
+        if (UART3_TX_tail != UART3_TX_head) {
+            HAL_UART_Transmit_DMA(&huart3, (uint8_t *)UART3_TX_DMA_buffer[UART3_TX_tail],
+                                  strlen(UART3_TX_DMA_buffer[UART3_TX_tail]));
+            UART3_TX_tail = (UART3_TX_tail + 1) % UART3_TX_QUEUE_SIZE;
+        } else {
+            UART3_DMA_isBusy = false;
         }
     }
 }

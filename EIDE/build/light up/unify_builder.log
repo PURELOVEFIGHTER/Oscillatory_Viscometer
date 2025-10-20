@@ -287,3 +287,300 @@ These source files will be recompiled
 [2025-10-20 11:58:04]	[done]
 	build successfully !
 
+[2025-10-20 16:32:17]	[info] incremental build: 11 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\drv8833_config.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\dma.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\drv8833_config.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\drv8833_driver.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\drv8833_config.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\drv8833_config.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\drv8833_config.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\drv8833_config.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\drv8833_config.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\drv8833_config.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\drv8833_config.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\drv8833_config.h' has been changed.
+
+[2025-10-20 16:32:25]	[done]
+	build successfully !
+
+[2025-10-20 16:57:16]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\ldc1101_driver.c': source file has been changed.
+
+[2025-10-20 16:57:17]	[done]
+	build successfully !
+
+[2025-10-20 17:07:41]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+
+[2025-10-20 17:07:42]	[done]
+	build successfully !
+
+[2025-10-20 17:18:34]	[done]
+	build successfully !
+
+[2025-10-20 17:19:02]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+
+[2025-10-20 17:19:03]	[done]
+	build successfully !
+
+[2025-10-20 19:15:56]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+
+[2025-10-20 19:15:58]	[done]
+	build successfully !
+
+[2025-10-20 19:17:14]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+
+[2025-10-20 19:17:15]	[done]
+	build successfully !
+
+[2025-10-20 19:24:54]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\ldc1101_driver.c': source file has been changed.
+
+[2025-10-20 19:24:55]	[done]
+	build successfully !
+
+[2025-10-20 19:38:00]	[info] incremental build: 10 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\dma.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+
+[2025-10-20 19:38:03]	[done]
+	build successfully !
+
+[2025-10-20 19:40:11]	[info] incremental build: 11 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\dma.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\ldc1101_driver.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+
+[2025-10-20 19:40:14]	[done]
+	build successfully !
+
+[2025-10-20 19:42:06]	[info] incremental build: 10 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\dma.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+
+[2025-10-20 19:42:09]	[done]
+	build successfully !
+
+[2025-10-20 19:43:05]	[info] incremental build: 10 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\dma.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+
+[2025-10-20 19:43:09]	[done]
+	build successfully !
+
+[2025-10-20 19:43:39]	[info] incremental build: 10 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\dma.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+
+[2025-10-20 19:43:42]	[done]
+	build successfully !
+
+[2025-10-20 19:43:46]	[info] incremental build: 10 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\dma.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+
+[2025-10-20 19:43:49]	[done]
+	build successfully !
+
+[2025-10-20 19:44:57]	[info] incremental build: 10 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\dma.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+
+[2025-10-20 19:45:00]	[done]
+	build successfully !
+
+[2025-10-20 19:45:46]	[info] incremental build: 10 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\dma.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+
+[2025-10-20 19:45:48]	[done]
+	build successfully !
+
+[2025-10-20 19:52:49]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+
+[2025-10-20 19:52:51]	[done]
+	build successfully !
+
+[2025-10-20 19:55:10]	[info] incremental build: 10 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\dma.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+
+[2025-10-20 19:55:13]	[done]
+	build successfully !
+
+[2025-10-20 19:55:32]	[info] incremental build: 10 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\dma.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+
+[2025-10-20 19:55:34]	[done]
+	build successfully !
+
+[2025-10-20 19:58:23]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+
+[2025-10-20 19:58:24]	[done]
+	build successfully !
+
+[2025-10-20 19:58:36]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+
+[2025-10-20 19:58:37]	[done]
+	build successfully !
+
+[2025-10-20 20:06:29]	[info] incremental build: 10 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\dma.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+
+[2025-10-20 20:06:31]	[done]
+	build successfully !
+
+[2025-10-20 20:14:48]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+
+[2025-10-20 20:14:49]	[done]
+	build successfully !
+
+[2025-10-20 20:15:12]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+
+[2025-10-20 20:15:13]	[done]
+	build successfully !
+

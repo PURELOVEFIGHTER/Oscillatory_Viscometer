@@ -112,11 +112,11 @@ extern volatile uint8_t UART1_RX_activeBuffer;
 extern char UART1_RX_DMA_buffer[2][MSG_LEN];
 extern char UART1_TX_buffer[MSG_LEN];
 /* UART3 */
-extern char UART3_TX_DMA_buffer[2][MSG_LEN];
-extern volatile uint8_t UART3_activeBufferIndex;
-extern volatile uint8_t UART3_sendingBufferIndex;
+#define UART3_TX_QUEUE_SIZE 6
+extern char UART3_TX_DMA_buffer[UART3_TX_QUEUE_SIZE][MSG_LEN];
 extern volatile bool UART3_DMA_isBusy;
-extern volatile bool UART3_DMA_isPending;
+extern volatile uint8_t UART3_TX_head;
+extern volatile uint8_t UART3_TX_tail;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
