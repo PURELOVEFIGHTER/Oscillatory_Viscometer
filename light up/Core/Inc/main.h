@@ -83,13 +83,13 @@ extern DRV8833_HandleTypeDef drv1;
 #define FREQ_MIN  5
 #define FREQ_MAX  1000
 #define FREQ_STEP 5
-void FREQ_Scan(void);
+extern volatile bool freq_scan_enabled;
+extern uint8_t current_freq;
 
 // 占空比扫描设置
 #define DR_MIN  5
 #define DR_MAX  50
 #define DR_STEP 5
-void DR_Scan(void);
 
 // 控制波形设置
 extern uint16_t drv_PWM_freq; // PWM 频率

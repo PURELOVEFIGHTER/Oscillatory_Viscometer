@@ -17,7 +17,4 @@ version: "2.1"
 options:
     light up:
         files: {}
-        virtualPathFiles:
-            <virtual_root>/Application/User/Core/dma.c: ""
-            <virtual_root>/Application/User/Core/i2c.c: ""
-            <virtual_root>/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_i2c.c: ""
+        virtualPathFiles: {}

@@ -1,5 +1,6 @@
 #include "command.h"
 #include "ldc1101_driver.h"
+#include "tim.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -35,6 +36,11 @@ void Command_Parse(void) {
         drv_PWM_freq = atoi(&UART1_RX_DMA_buffer[UART1_RX_activeBuffer][3]);
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
         sprintf(UART1_TX_buffer, "PWM_FREQ set to %dHz\r\n", drv_PWM_freq);
+    } else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "FR Scan", 7) == 0) {
+        freq_scan_enabled = true;                                                        // 打开扫频标志
+        current_freq      = 181;                                                          // 从起始频率开始
+        drv_PWM_freq      = current_freq;                                                // 设置初始 PWM
+        HAL_TIM_Base_Start_IT(&htim4);                                                   // 启动定时器中断
     } else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "SPI Check", 9) == 0) // SPI检查
     {
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);

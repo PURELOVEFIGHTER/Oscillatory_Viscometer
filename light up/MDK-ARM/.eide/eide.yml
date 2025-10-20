@@ -13,53 +13,53 @@ virtualFolder:
       folders:
         - name: MDK-ARM
           files:
-            - path: ../light up/MDK-ARM/startup_stm32f103xb.s
+            - path: startup_stm32f103xb.s
           folders: []
         - name: User
           files: []
           folders:
             - name: Core
               files:
-                - path: ../light up/Core/Src/drv8833_driver.c
-                - path: ../light up/Core/Src/oled.c
-                - path: ../light up/Core/Src/oledfont.c
-                - path: ../light up/Core/Src/command.c
-                - path: ../light up/Core/Src/ldc1101_driver.c
-                - path: ../light up/Core/Src/main.c
-                - path: ../light up/Core/Src/gpio.c
-                - path: ../light up/Core/Src/dma.c
-                - path: ../light up/Core/Src/i2c.c
-                - path: ../light up/Core/Src/spi.c
-                - path: ../light up/Core/Src/tim.c
-                - path: ../light up/Core/Src/usart.c
-                - path: ../light up/Core/Src/stm32f1xx_it.c
-                - path: ../light up/Core/Src/stm32f1xx_hal_msp.c
+                - path: ../Core/Src/drv8833_driver.c
+                - path: ../Core/Src/oled.c
+                - path: ../Core/Src/oledfont.c
+                - path: ../Core/Src/command.c
+                - path: ../Core/Src/ldc1101_driver.c
+                - path: ../Core/Src/main.c
+                - path: ../Core/Src/gpio.c
+                - path: ../Core/Src/dma.c
+                - path: ../Core/Src/i2c.c
+                - path: ../Core/Src/spi.c
+                - path: ../Core/Src/tim.c
+                - path: ../Core/Src/usart.c
+                - path: ../Core/Src/stm32f1xx_it.c
+                - path: ../Core/Src/stm32f1xx_hal_msp.c
               folders: []
     - name: Drivers
       files: []
       folders:
         - name: STM32F1xx_HAL_Driver
           files:
-            - path: ../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c
-            - path: ../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c
-            - path: ../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c
-            - path: ../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c
-            - path: ../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c
-            - path: ../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c
-            - path: ../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c
-            - path: ../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c
-            - path: ../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c
-            - path: ../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c
-            - path: ../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c
-            - path: ../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c
-            - path: ../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c
-            - path: ../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c
-            - path: ../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c
-            - path: ../light up/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c
+            - path: ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c
+            - path: ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c
+            - path: ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c
+            - path: ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c
+            - path: ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c
+            - path: ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c
+            - path: ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c
+            - path: ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c
+            - path: ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c
+            - path: ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c
+            - path: ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c
+            - path: ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c
+            - path: ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c
+            - path: ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c
+            - path: ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c
+            - path: ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c
           folders: []
         - name: CMSIS
           files:
-            - path: ../light up/Core/Src/system_stm32f1xx.c
+            - path: ../Core/Src/system_stm32f1xx.c
           folders: []
     - name: ::CMSIS
       files: []
@@ -67,7 +67,7 @@ virtualFolder:
 dependenceList: []
 outDir: build
 miscInfo:
-  uid: 5ac0e45a3754e7771275343fe7b62f93
+  uid: f8794d6c181c09fde33a64bbf1edb70a
 targets:
   light up:
     cppPreprocessAttrs:
@@ -75,14 +75,14 @@ targets:
         - USE_HAL_DRIVER
         - STM32F103xB
       incList:
-        - ../light up/Core/Inc
-        - ../light up/Drivers/STM32F1xx_HAL_Driver/Inc
-        - ../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy
-        - ../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include
-        - ../light up/Drivers/CMSIS/Include
-        - ../light up/MDK-ARM
+        - ../Core/Inc
+        - ../Drivers/STM32F1xx_HAL_Driver/Inc
+        - ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy
+        - ../Drivers/CMSIS/Device/ST/STM32F1xx/Include
+        - ../Drivers/CMSIS/Include
+        - .
         - .cmsis/include
-        - ../light up/MDK-ARM/RTE/_light up
+        - RTE/_light up
       libList: []
     excludeList: []
     toolchain: AC5
