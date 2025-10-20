@@ -107,14 +107,14 @@ extern uint8_t LDC_status;
 
 /* UART -----------------------------------------------------------*/
 #define MSG_LEN 64
-extern char UART1_RX_buffer[MSG_LEN];
-extern char UART1_TX_buffer[2][MSG_LEN];
-extern volatile bool UART1_TX_isBusy;           // 发送DMA忙标志
-extern volatile bool UART1_TX_isPending;        // 有待发送数据
-extern volatile uint8_t UART1_TX_activeBuffer;  // 当前活跃发送缓冲
-extern char UART3_DMA_buffer[2][MSG_LEN];
-extern uint8_t UART3_activeBufferIndex;
-extern uint8_t UART3_sendingBufferIndex;
+/* UART1 */
+extern volatile uint8_t UART1_RX_activeBuffer;
+extern char UART1_RX_DMA_buffer[2][MSG_LEN];
+extern char UART1_TX_buffer[MSG_LEN];
+/* UART3 */
+extern char UART3_TX_DMA_buffer[2][MSG_LEN];
+extern volatile uint8_t UART3_activeBufferIndex;
+extern volatile uint8_t UART3_sendingBufferIndex;
 extern volatile bool UART3_DMA_isBusy;
 extern volatile bool UART3_DMA_isPending;
 /* USER CODE END Private defines */

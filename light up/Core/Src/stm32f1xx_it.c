@@ -236,21 +236,13 @@ void USART1_IRQHandler(void) {
     /* USER CODE BEGIN USART1_IRQn 0 */
     if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_IDLE) != RESET) {
         __HAL_UART_CLEAR_IDLEFLAG(&huart1);
-        HAL_UART_IdleCallback(&huart1);
+        HAL_UART_IdleLineCallback(&huart1);
     }
     /* USER CODE END USART1_IRQn 0 */
     HAL_UART_IRQHandler(&huart1);
     /* USER CODE BEGIN USART1_IRQn 1 */
 
     /* USER CODE END USART1_IRQn 1 */
-}
-
-/**
- * @brief This function handles USART3 global interrupt callback.
- */
-void HAL_UART_IdleCallback(UART_HandleTypeDef *huart) {
-    if (huart->Instance == USART1)
-        Command_Parse();
 }
 
 /**
@@ -267,8 +259,6 @@ void USART3_IRQHandler(void) {
 }
 
 /* USER CODE BEGIN 1 */
-// void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {}
-
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (htim->Instance == TIM2) {
         // 方向控制波形
@@ -302,10 +292,21 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
             UART3_DMA_isBusy         = true;
             UART3_sendingBufferIndex = UART3_activeBufferIndex;
             UART3_activeBufferIndex  = 1 - UART3_activeBufferIndex;
-            HAL_UART_Transmit_DMA(&huart3, (uint8_t *)UART3_DMA_buffer[UART3_sendingBufferIndex],
-                                  strlen(UART3_DMA_buffer[UART3_sendingBufferIndex]));
+            HAL_UART_Transmit_DMA(&huart3, (uint8_t *)UART3_TX_DMA_buffer[UART3_sendingBufferIndex],
+                                  strlen(UART3_TX_DMA_buffer[UART3_sendingBufferIndex]));
         }
     }
 }
 
+void HAL_UART_IdleLineCallback(UART_HandleTypeDef *huart) {
+    if (huart->Instance == USART1) {
+        HAL_UART_DMAStop(&huart1);
+
+        Command_Parse();
+
+        memset(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], 0, MSG_LEN);
+        UART1_RX_activeBuffer ^= 1;
+        HAL_UART_Receive_DMA(&huart1, (uint8_t *)UART1_RX_DMA_buffer[UART1_RX_activeBuffer], MSG_LEN);
+    }
+}
 /* USER CODE END 1 */

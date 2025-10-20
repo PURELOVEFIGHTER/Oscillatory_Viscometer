@@ -59,10 +59,9 @@ void DMA1_Channel2_IRQHandler(void);
 void DMA1_Channel5_IRQHandler(void);
 void TIM2_IRQHandler(void);
 void USART1_IRQHandler(void);
-void HAL_UART_IdleCallback(UART_HandleTypeDef *huart);
 void USART3_IRQHandler(void);
 /* USER CODE BEGIN EFP */
-
+void HAL_UART_IdleLineCallback(UART_HandleTypeDef *huart);
 /* USER CODE END EFP */
 
 #ifdef __cplusplus

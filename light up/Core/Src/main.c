@@ -82,17 +82,16 @@ uint8_t LDC_status           = 0;
 
 /* UART -----------------------------------------------------------*/
 /* UART1 */
-char UART1_RX_buffer[MSG_LEN];
-char UART1_TX_buffer[2][MSG_LEN];
-volatile bool UART1_TX_isBusy          = false; // 发送DMA忙标志
-volatile bool UART1_TX_isPending       = false; // 有待发送数据
-volatile uint8_t UART1_TX_activeBuffer = 0;     // 当前活跃发送缓冲
+char UART1_RX_DMA_buffer[2][MSG_LEN];
+volatile uint8_t UART1_RX_activeBuffer = 0;
+
+char UART1_TX_buffer[MSG_LEN];
 /* UART3 */
-char UART3_DMA_buffer[2][MSG_LEN];
-uint8_t UART3_activeBufferIndex   = 0;     // 当前写入缓冲区索引
-uint8_t UART3_sendingBufferIndex  = 0;     // 当前正在 DMA 发送的缓冲区索引
-volatile bool UART3_DMA_isBusy    = false; // DMA忙标志
-volatile bool UART3_DMA_isPending = false; // DMA待处理标志
+char UART3_TX_DMA_buffer[2][MSG_LEN];
+volatile uint8_t UART3_activeBufferIndex  = 0;     // 当前写入缓冲区索引
+volatile uint8_t UART3_sendingBufferIndex = 0;     // 当前正在 DMA 发送的缓冲区索引
+volatile bool UART3_DMA_isBusy            = false; // DMA忙标志
+volatile bool UART3_DMA_isPending         = false; // DMA待处理标志
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -165,8 +164,8 @@ int main(void) {
     MX_USART3_UART_Init();
     /* USER CODE BEGIN 2 */
     /* 片上外设 */
-    HAL_UART_Receive_DMA(&huart1, (uint8_t *)UART1_RX_buffer, MSG_LEN); // 设置DMA接收地址
-    __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);                        // 开启DMA空闲中断
+    HAL_UART_Receive_DMA(&huart1, (uint8_t *)UART1_RX_DMA_buffer[UART1_RX_activeBuffer], MSG_LEN); // 设置DMA接收地址
+    __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);                                                   // 开启DMA空闲中断
 
     /* 片外外设 */
     // OLED 初始化
@@ -180,11 +179,11 @@ int main(void) {
 
     // LDC1101 初始化
     if (ldc1101_init(&ldc2, _LDC1101_RP_SET_RP_MIN_1_5KOhm)) {
-        sprintf(UART1_TX_buffer[0], "LDC1101 Initialize Failed.\r\n");
-        HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer[0], strlen(UART1_TX_buffer[0]), HAL_MAX_DELAY);
+        sprintf(UART1_TX_buffer, "LDC1101 Initialize Failed.\r\n");
+        HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
     } else {
-        sprintf(UART1_TX_buffer[0], "LDC1101 Initialize Done.\r\n");
-        HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer[0], strlen(UART1_TX_buffer[0]), HAL_MAX_DELAY);
+        sprintf(UART1_TX_buffer, "LDC1101 Initialize Done.\r\n");
+        HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
         ldc2_isWorking = true;
     }
     /* USER CODE END 2 */
@@ -202,13 +201,13 @@ int main(void) {
             LDC_status = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
             if (!(LDC_status & 0x01)) {
                 LHR_data = ldc1101_getLHRData(&ldc2);
-                sprintf(UART3_DMA_buffer[UART3_activeBufferIndex], "L=%lu,%lu\r\n", LHR_data, LHR_data);
+                sprintf(UART3_TX_DMA_buffer[UART3_activeBufferIndex], "L=%lu,%lu\r\n", LHR_data, LHR_data);
                 if (!UART3_DMA_isBusy) {
-                    UART3_DMA_isBusy         = true;
-                    UART3_sendingBufferIndex = UART3_activeBufferIndex;
-                    UART3_activeBufferIndex  = 1 - UART3_activeBufferIndex;
-                    HAL_UART_Transmit_DMA(&huart3, (uint8_t *)UART3_DMA_buffer[UART3_sendingBufferIndex],
-                                          strlen(UART3_DMA_buffer[UART3_sendingBufferIndex]));
+                    UART3_DMA_isBusy         = true;                        // DMA正在发送消息
+                    UART3_sendingBufferIndex = UART3_activeBufferIndex;     // 发送刚写入数据
+                    UART3_activeBufferIndex  = 1 - UART3_activeBufferIndex; // 将活跃缓冲区切换到另一个缓冲区
+                    HAL_UART_Transmit_DMA(&huart3, (uint8_t *)UART3_TX_DMA_buffer[UART3_sendingBufferIndex],
+                                          strlen(UART3_TX_DMA_buffer[UART3_sendingBufferIndex]));
                 } else {
                     UART3_DMA_isPending = true;
                 }

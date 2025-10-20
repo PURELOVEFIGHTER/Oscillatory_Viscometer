@@ -37,3 +37,253 @@ These source files will be recompiled
 [2025-10-16 22:23:13]	[done]
 	build successfully !
 
+[2025-10-20 11:51:53]	[info] incremental build: 11 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\dma.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
+
+[2025-10-20 11:51:57]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c", exit code: 1
+command: 
+  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\command.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\command.d" ".\..\light up\Core\Src\command.c"
+   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
+   at unify_builder.Program.Main(String[] args_)
+---
+".\..\light up\Core\Src\command.c", line 9: Error:  #147: declaration is incompatible with "char UART1_RX_DMA_buffer[2][64]"  (declared at line 112 of "../light up/Core/Inc/main.h")
+  extern char UART1_RX_DMA_buffer[MSG_LEN];
+              ^
+".\..\light up\Core\Src\command.c", line 10: Error:  #147: declaration is incompatible with "char UART1_TX_buffer[64]"  (declared at line 113 of "../light up/Core/Inc/main.h")
+  extern char UART1_TX_buffer[2][MSG_LEN];
+              ^
+".\..\light up\Core\Src\command.c", line 28: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+      if (strncmp(UART1_RX_DMA_buffer, "DR:", 3) == 0) // 设置占空�?
+                  ^
+".\..\light up\Core\Src\command.c", line 30: Warning:  #175-D: subscript out of range
+          drv_PWM_DR = atoi(&UART1_RX_DMA_buffer[3]);
+                                                ^
+".\..\light up\Core\Src\command.c", line 30: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+          drv_PWM_DR = atoi(&UART1_RX_DMA_buffer[3]);
+                            ^
+".\..\light up\Core\Src\command.c", line 33: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+      } else if (strncmp(UART1_RX_DMA_buffer, "FR:", 3) == 0) // 设置频率
+                         ^
+".\..\light up\Core\Src\command.c", line 35: Warning:  #175-D: subscript out of range
+          drv_PWM_freq = atoi(&UART1_RX_DMA_buffer[3]);
+                                                  ^
+".\..\light up\Core\Src\command.c", line 35: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+          drv_PWM_freq = atoi(&UART1_RX_DMA_buffer[3]);
+                              ^
+".\..\light up\Core\Src\command.c", line 38: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+      } else if (strncmp(UART1_RX_DMA_buffer, "SPI Check", 9) == 0) // SPI检�?
+                         ^
+".\..\light up\Core\Src\command.c", line 43: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+      } else if (strncmp(UART1_RX_DMA_buffer, "Read:", 5) == 0) // 读取寄存�?
+                         ^
+".\..\light up\Core\Src\command.c", line 46: Warning:  #175-D: subscript out of range
+          sscanf(&UART1_RX_DMA_buffer[5], "%hhx", &reg_addr);
+                                     ^
+".\..\light up\Core\Src\command.c", line 46: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *restrict"
+          sscanf(&UART1_RX_DMA_buffer[5], "%hhx", &reg_addr);
+                 ^
+".\..\light up\Core\Src\command.c", line 49: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+      } else if ((strncmp(UART1_RX_DMA_buffer, "RPL Check", 9) == 0 && !isLHR)
+                          ^
+".\..\light up\Core\Src\command.c", line 50: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+                 || (strncmp(UART1_RX_DMA_buffer, "LHR Check", 9) == 0 && isLHR)) // 状态检�?
+                             ^
+.\..\light up\Core\Src\command.c: 3 warnings, 11 errors
+
+[2025-10-20 11:52:46]	[info] incremental build: 9 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
+
+[2025-10-20 11:52:47]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c", exit code: 1
+command: 
+  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\command.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\command.d" ".\..\light up\Core\Src\command.c"
+   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
+   at unify_builder.Program.Main(String[] args_)
+---
+".\..\light up\Core\Src\main.c", line 182: Error:  #167: argument of type "char" is incompatible with parameter of type "char *restrict"
+          sprintf(UART1_TX_buffer[0], "LDC1101 Initialize Failed.\r\n");
+                  ^
+".\..\light up\Core\Src\main.c", line 183: Error:  #167: argument of type "char" is incompatible with parameter of type "const char *"
+          HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer[0], strlen(UART1_TX_buffer[0]), HAL_MAX_DELAY);
+                                                                           ^
+".\..\light up\Core\Src\main.c", line 185: Error:  #167: argument of type "char" is incompatible with parameter of type "char *restrict"
+          sprintf(UART1_TX_buffer[0], "LDC1101 Initialize Done.\r\n");
+                  ^
+".\..\light up\Core\Src\main.c", line 186: Error:  #167: argument of type "char" is incompatible with parameter of type "const char *"
+          HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer[0], strlen(UART1_TX_buffer[0]), HAL_MAX_DELAY);
+                                                                           ^
+.\..\light up\Core\Src\main.c: 0 warnings, 4 errors
+".\..\light up\Core\Src\command.c", line 28: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+      if (strncmp(UART1_RX_DMA_buffer, "DR:", 3) == 0) // 设置占空�?
+                  ^
+".\..\light up\Core\Src\command.c", line 30: Warning:  #175-D: subscript out of range
+          drv_PWM_DR = atoi(&UART1_RX_DMA_buffer[3]);
+                                                ^
+".\..\light up\Core\Src\command.c", line 30: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+          drv_PWM_DR = atoi(&UART1_RX_DMA_buffer[3]);
+                            ^
+".\..\light up\Core\Src\command.c", line 33: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+      } else if (strncmp(UART1_RX_DMA_buffer, "FR:", 3) == 0) // 设置频率
+                         ^
+".\..\light up\Core\Src\command.c", line 35: Warning:  #175-D: subscript out of range
+          drv_PWM_freq = atoi(&UART1_RX_DMA_buffer[3]);
+                                                  ^
+".\..\light up\Core\Src\command.c", line 35: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+          drv_PWM_freq = atoi(&UART1_RX_DMA_buffer[3]);
+                              ^
+".\..\light up\Core\Src\command.c", line 38: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+      } else if (strncmp(UART1_RX_DMA_buffer, "SPI Check", 9) == 0) // SPI检�?
+                         ^
+".\..\light up\Core\Src\command.c", line 43: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+      } else if (strncmp(UART1_RX_DMA_buffer, "Read:", 5) == 0) // 读取寄存�?
+                         ^
+".\..\light up\Core\Src\command.c", line 46: Warning:  #175-D: subscript out of range
+          sscanf(&UART1_RX_DMA_buffer[5], "%hhx", &reg_addr);
+                                     ^
+".\..\light up\Core\Src\command.c", line 46: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *restrict"
+          sscanf(&UART1_RX_DMA_buffer[5], "%hhx", &reg_addr);
+                 ^
+".\..\light up\Core\Src\command.c", line 49: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+      } else if ((strncmp(UART1_RX_DMA_buffer, "RPL Check", 9) == 0 && !isLHR)
+                          ^
+".\..\light up\Core\Src\command.c", line 50: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+                 || (strncmp(UART1_RX_DMA_buffer, "LHR Check", 9) == 0 && isLHR)) // 状态检�?
+                             ^
+.\..\light up\Core\Src\command.c: 3 warnings, 9 errors
+
+[2025-10-20 11:53:40]	[info] incremental build: 8 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
+
+[2025-10-20 11:53:40]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c", exit code: 1
+command: 
+  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\command.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\command.d" ".\..\light up\Core\Src\command.c"
+   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
+   at unify_builder.Program.Main(String[] args_)
+---
+".\..\light up\Core\Src\command.c", line 28: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+      if (strncmp(UART1_RX_DMA_buffer, "DR:", 3) == 0) // 设置占空�?
+                  ^
+".\..\light up\Core\Src\command.c", line 30: Warning:  #175-D: subscript out of range
+          drv_PWM_DR = atoi(&UART1_RX_DMA_buffer[3]);
+                                                ^
+".\..\light up\Core\Src\command.c", line 30: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+          drv_PWM_DR = atoi(&UART1_RX_DMA_buffer[3]);
+                            ^
+".\..\light up\Core\Src\command.c", line 33: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+      } else if (strncmp(UART1_RX_DMA_buffer, "FR:", 3) == 0) // 设置频率
+                         ^
+".\..\light up\Core\Src\command.c", line 35: Warning:  #175-D: subscript out of range
+          drv_PWM_freq = atoi(&UART1_RX_DMA_buffer[3]);
+                                                  ^
+".\..\light up\Core\Src\command.c", line 35: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+          drv_PWM_freq = atoi(&UART1_RX_DMA_buffer[3]);
+                              ^
+".\..\light up\Core\Src\command.c", line 38: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+      } else if (strncmp(UART1_RX_DMA_buffer, "SPI Check", 9) == 0) // SPI检�?
+                         ^
+".\..\light up\Core\Src\command.c", line 43: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+      } else if (strncmp(UART1_RX_DMA_buffer, "Read:", 5) == 0) // 读取寄存�?
+                         ^
+".\..\light up\Core\Src\command.c", line 46: Warning:  #175-D: subscript out of range
+          sscanf(&UART1_RX_DMA_buffer[5], "%hhx", &reg_addr);
+                                     ^
+".\..\light up\Core\Src\command.c", line 46: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *restrict"
+          sscanf(&UART1_RX_DMA_buffer[5], "%hhx", &reg_addr);
+                 ^
+".\..\light up\Core\Src\command.c", line 49: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+      } else if ((strncmp(UART1_RX_DMA_buffer, "RPL Check", 9) == 0 && !isLHR)
+                          ^
+".\..\light up\Core\Src\command.c", line 50: Error:  #167: argument of type "char (*)[64]" is incompatible with parameter of type "const char *"
+                 || (strncmp(UART1_RX_DMA_buffer, "LHR Check", 9) == 0 && isLHR)) // 状态检�?
+                             ^
+.\..\light up\Core\Src\command.c: 3 warnings, 9 errors
+
+[2025-10-20 11:54:50]	[info] incremental build: 6 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
+
+[2025-10-20 11:54:51]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c", exit code: 1
+command: 
+  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\stm32f1xx_it.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\stm32f1xx_it.d" ".\..\light up\Core\Src\stm32f1xx_it.c"
+   at unify_builder.Program.Main(String[] args_)
+---
+".\..\light up\Core\Src\stm32f1xx_it.c", line 307: Error:  #20: identifier "UART1_RX_activeBuffer" is undefined
+          memset(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], 0, MSG_LEN);
+                                     ^
+.\..\light up\Core\Src\stm32f1xx_it.c: 0 warnings, 1 error
+
+[2025-10-20 11:55:56]	[info] incremental build: 11 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\dma.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\EIDE\..\light up\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
+
+[2025-10-20 11:56:00]	[done]
+	build successfully !
+
+[2025-10-20 11:57:39]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+
+[2025-10-20 11:57:40]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c", exit code: 1
+command: 
+  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I"../light up/Core/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc" -I"../light up/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy" -I"../light up/Drivers/CMSIS/Device/ST/STM32F1xx/Include" -I"../light up/Drivers/CMSIS/Include" -I"../light up/MDK-ARM" -I.cmsis/include -I"../light up/MDK-ARM/RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\light up\Core\Src\stm32f1xx_it.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\light up\Core\Src\stm32f1xx_it.d" ".\..\light up\Core\Src\stm32f1xx_it.c"
+   at unify_builder.Program.Main(String[] args_)
+---
+".\..\light up\Core\Src\stm32f1xx_it.c", line 311: Error: At end of source:  #67: expected a "}"
+.\..\light up\Core\Src\stm32f1xx_it.c: 0 warnings, 1 error
+
+[2025-10-20 11:58:03]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+
+[2025-10-20 11:58:04]	[done]
+	build successfully !
+
