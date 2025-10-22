@@ -1,5 +1,5 @@
 #include "drv8833_driver.h"
-#include "drv8833_config.h"
+#include "config.h"
 
 volatile uint8_t drv_FAULT = 0;
 

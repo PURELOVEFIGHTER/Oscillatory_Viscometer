@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 #include "stm32f1xx_hal.h"
-#include "drv8833_config.h"
+#include "config.h"
 
 typedef struct {
     GPIO_TypeDef *IN1_Port;

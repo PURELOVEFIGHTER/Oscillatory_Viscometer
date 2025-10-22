@@ -68,11 +68,11 @@ DRV8833_HandleTypeDef drv1 = {
 #endif
 };
 
-uint16_t drv_PWM_freq = 100;
-uint16_t drv_PWM_DR   = 30;
+uint16_t drv_excitingLevel = 0;
+uint16_t drv_PWM_freq      = 198;
+uint16_t drv_PWM_DR        = 50;
 uint16_t drv_PWM_cnt;
-uint8_t current_freq            = 70;
-volatile bool freq_scan_enabled = false;
+volatile bool freq_sweep_enabled = false;
 
 /* LDC1101 --------------------------------------------------------*/
 LDC1101_HandleTypeDef ldc2   = {&hspi2, LDC2_CS_GPIO_Port, LDC2_CS_Pin};
@@ -89,10 +89,7 @@ volatile uint8_t UART1_RX_activeBuffer = 0;
 
 char UART1_TX_buffer[MSG_LEN];
 /* UART3 */
-char UART3_TX_DMA_buffer[UART3_TX_QUEUE_SIZE][MSG_LEN];
-volatile bool UART3_DMA_isBusy = false;
-volatile uint8_t UART3_TX_head = 0;
-volatile uint8_t UART3_TX_tail = 0;
+char UART3_TX_buffer[MSG_LEN];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -154,7 +151,6 @@ int main(void) {
 
     // DRV8833 初始化
     DRV8833_Init(&drv1);
-    HAL_TIM_Base_Start_IT(&htim2); // DRV8833 驱动波形开启
 
     // LDC1101 初始化
     if (ldc1101_init(&ldc2, _LDC1101_RP_SET_RP_MIN_1_5KOhm)) {
@@ -165,6 +161,9 @@ int main(void) {
         HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
         ldc2_isWorking = true;
     }
+
+    // 振动启动
+    HAL_TIM_Base_Start_IT(&htim2);
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -181,22 +180,8 @@ int main(void) {
             if (!(LDC_status & 0x01)) {
                 LHR_data = ldc1101_getLHRData(&ldc2);
 
-                // uint8_t next_head = (UART3_TX_head + 1) % UART3_TX_QUEUE_SIZE;
-                // if (next_head != UART3_TX_tail) {
-                //     sprintf(UART3_TX_DMA_buffer[UART3_TX_head], "L=%lu,%lu\r\n", LHR_data, LHR_data);
-                //     UART3_TX_head = next_head;
-                // }
-                // if (!UART3_DMA_isBusy && UART3_TX_tail != UART3_TX_head) {
-                //     UART3_DMA_isBusy = true;
-                //     HAL_UART_Transmit_DMA(&huart3, (uint8_t *)UART3_TX_DMA_buffer[UART3_TX_tail],
-                //                           strlen(UART3_TX_DMA_buffer[UART3_TX_tail]));
-                //     UART3_TX_tail = (UART3_TX_tail + 1) % UART3_TX_QUEUE_SIZE;
-                // }
-                int len = sprintf((char *)UART3_TX_DMA_buffer[0], "L=%lu,Fr=%lu,%lu,%u\r\n", LHR_data,
-                                  3157600UL + (unsigned long)drv_PWM_freq*1000, // Fr=3157600+当前频率
-                                  LHR_data,
-                                  drv_PWM_freq); // 当前频率
-                HAL_UART_Transmit(&huart3, (uint8_t *)UART3_TX_DMA_buffer[0], len, HAL_MAX_DELAY);
+                sprintf((char *)UART3_TX_buffer, "L=%lu,%lu,%u\r\n", LHR_data, LHR_data, drv_PWM_freq);
+                HAL_UART_Transmit(&huart3, (uint8_t *)UART3_TX_buffer, strlen((char *)UART3_TX_buffer), HAL_MAX_DELAY);
             }
         }
     }

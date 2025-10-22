@@ -59,7 +59,6 @@
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim4;
 extern DMA_HandleTypeDef hdma_usart1_rx;
-extern DMA_HandleTypeDef hdma_usart3_tx;
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart3;
 /* USER CODE BEGIN EV */
@@ -192,19 +191,6 @@ void SysTick_Handler(void) {
 /******************************************************************************/
 
 /**
- * @brief This function handles DMA1 channel2 global interrupt.
- */
-void DMA1_Channel2_IRQHandler(void) {
-    /* USER CODE BEGIN DMA1_Channel2_IRQn 0 */
-
-    /* USER CODE END DMA1_Channel2_IRQn 0 */
-    HAL_DMA_IRQHandler(&hdma_usart3_tx);
-    /* USER CODE BEGIN DMA1_Channel2_IRQn 1 */
-
-    /* USER CODE END DMA1_Channel2_IRQn 1 */
-}
-
-/**
  * @brief This function handles DMA1 channel5 global interrupt.
  */
 void DMA1_Channel5_IRQHandler(void) {
@@ -277,56 +263,41 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (htim->Instance == TIM2) {
         // 方向控制波形
         static uint32_t tim2_drv_cnt = 0;
-        if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt * drv_PWM_DR / 100))
+        if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt * drv_PWM_DR / 100)) {
             DRV_Forward(&(drv1.CHANNEL_A));
-        else if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt))
+            // drv_excitingLevel = ;
+        } else if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt)) {
             // DRV_Reverse(&(drv1.CHANNEL_A));
             DRV_Coast(&(drv1.CHANNEL_A));
-        else {
+            // drv_excitingLevel = ;
+        } else {
             tim2_drv_cnt = 0;
-            DRV_Forward(&(drv1.CHANNEL_A));
         }
         tim2_drv_cnt++;
 
         // LED 心跳
-        static int tim2_led_cnt = 0;
+        static uint32_t tim2_led_cnt = 0;
         if (tim2_led_cnt == 100000) {
             HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
             tim2_led_cnt = 0;
         }
         tim2_led_cnt++;
     }
-    if (htim->Instance == TIM4 && freq_scan_enabled) {
-        static uint8_t tim4_cnt = 1;
-        tim4_cnt++; // 每次中断自增1，假设定时器频率为1Hz
+    if (htim->Instance == TIM4 && freq_sweep_enabled) {
+        static uint8_t tim4_cnt = 0;
+        tim4_cnt++;
 
-        if (tim4_cnt > 10) // 超过2秒
-        {
-            tim4_cnt = 1;      // 重置计数（下一频率从1开始）
+        if (tim4_cnt > FREQ_SWEEP_HOLD_TIME_S) {
+            tim4_cnt = 0;
+            drv_PWM_freq += FREQ_SWEEP_STEP_HZ;
 
-            current_freq += 1; // 步进频率
-
-            if (current_freq > 211) // 超过最大频率
-            {
-                freq_scan_enabled = false;    // 结束扫频
-                HAL_TIM_Base_Stop_IT(&htim4); // 停止 TIM4 定时器中断
-            } else {
-                drv_PWM_freq = current_freq; // 更新频率变量
+            if (drv_PWM_freq > FREQ_SWEEP_END_HZ) {
+                freq_sweep_enabled = false;
+                HAL_TIM_Base_Stop_IT(&htim4);
             }
         }
     }
 }
-// void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
-//     if (huart->Instance == USART3) {
-//         if (UART3_TX_tail != UART3_TX_head) {
-//             HAL_UART_Transmit_DMA(&huart3, (uint8_t *)UART3_TX_DMA_buffer[UART3_TX_tail],
-//                                   strlen(UART3_TX_DMA_buffer[UART3_TX_tail]));
-//             UART3_TX_tail = (UART3_TX_tail + 1) % UART3_TX_QUEUE_SIZE;
-//         } else {
-//             UART3_DMA_isBusy = false;
-//         }
-//     }
-// }
 
 void HAL_UART_IdleLineCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == USART1) {

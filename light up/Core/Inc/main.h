@@ -33,7 +33,7 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "ldc1101_driver.h"
 #include "drv8833_driver.h"
-#include "drv8833_config.h"
+#include "config.h"
 #include "command.h"
 #include "oled.h"
 #include "stdio.h"
@@ -83,7 +83,7 @@ extern DRV8833_HandleTypeDef drv1;
 #define FREQ_MIN  5
 #define FREQ_MAX  1000
 #define FREQ_STEP 5
-extern volatile bool freq_scan_enabled;
+extern volatile bool freq_sweep_enabled;
 extern uint8_t current_freq;
 
 // 占空比扫描设置
@@ -92,6 +92,7 @@ extern uint8_t current_freq;
 #define DR_STEP 5
 
 // 控制波形设置
+extern uint16_t drv_excitingLevel;
 extern uint16_t drv_PWM_freq; // PWM 频率
 extern uint16_t drv_PWM_cnt;  // PWM 所需中断计数值
 extern uint16_t drv_PWM_DR;   // PWM 占空比
@@ -112,11 +113,7 @@ extern volatile uint8_t UART1_RX_activeBuffer;
 extern char UART1_RX_DMA_buffer[2][MSG_LEN];
 extern char UART1_TX_buffer[MSG_LEN];
 /* UART3 */
-#define UART3_TX_QUEUE_SIZE 6
-extern char UART3_TX_DMA_buffer[UART3_TX_QUEUE_SIZE][MSG_LEN];
-extern volatile bool UART3_DMA_isBusy;
-extern volatile uint8_t UART3_TX_head;
-extern volatile uint8_t UART3_TX_tail;
+extern char UART3_TX_buffer[MSG_LEN];
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

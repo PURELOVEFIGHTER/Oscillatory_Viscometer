@@ -5,26 +5,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-// ================= 外部变量 ================= //
 extern UART_HandleTypeDef huart1;
 extern char UART1_RX_DMA_buffer[2][MSG_LEN];
 extern char UART1_TX_buffer[MSG_LEN];
 
 extern uint16_t drv_PWM_freq;
 extern uint16_t drv_PWM_DR;
+
+extern LDC1101_HandleTypeDef ldc2;
 extern bool isLHR;
 extern uint8_t LDC_status;
 
-// LDC1101 驱动器外部对象
-extern LDC1101_HandleTypeDef ldc2;
-
-/**
- * ************************************************************************
- * @brief 指令解析
- * @details
- *
- * ************************************************************************
- */
 void Command_Parse(void) {
     if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "DR:", 3) == 0) // 设置占空比
     {
@@ -36,11 +27,11 @@ void Command_Parse(void) {
         drv_PWM_freq = atoi(&UART1_RX_DMA_buffer[UART1_RX_activeBuffer][3]);
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
         sprintf(UART1_TX_buffer, "PWM_FREQ set to %dHz\r\n", drv_PWM_freq);
-    } else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "FR Scan", 7) == 0) {
-        freq_scan_enabled = true;                                                        // 打开扫频标志
-        current_freq      = 181;                                                          // 从起始频率开始
-        drv_PWM_freq      = current_freq;                                                // 设置初始 PWM
-        HAL_TIM_Base_Start_IT(&htim4);                                                   // 启动定时器中断
+    } else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "FR Sweep", 8) == 0) {
+        freq_sweep_enabled = true;
+        drv_PWM_freq       = FREQ_SWEEP_START_HZ;
+        HAL_TIM_Base_Start_IT(&htim4);
+        sprintf(UART1_TX_buffer, "Frequency sweeping start.\r\n");
     } else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "SPI Check", 9) == 0) // SPI检查
     {
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
