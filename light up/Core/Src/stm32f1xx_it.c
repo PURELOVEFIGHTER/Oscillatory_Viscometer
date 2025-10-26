@@ -263,13 +263,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (htim->Instance == TIM2) {
         // 方向控制波形
         static uint32_t tim2_drv_cnt = 0;
-        if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt * drv_PWM_DR / 100)) {
+        if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt * drv_PWM_DR / 100 / 2)) {
             DRV_Forward(&(drv1.CHANNEL_A));
             // drv_excitingLevel = ;
-        } else if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt)) {
-            // DRV_Reverse(&(drv1.CHANNEL_A));
+        } else if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt / 2)) {
             DRV_Coast(&(drv1.CHANNEL_A));
             // drv_excitingLevel = ;
+        } else if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt / 2) + ((uint32_t)drv_PWM_cnt * drv_PWM_DR / 100 / 2)) {
+            DRV_Reverse(&(drv1.CHANNEL_A));
+        } else if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt)) {
+            DRV_Coast(&(drv1.CHANNEL_A));
         } else {
             tim2_drv_cnt = 0;
         }
@@ -283,17 +286,30 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         }
         tim2_led_cnt++;
     }
-    if (htim->Instance == TIM4 && freq_sweep_enabled) {
+    if (htim->Instance == TIM4) {
         static uint8_t tim4_cnt = 0;
         tim4_cnt++;
 
-        if (tim4_cnt > FREQ_SWEEP_HOLD_TIME_S) {
-            tim4_cnt = 0;
-            drv_PWM_freq += FREQ_SWEEP_STEP_HZ;
+        if (freq_sweep_enabled) {
+            if (tim4_cnt > FREQ_SWEEP_HOLD_TIME_S) {
+                tim4_cnt = 0;
+                drv_PWM_freq += FREQ_SWEEP_STEP_HZ;
 
-            if (drv_PWM_freq > FREQ_SWEEP_END_HZ) {
-                freq_sweep_enabled = false;
-                HAL_TIM_Base_Stop_IT(&htim4);
+                if (drv_PWM_freq >= FREQ_SWEEP_END_HZ) {
+                    freq_sweep_enabled = false;
+                    HAL_TIM_Base_Stop_IT(&htim4);
+                }
+            }
+        }
+        if (DR_sweep_enabled) {
+            if (tim4_cnt > DUTY_RATIO_SWEEP_HOLD_TIME_S) {
+                tim4_cnt = 0;
+                drv_PWM_DR += DUTY_RATIO_SWEEP_STEP;
+
+                if (drv_PWM_DR >= DUTY_RATIO_SWEEP_END) {
+                    DR_sweep_enabled = false;
+                    HAL_TIM_Base_Stop_IT(&htim4);
+                }
             }
         }
     }
