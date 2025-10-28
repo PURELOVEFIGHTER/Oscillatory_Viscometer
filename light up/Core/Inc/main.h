@@ -66,8 +66,6 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define STATE_LED_Pin GPIO_PIN_13
 #define STATE_LED_GPIO_Port GPIOC
-#define DRV_nSLEEP_Pin GPIO_PIN_1
-#define DRV_nSLEEP_GPIO_Port GPIOB
 #define LDC2_CS_Pin GPIO_PIN_12
 #define LDC2_CS_GPIO_Port GPIOB
 

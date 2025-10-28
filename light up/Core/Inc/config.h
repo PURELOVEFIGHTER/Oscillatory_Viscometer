@@ -10,7 +10,7 @@ extern "C" {
 /* =========================================================
  *                     扫频参数配置
  * ========================================================= */
-#define FREQ_SWEEP_START_HZ    175  // 扫频起始频率
+#define FREQ_SWEEP_START_HZ    175 // 扫频起始频率
 #define FREQ_SWEEP_END_HZ      200 // 扫频结束频率
 #define FREQ_SWEEP_STEP_HZ     1   // 扫频步进频率
 #define FREQ_SWEEP_HOLD_TIME_S 2   // 每个频率停留时间(s)
@@ -44,8 +44,8 @@ extern "C" {
     #define DRV_BIN2_Pin       0
 #endif
 
-#define DRV_nSLEEP_GPIO_Port GPIOB
-#define DRV_nSLEEP_Pin       GPIO_PIN_1
+#define DRV_nSLEEP_GPIO_Port GPIOA
+#define DRV_nSLEEP_Pin       GPIO_PIN_2
 
 #if DRV_USE_nFAULT
     #define DRV_nFAULT_GPIO_Port NULL
