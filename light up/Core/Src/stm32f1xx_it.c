@@ -265,10 +265,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         static uint32_t tim2_drv_cnt = 0;
         if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt * drv_PWM_DR / 100 / 2)) {
             DRV_Forward(&(drv1.CHANNEL_A));
-            // drv_excitingLevel = ;
         } else if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt / 2)) {
             DRV_Coast(&(drv1.CHANNEL_A));
-            // drv_excitingLevel = ;
         } else if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt / 2) + ((uint32_t)drv_PWM_cnt * drv_PWM_DR / 100 / 2)) {
             DRV_Reverse(&(drv1.CHANNEL_A));
         } else if (tim2_drv_cnt < ((uint32_t)drv_PWM_cnt)) {
@@ -293,7 +291,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         if (freq_sweep_enabled) {
             if (tim4_cnt > FREQ_SWEEP_HOLD_TIME_S) {
                 tim4_cnt = 0;
-                drv_PWM_freq += FREQ_SWEEP_STEP_HZ;
+                drv_PWM_fr - 7eq += FREQ_SWEEP_STEP_HZ;
 
                 if (drv_PWM_freq >= FREQ_SWEEP_END_HZ) {
                     freq_sweep_enabled = false;
