@@ -2,6 +2,7 @@
 #include "config.h"
 
 volatile uint8_t drv_FAULT = 0;
+extern TIM_HandleTypeDef htim2;
 
 void DRV8833_Init(DRV8833_HandleTypeDef *hdrv) {
     /* 默认关闭 A 通道 */
@@ -26,26 +27,36 @@ void DRV_Sleep(DRV8833_HandleTypeDef *hdrv) { HAL_GPIO_WritePin(hdrv->nSLEEP_Por
 
 // 滑行：IN1 = 0, IN2 = 0
 void DRV_Coast(DRV8833_Channel *ch) {
-    HAL_GPIO_WritePin(ch->IN1_Port, ch->IN1_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(ch->IN2_Port, ch->IN2_Pin, GPIO_PIN_RESET);
+    // HAL_GPIO_WritePin(ch->IN1_Port, ch->IN1_Pin, GPIO_PIN_RESET);
+    // HAL_GPIO_WritePin(ch->IN2_Port, ch->IN2_Pin, GPIO_PIN_RESET);
+    HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_2);
 }
 
 // 正转：IN1 = 1, IN2 = 0
 void DRV_Forward(DRV8833_Channel *ch) {
-    HAL_GPIO_WritePin(ch->IN1_Port, ch->IN1_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(ch->IN2_Port, ch->IN2_Pin, GPIO_PIN_RESET);
+    // HAL_GPIO_WritePin(ch->IN1_Port, ch->IN1_Pin, GPIO_PIN_SET);
+    // HAL_GPIO_WritePin(ch->IN2_Port, ch->IN2_Pin, GPIO_PIN_RESET);
+    HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_2);
 }
 
 // 反转：IN1 = 0, IN2 = 1
 void DRV_Reverse(DRV8833_Channel *ch) {
-    HAL_GPIO_WritePin(ch->IN1_Port, ch->IN1_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(ch->IN2_Port, ch->IN2_Pin, GPIO_PIN_SET);
+    // HAL_GPIO_WritePin(ch->IN1_Port, ch->IN1_Pin, GPIO_PIN_RESET);
+    // HAL_GPIO_WritePin(ch->IN2_Port, ch->IN2_Pin, GPIO_PIN_SET);
+    HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
 }
 
 // 刹车：IN1 = 1, IN2 = 1
 void DRV_Brake(DRV8833_Channel *ch) {
-    HAL_GPIO_WritePin(ch->IN1_Port, ch->IN1_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(ch->IN2_Port, ch->IN2_Pin, GPIO_PIN_SET);
+    // HAL_GPIO_WritePin(ch->IN1_Port, ch->IN1_Pin, GPIO_PIN_SET);
+    // HAL_GPIO_WritePin(ch->IN2_Port, ch->IN2_Pin, GPIO_PIN_SET);
+    __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, __HAL_TIM_GET_AUTORELOAD(&htim2));
+    __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, __HAL_TIM_GET_AUTORELOAD(&htim2));
+    HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
 }
 
 uint8_t DRV_Fault(DRV8833_HandleTypeDef *hdrv) {

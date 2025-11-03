@@ -151,6 +151,7 @@ int main(void)
   MX_SPI2_Init();
   MX_USART3_UART_Init();
   MX_TIM4_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
     /* 片上外设 */
     HAL_UART_Receive_DMA(&huart1, (uint8_t *)UART1_RX_DMA_buffer[UART1_RX_activeBuffer], MSG_LEN); // 设置DMA接收地址
@@ -164,7 +165,9 @@ int main(void)
 
     // DRV8833 初始化
     DRV8833_Init(&drv1);
-    HAL_TIM_Base_Start_IT(&htim2);
+    HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
+    HAL_TIM_Base_Start_IT(&htim1);
     sprintf(UART1_TX_buffer, "Oscillating On.\r\n");
     HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
 
