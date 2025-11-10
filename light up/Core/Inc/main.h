@@ -64,10 +64,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define STATE_LED_Pin GPIO_PIN_13
-#define STATE_LED_GPIO_Port GPIOC
-#define LDC2_CS_Pin GPIO_PIN_12
-#define LDC2_CS_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 /* DRV8833 --------------------------------------------------------*/
@@ -87,11 +83,14 @@ extern uint16_t drv_PWM_cnt;       // PWM 中断计数值
 extern LDC1101_HandleTypeDef ldc2;
 // 状态量
 extern volatile bool ldc2_isWorking;
+extern volatile bool ldc2_isReading;
+extern volatile bool ldc2_dataReady;
 extern uint8_t LDC_status;
 // 数据量
 extern uint16_t Rp_data;
 extern uint16_t L_data;
 extern uint32_t LHR_data;
+extern uint16_t ldc2_cnt;
 
 /* UART -----------------------------------------------------------*/
 #define MSG_LEN 64
@@ -99,6 +98,7 @@ extern uint32_t LHR_data;
 extern volatile uint8_t UART1_RX_activeBuffer;
 extern char UART1_RX_DMA_buffer[2][MSG_LEN];
 extern char UART1_TX_buffer[MSG_LEN];
+extern bool UART1_TX_send;
 /* UART3 */
 extern char UART3_TX_buffer[MSG_LEN];
 /* USER CODE END Private defines */

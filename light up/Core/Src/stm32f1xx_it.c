@@ -272,26 +272,49 @@ void USART3_IRQHandler(void) {
     /* USER CODE END USART3_IRQn 1 */
 }
 
+/**
+ * @brief This function handles EXTI line[15:10] interrupts.
+ */
+void EXTI15_10_IRQHandler(void) {
+    /* USER CODE BEGIN EXTI15_10_IRQn 0 */
+
+    /* USER CODE END EXTI15_10_IRQn 0 */
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);
+    /* USER CODE BEGIN EXTI15_10_IRQn 1 */
+
+    /* USER CODE END EXTI15_10_IRQn 1 */
+}
+
 /* USER CODE BEGIN 1 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (htim->Instance == TIM1) {
-        // 方向控制波形
-        static uint32_t tim1_drv_cnt = 0;
-        if (tim1_drv_cnt < ((uint32_t)drv_PWM_cnt * drv_PWM_DR / 100 / 2)) {
-            DRV_Forward(&(drv1.CHANNEL_A));
+
+        static uint32_t tim1_drv_cnt  = 0;
+        static uint32_t tim1_ldc2_cnt = 0;
+        static uint32_t tim1_led_cnt  = 0;
+
+        // 方向控制
+        if (tim1_drv_cnt < ((uint32_t)drv_PWM_cnt / 2 * drv_PWM_DR / 100)) {
+            drv_stage = DRV_STAGE_FORWARD;
         } else if (tim1_drv_cnt < ((uint32_t)drv_PWM_cnt / 2)) {
-            DRV_Coast(&(drv1.CHANNEL_A));
+            drv_stage = DRV_STAGE_COAST;
         } else if (tim1_drv_cnt < ((uint32_t)drv_PWM_cnt / 2) + ((uint32_t)drv_PWM_cnt * drv_PWM_DR / 100 / 2)) {
-            DRV_Reverse(&(drv1.CHANNEL_A));
+            drv_stage = DRV_STAGE_REVERSE;
         } else if (tim1_drv_cnt < ((uint32_t)drv_PWM_cnt)) {
-            DRV_Coast(&(drv1.CHANNEL_A));
+            drv_stage = DRV_STAGE_COAST;
         } else {
             tim1_drv_cnt = 0;
         }
         tim1_drv_cnt++;
 
+        // LDC1101状态检查
+        if (tim1_ldc2_cnt == 100) {
+            tim1_ldc2_cnt = 0;
+            LDC_status    = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
+        }
+
         // LED 心跳
-        static uint32_t tim1_led_cnt = 0;
         if (tim1_led_cnt == 100000) {
             HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
             tim1_led_cnt = 0;
@@ -332,10 +355,32 @@ void HAL_UART_IdleLineCallback(UART_HandleTypeDef *huart) {
         HAL_UART_DMAStop(&huart1);
 
         Command_Parse();
+        UART1_TX_send = true;
 
         memset(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], 0, MSG_LEN);
         UART1_RX_activeBuffer ^= 1;
         HAL_UART_Receive_DMA(&huart1, (uint8_t *)UART1_RX_DMA_buffer[UART1_RX_activeBuffer], MSG_LEN);
+    }
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+    if (GPIO_Pin == GPIO_PIN_11) {
+        ldc2_isReading = !ldc2_isReading;
+        if (ldc2_isReading) {
+            sprintf(UART1_TX_buffer, "Reading LHR Data.\r\n");
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
+            EXTI->IMR |= GPIO_PIN_12;
+        } else {
+            sprintf(UART1_TX_buffer, "Stopped LHR Data Reading.\r\n");
+            EXTI->IMR &= ~GPIO_PIN_12;
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
+        }
+        UART1_TX_send = true;
+    }
+    if (GPIO_Pin == GPIO_PIN_12) {
+        ldc2_dataReady = true;
+        EXTI->IMR &= ~GPIO_PIN_12;
+        ldc2_cnt++;
     }
 }
 /* USER CODE END 1 */

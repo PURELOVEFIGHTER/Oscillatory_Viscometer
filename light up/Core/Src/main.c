@@ -74,8 +74,8 @@ DRV8833_HandleTypeDef drv1 = {
 };
 
 uint16_t drv_excitingLevel = 0;
-uint16_t drv_PWM_freq      = 188;
-uint16_t drv_PWM_DR        = 65;
+uint16_t drv_PWM_freq      = 200;
+uint16_t drv_PWM_DR        = 50;
 uint16_t drv_PWM_cnt;
 volatile bool freq_sweep_enabled = false;
 volatile bool DR_sweep_enabled   = false;
@@ -83,15 +83,19 @@ volatile bool DR_sweep_enabled   = false;
 /* LDC1101 --------------------------------------------------------*/
 LDC1101_HandleTypeDef ldc2   = {&hspi2, LDC2_CS_GPIO_Port, LDC2_CS_Pin};
 volatile bool ldc2_isWorking = false;
+volatile bool ldc2_isReading = false;
+volatile bool ldc2_dataReady = false;
 uint16_t Rp_data             = 0;
 uint16_t L_data              = 0;
 uint32_t LHR_data            = 0;
 uint8_t LDC_status           = 0;
+uint16_t ldc2_cnt            = 0;
 
 /* UART -----------------------------------------------------------*/
 /* UART1 */
 char UART1_RX_DMA_buffer[2][MSG_LEN];
 volatile uint8_t UART1_RX_activeBuffer = 0;
+bool UART1_TX_send                     = false;
 
 char UART1_TX_buffer[MSG_LEN];
 /* UART3 */
@@ -163,20 +167,24 @@ int main(void)
     OLED_Clear();
     OLED_Display_On();
 
+    // 外部中断初始化
+    EXTI->IMR |= GPIO_PIN_12;
+    EXTI->IMR &= ~GPIO_PIN_12;
+
     // DRV8833 初始化
     DRV8833_Init(&drv1);
     HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
     HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
     HAL_TIM_Base_Start_IT(&htim1);
-    sprintf(UART1_TX_buffer, "Oscillating On.\r\n");
+    sprintf(UART1_TX_buffer, "Oscillation On.\r\n");
     HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
 
     // LDC1101 初始化
     if (ldc1101_init(&ldc2, _LDC1101_RP_SET_RP_MIN_1_5KOhm)) {
-        sprintf(UART1_TX_buffer, "LDC1101 Initialize Failed.\r\n");
+        sprintf(UART1_TX_buffer, "LDC1101 Initialization Failed.\r\n");
         HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
     } else {
-        sprintf(UART1_TX_buffer, "LDC1101 Initialize Done.\r\n");
+        sprintf(UART1_TX_buffer, "LDC1101 Initialization Done.\r\n");
         HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
         ldc2_isWorking = true;
     }
@@ -191,20 +199,59 @@ int main(void)
             drv_PWM_cnt = drv_PWM_cnt; // 保持不变
         else
             drv_PWM_cnt = 100000 / drv_PWM_freq;
+        /* DRV8833动作阶段切换 */
+        switch (drv_stage) {
+            case DRV_STAGE_COAST:
+                DRV_Coast(&(drv1.CHANNEL_A));
+                break;
+            case DRV_STAGE_FORWARD:
+                DRV_Forward(&(drv1.CHANNEL_A));
+                break;
+            case DRV_STAGE_REVERSE:
+                DRV_Reverse(&(drv1.CHANNEL_A));
+                break;
+            case DRV_STAGE_BRAKE:
+                DRV_Brake(&(drv1.CHANNEL_A));
+                break;
+            default:
+                DRV_Coast(&(drv1.CHANNEL_A));
+                break;
+        }
 
+        /* LDC1101数据读取 */
         if (ldc2_isWorking) {
-            LDC_status = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
-            if (!(LDC_status & 0x01)) {
-                LHR_data = ldc1101_getLHRData(&ldc2);
-                sprintf((char *)UART3_TX_buffer, "L=%lu,%lu,%u,%u\r\n", LHR_data, LHR_data, drv_PWM_freq, drv_PWM_DR);
-                HAL_UART_Transmit(&huart3, (uint8_t *)UART3_TX_buffer, strlen((char *)UART3_TX_buffer), HAL_MAX_DELAY);
+            if (ldc2_isReading) {
+                // if (ldc2_dataReady) {
+                //     ldc2_dataReady = false;
+                //     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
+                //     for (volatile int i = 0; i < 100; i++)
+                //         __NOP(); // 約1~2?s
+
+                //     LHR_data = ldc1101_getLHRData(&ldc2);
+                //     sprintf((char *)UART3_TX_buffer, "L=%lu,%lu,%u,%u\r\n", LHR_data, LHR_data, drv_PWM_freq,
+                //             drv_PWM_DR);
+                //     HAL_UART_Transmit(&huart3, (uint8_t *)UART3_TX_buffer, strlen((char *)UART3_TX_buffer),
+                //                       HAL_MAX_DELAY);
+
+                  //     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
+                  //     EXTI->IMR |= GPIO_PIN_12;
+                  // }
+                if (!(LDC_status & 0x01)) {
+                    LHR_data = ldc1101_getLHRData(&ldc2);
+                    sprintf((char *)UART3_TX_buffer, "L=%lu,%lu,%u,%u\r\n", LHR_data, LHR_data, drv_PWM_freq,
+                            drv_PWM_DR);
+                    HAL_UART_Transmit(&huart3, (uint8_t *)UART3_TX_buffer, strlen((char *)UART3_TX_buffer),
+                                      HAL_MAX_DELAY);
+                }
             }
         }
-        // 通讯速度慢，会堵塞主循环，需要新开定时器进行显示
-        // sprintf(OLED_Line1, "Frequency:%4dHz", drv_PWM_freq);
-        // OLED_ShowString(0, 0, OLED_Line1, 16, 0);
-        // sprintf(OLED_Line2, "Duty Ratio:%2d%%", drv_PWM_DR);
-        // OLED_ShowString(0, 2, OLED_Line2, 16, 0);
+
+        /* 上位机指令回复 */
+        if (UART1_TX_send) {
+            HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
+            UART1_TX_send = false;
+            memset(UART1_TX_buffer, 0, MSG_LEN);
+        }
     }
     /* USER CODE END WHILE */
 

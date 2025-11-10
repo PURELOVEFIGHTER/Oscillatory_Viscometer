@@ -31,6 +31,15 @@ typedef struct {
 
 } DRV8833_HandleTypeDef;
 
+typedef enum {
+    DRV_STAGE_COAST   = 0, // 滑行
+    DRV_STAGE_FORWARD = 1, // 正转
+    DRV_STAGE_REVERSE = 2, // 反转
+    DRV_STAGE_BRAKE   = 3  // 刹车
+} DRV_Stage_t;
+
+extern volatile DRV_Stage_t drv_stage;
+
 extern volatile uint8_t drv_FAULT;
 
 void DRV8833_Init(DRV8833_HandleTypeDef *hdrv);

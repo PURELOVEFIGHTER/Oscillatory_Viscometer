@@ -4,14 +4,16 @@
 extern "C" {
 #endif
 /* =========================================================
- *                    中断优先级配置
+ *                     LDC1101配置
  * ========================================================= */
+#define LDC2_CS_GPIO_Port GPIOB
+#define LDC2_CS_Pin       GPIO_PIN_12
 
 /* =========================================================
  *                     扫频参数配置
  * ========================================================= */
 #define FREQ_SWEEP_START_HZ    175 // 扫频起始频率
-#define FREQ_SWEEP_END_HZ      200 // 扫频结束频率
+#define FREQ_SWEEP_END_HZ      225 // 扫频结束频率
 #define FREQ_SWEEP_STEP_HZ     1   // 扫频步进频率
 #define FREQ_SWEEP_HOLD_TIME_S 2   // 每个频率停留时间(s)
 

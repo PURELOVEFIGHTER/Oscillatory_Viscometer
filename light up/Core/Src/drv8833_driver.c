@@ -3,6 +3,7 @@
 
 volatile uint8_t drv_FAULT = 0;
 extern TIM_HandleTypeDef htim2;
+volatile DRV_Stage_t drv_stage = DRV_STAGE_COAST;
 
 void DRV8833_Init(DRV8833_HandleTypeDef *hdrv) {
     /* 默认关闭 A 通道 */
