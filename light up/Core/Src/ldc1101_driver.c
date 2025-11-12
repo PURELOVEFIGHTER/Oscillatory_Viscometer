@@ -45,7 +45,6 @@ uint8_t ldc1101_init(LDC1101_HandleTypeDef *dev, uint8_t RP_MIN) {
     ldc1101_writeByte(dev, _LDC1101_REG_AMPLITUDE_CONTROL_REQUIREMENT, 0x01); // LHR 持续转换
 
     // LHR Data Ready 报告(0x0A,0xA0)
-    ldc1101_writeByte(dev, 0x08, 0x40);
     ldc1101_writeByte(dev, _LDC1101_REG_CFG_INTB_MODE,
                       _LDC1101_INTB_MODE_REPORT_INTB_ON_SDO_PIN | _LDC1101_INTB_MODE_REPORT_LHR_DATA_READY);
 

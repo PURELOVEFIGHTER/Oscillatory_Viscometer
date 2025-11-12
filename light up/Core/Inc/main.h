@@ -69,7 +69,7 @@ void Error_Handler(void);
 /* DRV8833 --------------------------------------------------------*/
 extern DRV8833_HandleTypeDef drv1;
 
-// ɨ迪
+// ɨ�?
 extern volatile bool freq_sweep_enabled;
 extern volatile bool DR_sweep_enabled;
 
@@ -81,12 +81,12 @@ extern uint32_t drv_PWM_cnt;      // PWM жϼֵ
 
 /* LDC1101 --------------------------------------------------------*/
 extern LDC1101_HandleTypeDef ldc2;
-// ״̬
+// Status Variables
 extern volatile bool ldc2_isWorking;
 extern volatile bool ldc2_isReading;
 extern volatile bool ldc2_dataReady;
 extern uint8_t LDC_status;
-// 
+// Data Variables
 extern uint16_t Rp_data;
 extern uint16_t L_data;
 extern uint32_t LHR_data;
@@ -104,8 +104,8 @@ extern bool UART1_TX_send;
 #define QUEUE_LEN 512
 extern uint8_t UART3_TX_buffer[QUEUE_LEN * 8];
 extern uint8_t frame[8];
-extern uint8_t *volatile UART3_TX_head;
-extern uint8_t *volatile UART3_TX_tail;
+extern uint8_t * volatile UART3_TX_head;
+extern uint8_t * volatile UART3_TX_tail;
 extern volatile bool UART3_DMA_busy;
 extern volatile uint32_t UART3_TX_frameCount;
 extern volatile uint32_t UART3_TX_dropCount;

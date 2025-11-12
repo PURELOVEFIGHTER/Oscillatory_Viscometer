@@ -171,21 +171,16 @@ int main(void) {
     MX_TIM4_Init();
     MX_TIM1_Init();
     /* USER CODE BEGIN 2 */
-    /* 片 */
-    HAL_UART_Receive_DMA(&huart1, (uint8_t *)UART1_RX_DMA_buffer[UART1_RX_activeBuffer], MSG_LEN); // DMA盏址
-    __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);                                                   // DMA卸
+    /* UART1 DMA Receive Init */
+    HAL_UART_Receive_DMA(&huart1, (uint8_t *)UART1_RX_DMA_buffer[UART1_RX_activeBuffer], MSG_LEN);
+    __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
 
-    /* 片 */
-    // OLED 始
+    /* OLED Init */
     OLED_Init();
     OLED_Clear();
     OLED_Display_On();
 
-    // 獠啃断呈?
-    EXTI->IMR |= GPIO_PIN_12;
-    EXTI->IMR &= ~GPIO_PIN_12;
-
-    // DRV8833 始
+    /* DRV8833 Init */
     DRV8833_Init(&drv1);
     HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
     HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
@@ -193,7 +188,7 @@ int main(void) {
     sprintf(UART1_TX_buffer, "Oscillation On.\r\n");
     HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
 
-    // LDC1101 始
+    /* LDC1101 Init */
     if (ldc1101_init(&ldc2, _LDC1101_RP_SET_RP_MIN_1_5KOhm)) {
         sprintf(UART1_TX_buffer, "LDC1101 Initialization Failed.\r\n");
         HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
@@ -208,12 +203,11 @@ int main(void) {
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
     while (1) {
-        /* 瓒ㄆ凳夹断贾? */
+        /* DRV8833 振动输出控制 */
         if (drv_PWM_freq == 0)
             drv_PWM_cnt = drv_PWM_cnt; // 植
         else
             drv_PWM_cnt = 100000 / drv_PWM_freq;
-        /* DRV8833锥谢 */
         switch (drv_stage) {
             case DRV_STAGE_COAST:
                 DRV_Coast(&(drv1.CHANNEL_A));
@@ -232,7 +226,7 @@ int main(void) {
                 break;
         }
 
-        /* LDC1101 data read */
+        /* UART3 应用层 */
         if (ldc2_isWorking && ldc2_isReading && ldc2_dataReady) {
             ldc2_dataReady = false;
 
@@ -285,7 +279,7 @@ int main(void) {
             }
         }
 
-        /* 位指馗 */
+        /* 上位机指令回复 */
         if (UART1_TX_send) {
             HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
             UART1_TX_send = false;
