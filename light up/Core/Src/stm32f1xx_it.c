@@ -60,6 +60,7 @@ extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim4;
 extern DMA_HandleTypeDef hdma_usart1_rx;
+extern DMA_HandleTypeDef hdma_usart3_tx;
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart3;
 /* USER CODE BEGIN EV */
@@ -192,6 +193,19 @@ void SysTick_Handler(void) {
 /******************************************************************************/
 
 /**
+ * @brief This function handles DMA1 channel2 global interrupt.
+ */
+void DMA1_Channel2_IRQHandler(void) {
+    /* USER CODE BEGIN DMA1_Channel2_IRQn 0 */
+
+    /* USER CODE END DMA1_Channel2_IRQn 0 */
+    HAL_DMA_IRQHandler(&hdma_usart3_tx);
+    /* USER CODE BEGIN DMA1_Channel2_IRQn 1 */
+
+    /* USER CODE END DMA1_Channel2_IRQn 1 */
+}
+
+/**
  * @brief This function handles DMA1 channel5 global interrupt.
  */
 void DMA1_Channel5_IRQHandler(void) {
@@ -289,17 +303,17 @@ void EXTI15_10_IRQHandler(void) {
 /* USER CODE BEGIN 1 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (htim->Instance == TIM1) {
-
         static uint32_t tim1_drv_cnt  = 0;
         static uint32_t tim1_ldc2_cnt = 0;
         static uint32_t tim1_led_cnt  = 0;
 
-        // ·½Ïò¿ØÖÆ
+        // PWM é©±åŠ¨é˜¶æ®µ
         if (tim1_drv_cnt < ((uint32_t)drv_PWM_cnt / 2 * drv_PWM_DR / 100)) {
             drv_stage = DRV_STAGE_FORWARD;
         } else if (tim1_drv_cnt < ((uint32_t)drv_PWM_cnt / 2)) {
             drv_stage = DRV_STAGE_COAST;
-        } else if (tim1_drv_cnt < ((uint32_t)drv_PWM_cnt / 2) + ((uint32_t)drv_PWM_cnt * drv_PWM_DR / 100 / 2)) {
+        } else if (tim1_drv_cnt
+                   < ((uint32_t)drv_PWM_cnt / 2) + ((uint32_t)drv_PWM_cnt * drv_PWM_DR / 100 / 2)) {
             drv_stage = DRV_STAGE_REVERSE;
         } else if (tim1_drv_cnt < ((uint32_t)drv_PWM_cnt)) {
             drv_stage = DRV_STAGE_COAST;
@@ -308,19 +322,26 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         }
         tim1_drv_cnt++;
 
-        // LDC1101×´Ì¬¼ì²é
-        if (tim1_ldc2_cnt == 100) {
+        // LDC1101 çŠ¶æ€è½®è¯¢
+        if (tim1_ldc2_cnt >= 200) {
             tim1_ldc2_cnt = 0;
-            LDC_status    = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
+            uint8_t status = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
+            LDC_status     = status;
+            if (ldc2_isReading && !ldc2_dataReady && ((status & 0x01U) == 0U)) {
+                ldc2_dataReady = true;
+                ldc2_cnt++;
+            }
         }
+        tim1_ldc2_cnt++;
 
-        // LED ÐÄÌø
-        if (tim1_led_cnt == 100000) {
+        // LED å¿ƒè·³
+        if (tim1_led_cnt >= 100000U) {
             HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
             tim1_led_cnt = 0;
         }
         tim1_led_cnt++;
     }
+
     if (htim->Instance == TIM4) {
         static uint8_t tim4_cnt = 0;
         tim4_cnt++;
@@ -363,24 +384,52 @@ void HAL_UART_IdleLineCallback(UART_HandleTypeDef *huart) {
     }
 }
 
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
+    if (huart->Instance == USART3) {
+        UART3_TX_tail += huart->TxXferSize;
+        if (UART3_TX_tail >= UART3_TX_buffer + sizeof(UART3_TX_buffer))
+            UART3_TX_tail -= sizeof(UART3_TX_buffer);
+
+        if (UART3_TX_head != UART3_TX_tail) {
+            UART3_DMA_busy = true;
+            uint16_t size;
+            if (UART3_TX_head > UART3_TX_tail)
+                size = UART3_TX_head - UART3_TX_tail;
+            else
+                size = (UART3_TX_buffer + sizeof(UART3_TX_buffer)) - UART3_TX_tail;
+
+            HAL_UART_Transmit_DMA(&huart3, UART3_TX_tail, size);
+        } else {
+            UART3_DMA_busy = false;
+        }
+    }
+}
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     if (GPIO_Pin == GPIO_PIN_11) {
         ldc2_isReading = !ldc2_isReading;
         if (ldc2_isReading) {
             sprintf(UART1_TX_buffer, "Reading LHR Data.\r\n");
+            ldc2_dataReady      = false;
+            UART3_TX_frameCount = 0;
+            UART3_TX_dropCount  = 0;
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-            EXTI->IMR |= GPIO_PIN_12;
         } else {
             sprintf(UART1_TX_buffer, "Stopped LHR Data Reading.\r\n");
-            EXTI->IMR &= ~GPIO_PIN_12;
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
+            ldc2_dataReady = false;
+            HAL_UART_DMAStop(&huart3);
+            uint32_t primask = __get_PRIMASK();
+            __disable_irq();
+            UART3_TX_head = UART3_TX_tail = UART3_TX_buffer;
+            UART3_DMA_busy               = false;
+            __set_PRIMASK(primask);
         }
         UART1_TX_send = true;
     }
     if (GPIO_Pin == GPIO_PIN_12) {
-        ldc2_dataReady = true;
-        EXTI->IMR &= ~GPIO_PIN_12;
-        ldc2_cnt++;
+        __HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_12);
     }
 }
 /* USER CODE END 1 */
+

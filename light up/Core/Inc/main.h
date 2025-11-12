@@ -69,24 +69,24 @@ void Error_Handler(void);
 /* DRV8833 --------------------------------------------------------*/
 extern DRV8833_HandleTypeDef drv1;
 
-// É¨Ãè¿ª¹Ø
+// É¨è¿ª
 extern volatile bool freq_sweep_enabled;
 extern volatile bool DR_sweep_enabled;
 
-// ¿ØÖÆ²¨ÐÎÉèÖÃ
-extern uint16_t drv_excitingLevel; // PWM ÊµÊ±µçÆ½
-extern uint16_t drv_PWM_freq;      // PWM ÆµÂÊ
-extern uint16_t drv_PWM_DR;        // PWM Õ¼¿Õ±È
-extern uint16_t drv_PWM_cnt;       // PWM ÖÐ¶Ï¼ÆÊýÖµ
+// Æ²
+extern uint8_t drv_excitingLevel; // PWM ÊµÊ±Æ½
+extern uint16_t drv_PWM_freq;     // PWM Æµ
+extern uint8_t drv_PWM_DR;        // PWM Õ¼Õ±
+extern uint32_t drv_PWM_cnt;      // PWM Ð¶Ï¼Öµ
 
 /* LDC1101 --------------------------------------------------------*/
 extern LDC1101_HandleTypeDef ldc2;
-// ×´Ì¬Á¿
+// ×´Ì¬
 extern volatile bool ldc2_isWorking;
 extern volatile bool ldc2_isReading;
 extern volatile bool ldc2_dataReady;
 extern uint8_t LDC_status;
-// Êý¾ÝÁ¿
+// 
 extern uint16_t Rp_data;
 extern uint16_t L_data;
 extern uint32_t LHR_data;
@@ -99,8 +99,16 @@ extern volatile uint8_t UART1_RX_activeBuffer;
 extern char UART1_RX_DMA_buffer[2][MSG_LEN];
 extern char UART1_TX_buffer[MSG_LEN];
 extern bool UART1_TX_send;
+
 /* UART3 */
-extern char UART3_TX_buffer[MSG_LEN];
+#define QUEUE_LEN 512
+extern uint8_t UART3_TX_buffer[QUEUE_LEN * 8];
+extern uint8_t frame[8];
+extern uint8_t *volatile UART3_TX_head;
+extern uint8_t *volatile UART3_TX_tail;
+extern volatile bool UART3_DMA_busy;
+extern volatile uint32_t UART3_TX_frameCount;
+extern volatile uint32_t UART3_TX_dropCount;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

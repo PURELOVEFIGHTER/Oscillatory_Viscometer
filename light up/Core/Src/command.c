@@ -10,7 +10,7 @@ extern char UART1_RX_DMA_buffer[2][MSG_LEN];
 extern char UART1_TX_buffer[MSG_LEN];
 
 extern uint16_t drv_PWM_freq;
-extern uint16_t drv_PWM_DR;
+extern uint8_t drv_PWM_DR;
 
 extern LDC1101_HandleTypeDef ldc2;
 extern bool isLHR;
@@ -69,6 +69,12 @@ void Command_Parse(void) {
         } else {
             sprintf(UART1_TX_buffer, "Cannot check LDC status while reading LHR Data.\r\n");
         }
+        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
+    } else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "UART3 Stat", 10) == 0) {
+        snprintf(UART1_TX_buffer, MSG_LEN,
+                 "UART3 TX Frames=%lu Dropped=%lu DMA=%u\r\n",
+                 (unsigned long)UART3_TX_frameCount, (unsigned long)UART3_TX_dropCount,
+                 UART3_DMA_busy ? 1U : 0U);
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
     } else {
         sprintf(UART1_TX_buffer, "Unknown command\r\n");

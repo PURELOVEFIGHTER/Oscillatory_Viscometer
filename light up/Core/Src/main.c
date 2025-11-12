@@ -73,10 +73,10 @@ DRV8833_HandleTypeDef drv1 = {
 #endif
 };
 
-uint16_t drv_excitingLevel = 0;
-uint16_t drv_PWM_freq      = 200;
-uint16_t drv_PWM_DR        = 50;
-uint16_t drv_PWM_cnt;
+uint8_t drv_excitingLevel = 0;
+uint16_t drv_PWM_freq     = 200;
+uint8_t drv_PWM_DR        = 50;
+uint32_t drv_PWM_cnt;
 volatile bool freq_sweep_enabled = false;
 volatile bool DR_sweep_enabled   = false;
 
@@ -96,10 +96,15 @@ uint16_t ldc2_cnt            = 0;
 char UART1_RX_DMA_buffer[2][MSG_LEN];
 volatile uint8_t UART1_RX_activeBuffer = 0;
 bool UART1_TX_send                     = false;
-
 char UART1_TX_buffer[MSG_LEN];
 /* UART3 */
-char UART3_TX_buffer[MSG_LEN];
+uint8_t UART3_TX_buffer[QUEUE_LEN * 8];
+uint8_t frame[8];
+uint8_t * volatile UART3_TX_head      = UART3_TX_buffer;
+uint8_t * volatile UART3_TX_tail      = UART3_TX_buffer;
+volatile bool UART3_DMA_busy          = false;
+volatile uint32_t UART3_TX_frameCount = 0;
+volatile uint32_t UART3_TX_dropCount  = 0;
 
 /* OLED -----------------------------------------------------------*/
 char OLED_Line1[20];
@@ -116,62 +121,71 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+static uint16_t UART3_BufferUsedUnsafe(void) {
+    const uint16_t buffer_len = sizeof(UART3_TX_buffer);
+    uint16_t head_offset      = (uint16_t)(UART3_TX_head - UART3_TX_buffer);
+    uint16_t tail_offset      = (uint16_t)(UART3_TX_tail - UART3_TX_buffer);
+
+    if (head_offset >= tail_offset) {
+        return head_offset - tail_offset;
+    }
+    return buffer_len - (tail_offset - head_offset);
+}
 
 /* USER CODE END 0 */
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
-int main(void)
-{
+ * @brief  The application entry point.
+ * @retval int
+ */
+int main(void) {
 
-  /* USER CODE BEGIN 1 */
+    /* USER CODE BEGIN 1 */
 
-  /* USER CODE END 1 */
+    /* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+    /* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+    /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+    HAL_Init();
 
-  /* USER CODE BEGIN Init */
+    /* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+    /* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+    /* Configure the system clock */
+    SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
+    /* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
+    /* USER CODE END SysInit */
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_USART1_UART_Init();
-  MX_TIM2_Init();
-  MX_I2C1_Init();
-  MX_SPI2_Init();
-  MX_USART3_UART_Init();
-  MX_TIM4_Init();
-  MX_TIM1_Init();
-  /* USER CODE BEGIN 2 */
-    /* 片上外设 */
-    HAL_UART_Receive_DMA(&huart1, (uint8_t *)UART1_RX_DMA_buffer[UART1_RX_activeBuffer], MSG_LEN); // 设置DMA接收地址
-    __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);                                                   // 开启DMA空闲中断
+    /* Initialize all configured peripherals */
+    MX_GPIO_Init();
+    MX_DMA_Init();
+    MX_USART1_UART_Init();
+    MX_TIM2_Init();
+    MX_I2C1_Init();
+    MX_SPI2_Init();
+    MX_USART3_UART_Init();
+    MX_TIM4_Init();
+    MX_TIM1_Init();
+    /* USER CODE BEGIN 2 */
+    /* 片 */
+    HAL_UART_Receive_DMA(&huart1, (uint8_t *)UART1_RX_DMA_buffer[UART1_RX_activeBuffer], MSG_LEN); // DMA盏址
+    __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);                                                   // DMA卸
 
-    /* 片外外设 */
-    // OLED 初始化
+    /* 片 */
+    // OLED 始
     OLED_Init();
     OLED_Clear();
     OLED_Display_On();
 
-    // 外部中断初始化
+    // 獠啃断呈?
     EXTI->IMR |= GPIO_PIN_12;
     EXTI->IMR &= ~GPIO_PIN_12;
 
-    // DRV8833 初始化
+    // DRV8833 始
     DRV8833_Init(&drv1);
     HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
     HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
@@ -179,7 +193,7 @@ int main(void)
     sprintf(UART1_TX_buffer, "Oscillation On.\r\n");
     HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
 
-    // LDC1101 初始化
+    // LDC1101 始
     if (ldc1101_init(&ldc2, _LDC1101_RP_SET_RP_MIN_1_5KOhm)) {
         sprintf(UART1_TX_buffer, "LDC1101 Initialization Failed.\r\n");
         HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
@@ -189,17 +203,17 @@ int main(void)
         ldc2_isWorking = true;
     }
 
-  /* USER CODE END 2 */
+    /* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+    /* Infinite loop */
+    /* USER CODE BEGIN WHILE */
     while (1) {
-        /* 根据设定频率计算中断计数值 */
+        /* 瓒ㄆ凳夹断贾? */
         if (drv_PWM_freq == 0)
-            drv_PWM_cnt = drv_PWM_cnt; // 保持不变
+            drv_PWM_cnt = drv_PWM_cnt; // 植
         else
             drv_PWM_cnt = 100000 / drv_PWM_freq;
-        /* DRV8833动作阶段切换 */
+        /* DRV8833锥谢 */
         switch (drv_stage) {
             case DRV_STAGE_COAST:
                 DRV_Coast(&(drv1.CHANNEL_A));
@@ -218,35 +232,60 @@ int main(void)
                 break;
         }
 
-        /* LDC1101数据读取 */
-        if (ldc2_isWorking) {
-            if (ldc2_isReading) {
-                // if (ldc2_dataReady) {
-                //     ldc2_dataReady = false;
-                //     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
-                //     for (volatile int i = 0; i < 100; i++)
-                //         __NOP(); // 約1~2?s
+        /* LDC1101 data read */
+        if (ldc2_isWorking && ldc2_isReading && ldc2_dataReady) {
+            ldc2_dataReady = false;
 
-                //     LHR_data = ldc1101_getLHRData(&ldc2);
-                //     sprintf((char *)UART3_TX_buffer, "L=%lu,%lu,%u,%u\r\n", LHR_data, LHR_data, drv_PWM_freq,
-                //             drv_PWM_DR);
-                //     HAL_UART_Transmit(&huart3, (uint8_t *)UART3_TX_buffer, strlen((char *)UART3_TX_buffer),
-                //                       HAL_MAX_DELAY);
+            LHR_data   = ldc1101_getLHRData(&ldc2);
+            LDC_status = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
+            // === frame [LHR(4B)][Freq(2B)][Duty(1B)][Pad(1B)] ===
+            frame[0] = (uint8_t)(LHR_data);
+            frame[1] = (uint8_t)(LHR_data >> 8);
+            frame[2] = (uint8_t)(LHR_data >> 16);
+            frame[3] = (uint8_t)(LHR_data >> 24);
+            frame[4] = (uint8_t)(drv_PWM_freq);
+            frame[5] = (uint8_t)(drv_PWM_freq >> 8);
+            frame[6] = drv_PWM_DR;
+            frame[7] = 0xAA;
 
-                  //     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-                  //     EXTI->IMR |= GPIO_PIN_12;
-                  // }
-                if (!(LDC_status & 0x01)) {
-                    LHR_data = ldc1101_getLHRData(&ldc2);
-                    sprintf((char *)UART3_TX_buffer, "L=%lu,%lu,%u,%u\r\n", LHR_data, LHR_data, drv_PWM_freq,
-                            drv_PWM_DR);
-                    HAL_UART_Transmit(&huart3, (uint8_t *)UART3_TX_buffer, strlen((char *)UART3_TX_buffer),
-                                      HAL_MAX_DELAY);
+            // ===== enqueue frame into ring buffer =====
+            bool frame_enqueued = false;
+            uint32_t primask    = __get_PRIMASK();
+            __disable_irq();
+
+            const uint16_t buffer_len = sizeof(UART3_TX_buffer);
+            uint16_t used             = UART3_BufferUsedUnsafe();
+            uint16_t free_space       = buffer_len - used - 1;
+
+            if (free_space >= sizeof(frame)) {
+                for (int i = 0; i < (int)sizeof(frame); i++) {
+                    *UART3_TX_head = frame[i];
+                    UART3_TX_head++;
+                    if (UART3_TX_head >= UART3_TX_buffer + buffer_len)
+                        UART3_TX_head = UART3_TX_buffer;
                 }
+                frame_enqueued = true;
+                UART3_TX_frameCount++;
+            } else {
+                UART3_TX_dropCount++;
+            }
+
+            __set_PRIMASK(primask);
+
+            if (frame_enqueued && !UART3_DMA_busy && (UART3_TX_head != UART3_TX_tail)) {
+                UART3_DMA_busy = true;
+
+                uint16_t size;
+                if (UART3_TX_head > UART3_TX_tail)
+                    size = UART3_TX_head - UART3_TX_tail;
+                else
+                    size = (UART3_TX_buffer + sizeof(UART3_TX_buffer)) - UART3_TX_tail;
+
+                HAL_UART_Transmit_DMA(&huart3, UART3_TX_tail, size);
             }
         }
 
-        /* 上位机指令回复 */
+        /* 位指馗 */
         if (UART1_TX_send) {
             HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
             UART1_TX_send = false;
@@ -257,46 +296,42 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-  /* USER CODE END 3 */
+    /* USER CODE END 3 */
 }
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
-void SystemClock_Config(void)
-{
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ * @brief System Clock Configuration
+ * @retval None
+ */
+void SystemClock_Config(void) {
+    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+    RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
+    /** Initializes the RCC Oscillators according to the specified parameters
+     * in the RCC_OscInitTypeDef structure.
+     */
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+    RCC_OscInitStruct.HSEState       = RCC_HSE_ON;
+    RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+    RCC_OscInitStruct.HSIState       = RCC_HSI_ON;
+    RCC_OscInitStruct.PLL.PLLState   = RCC_PLL_ON;
+    RCC_OscInitStruct.PLL.PLLSource  = RCC_PLLSOURCE_HSE;
+    RCC_OscInitStruct.PLL.PLLMUL     = RCC_PLL_MUL9;
+    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
+        Error_Handler();
+    }
 
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+    /** Initializes the CPU, AHB and APB buses clocks
+     */
+    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+    RCC_ClkInitStruct.SYSCLKSource   = RCC_SYSCLKSOURCE_PLLCLK;
+    RCC_ClkInitStruct.AHBCLKDivider  = RCC_SYSCLK_DIV1;
+    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
-  {
-    Error_Handler();
-  }
+    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK) {
+        Error_Handler();
+    }
 }
 
 /* USER CODE BEGIN 4 */
@@ -304,12 +339,11 @@ void SystemClock_Config(void)
 /* USER CODE END 4 */
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
-void Error_Handler(void)
-{
-  /* USER CODE BEGIN Error_Handler_Debug */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
+void Error_Handler(void) {
+    /* USER CODE BEGIN Error_Handler_Debug */
     /* User can add his own implementation to report the HAL error return state
      */
     __disable_irq();
@@ -317,23 +351,22 @@ void Error_Handler(void)
     while (1) {
     }
 
-  /* USER CODE END Error_Handler_Debug */
+    /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
-void assert_failed(uint8_t *file, uint32_t line)
-{
-  /* USER CODE BEGIN 6 */
+ * @brief  Reports the name of the source file and the source line number
+ *         where the assert_param error has occurred.
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @retval None
+ */
+void assert_failed(uint8_t *file, uint32_t line) {
+    /* USER CODE BEGIN 6 */
     /* User can add his own implementation to report the file name and line
        number, ex: printf("Wrong parameters value: file %s on line %d\r\n",
        file, line) */
-  /* USER CODE END 6 */
+    /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
