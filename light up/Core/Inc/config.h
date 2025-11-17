@@ -12,18 +12,18 @@ extern "C" {
 /* =========================================================
  *                     扫频参数配置
  * ========================================================= */
-#define FREQ_SWEEP_START_HZ    175 // 扫频起始频率
-#define FREQ_SWEEP_END_HZ      225 // 扫频结束频率
-#define FREQ_SWEEP_STEP_HZ     1   // 扫频步进频率
-#define FREQ_SWEEP_HOLD_TIME_S 2   // 每个频率停留时间(s)
+#define FREQ_SWEEP_START_HZ     150 // 扫频起始频率
+#define FREQ_SWEEP_END_HZ       250 // 扫频结束频率
+#define FREQ_SWEEP_STEP_HZ      1   // 扫频步进频率
+#define FREQ_SWEEP_HOLD_TIME_MS 50  // 每个频率停留时间(ms)
 
 /* =========================================================
  *                  占空比扫描参数配置
  * ========================================================= */
-#define DUTY_RATIO_SWEEP_START       0   // 占空比起始数值
-#define DUTY_RATIO_SWEEP_END         100 // 占空比结束数值
-#define DUTY_RATIO_SWEEP_STEP        1   // 占空比步进数值
-#define DUTY_RATIO_SWEEP_HOLD_TIME_S 3   // 每个占空比停留时间(s)
+#define DUTY_RATIO_SWEEP_START        0    // 占空比起始数值
+#define DUTY_RATIO_SWEEP_END          100  // 占空比结束数值
+#define DUTY_RATIO_SWEEP_STEP         1    // 占空比步进数值
+#define DUTY_RATIO_SWEEP_HOLD_TIME_MS 30 // 每个占空比停留时间(ms)
 
 /* =========================================================
  *                     DRV8833配置

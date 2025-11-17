@@ -73,9 +73,9 @@ DRV8833_HandleTypeDef drv1 = {
 #endif
 };
 
-uint8_t drv_excitingLevel = 0;
-uint16_t drv_PWM_freq     = 200;
-uint8_t drv_PWM_DR        = 50;
+volatile bool drv_excitingLevel = 0;
+uint16_t drv_PWM_freq           = 200;
+uint8_t drv_PWM_DR              = 50;
 uint32_t drv_PWM_cnt;
 volatile bool freq_sweep_enabled = false;
 volatile bool DR_sweep_enabled   = false;
@@ -98,8 +98,8 @@ volatile uint8_t UART1_RX_activeBuffer = 0;
 bool UART1_TX_send                     = false;
 char UART1_TX_buffer[MSG_LEN];
 /* UART3 */
-uint8_t UART3_TX_buffer[QUEUE_LEN * 8];
-uint8_t frame[8];
+uint8_t UART3_TX_buffer[QUEUE_LEN * 10];
+uint8_t frame[10];
 uint8_t * volatile UART3_TX_head      = UART3_TX_buffer;
 uint8_t * volatile UART3_TX_tail      = UART3_TX_buffer;
 volatile bool UART3_DMA_busy          = false;
@@ -214,9 +214,11 @@ int main(void) {
                 break;
             case DRV_STAGE_FORWARD:
                 DRV_Forward(&(drv1.CHANNEL_A));
+                drv_excitingLevel = 1;
                 break;
             case DRV_STAGE_REVERSE:
                 DRV_Reverse(&(drv1.CHANNEL_A));
+                drv_excitingLevel = 0;
                 break;
             case DRV_STAGE_BRAKE:
                 DRV_Brake(&(drv1.CHANNEL_A));
@@ -230,17 +232,21 @@ int main(void) {
         if (ldc2_isWorking && ldc2_isReading && ldc2_dataReady) {
             ldc2_dataReady = false;
 
-            LHR_data   = ldc1101_getLHRData(&ldc2);
-            LDC_status = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
+            LHR_data = ldc1101_getLHRData(&ldc2);
+            // 每次重新安装之后需要重新校准数值
+            LHR_data -= 3220000;
             // === frame [LHR(4B)][Freq(2B)][Duty(1B)][Pad(1B)] ===
-            frame[0] = (uint8_t)(LHR_data);
-            frame[1] = (uint8_t)(LHR_data >> 8);
-            frame[2] = (uint8_t)(LHR_data >> 16);
-            frame[3] = (uint8_t)(LHR_data >> 24);
-            frame[4] = (uint8_t)(drv_PWM_freq);
-            frame[5] = (uint8_t)(drv_PWM_freq >> 8);
-            frame[6] = drv_PWM_DR;
-            frame[7] = 0xAA;
+            frame    [0]  = (uint8_t)(LHR_data);
+            frame    [1]  = (uint8_t)(LHR_data >> 8);
+            frame    [2]  = (uint8_t)(LHR_data >> 16);
+            frame    [3]  = (uint8_t)(LHR_data >> 24);
+            frame    [4]  = (uint8_t)(drv_PWM_freq);
+            frame    [5]  = (uint8_t)(drv_PWM_freq >> 8);
+            frame    [6]  = drv_PWM_DR;
+            uint16_t wave = 3000 + 5000 * (uint16_t)drv_excitingLevel;
+            frame    [7]  = (uint8_t)(wave);
+            frame    [8]  = (uint8_t)(wave >> 8);
+            frame    [9]  = 0xAA;
 
             // ===== enqueue frame into ring buffer =====
             bool frame_enqueued = false;
@@ -364,3 +370,4 @@ void assert_failed(uint8_t *file, uint32_t line) {
     /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+

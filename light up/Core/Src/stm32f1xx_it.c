@@ -354,7 +354,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         tim4_cnt++;
 
         if (freq_sweep_enabled) {
-            if (tim4_cnt > FREQ_SWEEP_HOLD_TIME_S) {
+            if (tim4_cnt > FREQ_SWEEP_HOLD_TIME_MS) {
                 tim4_cnt = 0;
                 drv_PWM_freq += FREQ_SWEEP_STEP_HZ;
 
@@ -365,7 +365,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
             }
         }
         if (DR_sweep_enabled) {
-            if (tim4_cnt > DUTY_RATIO_SWEEP_HOLD_TIME_S) {
+            if (tim4_cnt > DUTY_RATIO_SWEEP_HOLD_TIME_MS) {
                 tim4_cnt = 0;
                 drv_PWM_DR += DUTY_RATIO_SWEEP_STEP;
 
@@ -415,6 +415,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     if (GPIO_Pin == GPIO_PIN_11) {
         ldc2_isReading = !ldc2_isReading;
+        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
         if (ldc2_isReading) {
             sprintf(UART1_TX_buffer, "Reading LHR Data.\r\n");
             ldc2_dataReady      = false;

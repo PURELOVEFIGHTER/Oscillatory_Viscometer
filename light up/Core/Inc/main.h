@@ -69,15 +69,14 @@ void Error_Handler(void);
 /* DRV8833 --------------------------------------------------------*/
 extern DRV8833_HandleTypeDef drv1;
 
-// 扫杩?
+// 扫描状态
 extern volatile bool freq_sweep_enabled;
 extern volatile bool DR_sweep_enabled;
 
-// 撇
-extern uint8_t drv_excitingLevel; // PWM 实时平
-extern uint16_t drv_PWM_freq;     // PWM 频
-extern uint8_t drv_PWM_DR;        // PWM 占毡
-extern uint32_t drv_PWM_cnt;      // PWM 卸霞值
+extern volatile bool drv_excitingLevel; // 低频 PWM 激励电平
+extern uint16_t drv_PWM_freq;           // 低频 PWM 频率
+extern uint8_t drv_PWM_DR;              // 低频 PWM 占空比
+extern uint32_t drv_PWM_cnt;            // 低频 PWM 频率所需计数值
 
 /* LDC1101 --------------------------------------------------------*/
 extern LDC1101_HandleTypeDef ldc2;
@@ -102,8 +101,8 @@ extern bool UART1_TX_send;
 
 /* UART3 */
 #define QUEUE_LEN 512
-extern uint8_t UART3_TX_buffer[QUEUE_LEN * 8];
-extern uint8_t frame[8];
+extern uint8_t UART3_TX_buffer[QUEUE_LEN * 10];
+extern uint8_t frame[10];
 extern uint8_t * volatile UART3_TX_head;
 extern uint8_t * volatile UART3_TX_tail;
 extern volatile bool UART3_DMA_busy;
