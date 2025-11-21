@@ -49,39 +49,30 @@
 
 /* USER CODE BEGIN PV */
 /* DRV8833 --------------------------------------------------------*/
-DRV8833_HandleTypeDef drv1 = {
-#if DRV_USE_CHANNEL_A
-    .CHANNEL_A.IN1_Port = DRV_AIN1_GPIO_Port,
-    .CHANNEL_A.IN1_Pin  = DRV_AIN1_Pin,
-    .CHANNEL_A.IN2_Port = DRV_AIN2_GPIO_Port,
-    .CHANNEL_A.IN2_Pin  = DRV_AIN2_Pin,
-#endif
-
-#if DRV_USE_CHANNEL_B
-    .CHANNEL_B.IN1_Port = DRV_BIN1_GPIO_Port,
-    .CHANNEL_B.IN1_Pin  = DRV_BIN1_Pin,
-    .CHANNEL_B.IN2_Port = DRV_BIN2_GPIO_Port,
-    .CHANNEL_B.IN2_Pin  = DRV_BIN2_Pin,
-#endif
-
-    .nSLEEP_Port = DRV_nSLEEP_GPIO_Port,
-    .nSLEEP_Pin  = DRV_nSLEEP_Pin,
-
-#if DRV_USE_FAULT
-    .nFAULT_Port = DRV_nFAULT_GPIO_Port,
-    .nFAULT_Pin  = DRV_nFAULT_Pin,
-#endif
+DRV8833_HandleTypeDef hdrv1 = {
+    .CHANNEL_A = {.direction = DRV_STAGE_COAST,
+                  .htim      = &DRV_A_PWM_TIMER,
+                  .CH1       = DRV_AIN1_PWM_CH1,
+                  .CH2       = DRV_AIN2_PWM_CH2},
+    // .CHANNEL_B   = {.direction = DRV_STAGE_COAST,
+    //                 .htim      = &DRV_B_PWM_TIMER,
+    //                 .CH1       = DRV_BIN1_PWM_CH1,
+    //                 .CH2       = DRV_BIN2_PWM_CH2},
+    .nSLEEP_Port = DRV_nSLEEP_GPIO_PORT,
+    .nSLEEP_Pin  = DRV_nSLEEP_PIN,
 };
 
 volatile bool drv_excitingLevel = 0;
 uint16_t drv_PWM_freq           = 200;
 uint8_t drv_PWM_DR              = 50;
 uint32_t drv_PWM_cnt;
+uint32_t drv_PWM_halfCnt;
+uint32_t drv_PWM_assertCnt;
 volatile bool freq_sweep_enabled = false;
 volatile bool DR_sweep_enabled   = false;
 
 /* LDC1101 --------------------------------------------------------*/
-LDC1101_HandleTypeDef ldc2   = {&hspi2, LDC2_CS_GPIO_Port, LDC2_CS_Pin};
+LDC1101_HandleTypeDef ldc2   = {&hspi2, LDC2_CS_GPIO_PORT, LDC2_CS_PIN};
 volatile bool ldc2_isWorking = false;
 volatile bool ldc2_isReading = false;
 volatile bool ldc2_dataReady = false;
@@ -171,7 +162,7 @@ int main(void) {
     MX_TIM4_Init();
     MX_TIM1_Init();
     /* USER CODE BEGIN 2 */
-    /* UART1 DMA Receive Init */
+    /* UART1 DMA Init */
     HAL_UART_Receive_DMA(&huart1, (uint8_t *)UART1_RX_DMA_buffer[UART1_RX_activeBuffer], MSG_LEN);
     __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
 
@@ -181,72 +172,55 @@ int main(void) {
     OLED_Display_On();
 
     /* DRV8833 Init */
-    DRV8833_Init(&drv1);
-    HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
-    HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
+    DRV_Init(&hdrv1);
+    HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH1);
+    HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH2);
     HAL_TIM_Base_Start_IT(&htim1);
-    sprintf(UART1_TX_buffer, "Oscillation On.\r\n");
+    sprintf(UART1_TX_buffer, "[DRV8833]Oscillation On.\r\n");
     HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
+    // printf("[DRV8833]Oscillation On.\r\n");
 
     /* LDC1101 Init */
     if (ldc1101_init(&ldc2, _LDC1101_RP_SET_RP_MIN_1_5KOhm)) {
-        sprintf(UART1_TX_buffer, "LDC1101 Initialization Failed.\r\n");
+        sprintf(UART1_TX_buffer, "[LDC1101]LDC1101 Initialization Failed.\r\n");
         HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
     } else {
-        sprintf(UART1_TX_buffer, "LDC1101 Initialization Done.\r\n");
+        sprintf(UART1_TX_buffer, "[LDC1101]LDC1101 Initialization Done.\r\n");
         HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
         ldc2_isWorking = true;
     }
-
     /* USER CODE END 2 */
 
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
     while (1) {
-        /* DRV8833 振动输出控制 */
+        /* DRV8833 */
         if (drv_PWM_freq == 0)
-            drv_PWM_cnt = drv_PWM_cnt; // 植
-        else
-            drv_PWM_cnt = 100000 / drv_PWM_freq;
-        switch (drv_stage) {
-            case DRV_STAGE_COAST:
-                DRV_Coast(&(drv1.CHANNEL_A));
-                break;
-            case DRV_STAGE_FORWARD:
-                DRV_Forward(&(drv1.CHANNEL_A));
-                drv_excitingLevel = 1;
-                break;
-            case DRV_STAGE_REVERSE:
-                DRV_Reverse(&(drv1.CHANNEL_A));
-                drv_excitingLevel = 0;
-                break;
-            case DRV_STAGE_BRAKE:
-                DRV_Brake(&(drv1.CHANNEL_A));
-                break;
-            default:
-                DRV_Coast(&(drv1.CHANNEL_A));
-                break;
+            drv_PWM_cnt = drv_PWM_cnt;
+        else {
+            drv_PWM_cnt       = 100000 / drv_PWM_freq;
+            drv_PWM_halfCnt   = drv_PWM_cnt / 2;
+            drv_PWM_assertCnt = (uint32_t)(drv_PWM_cnt * drv_PWM_DR / 100);
         }
+        DRV_updateDirection(&hdrv1, &hdrv1.CHANNEL_A);
 
-        /* UART3 应用层 */
         if (ldc2_isWorking && ldc2_isReading && ldc2_dataReady) {
             ldc2_dataReady = false;
 
             LHR_data = ldc1101_getLHRData(&ldc2);
-            // 每次重新安装之后需要重新校准数值
             LHR_data -= 3220000;
             // === frame [LHR(4B)][Freq(2B)][Duty(1B)][Pad(1B)] ===
-            frame    [0]  = (uint8_t)(LHR_data);
-            frame    [1]  = (uint8_t)(LHR_data >> 8);
-            frame    [2]  = (uint8_t)(LHR_data >> 16);
-            frame    [3]  = (uint8_t)(LHR_data >> 24);
-            frame    [4]  = (uint8_t)(drv_PWM_freq);
-            frame    [5]  = (uint8_t)(drv_PWM_freq >> 8);
-            frame    [6]  = drv_PWM_DR;
+            frame[0]      = (uint8_t)(LHR_data);
+            frame[1]      = (uint8_t)(LHR_data >> 8);
+            frame[2]      = (uint8_t)(LHR_data >> 16);
+            frame[3]      = (uint8_t)(LHR_data >> 24);
+            frame[4]      = (uint8_t)(drv_PWM_freq);
+            frame[5]      = (uint8_t)(drv_PWM_freq >> 8);
+            frame[6]      = drv_PWM_DR;
             uint16_t wave = 3000 + 5000 * (uint16_t)drv_excitingLevel;
-            frame    [7]  = (uint8_t)(wave);
-            frame    [8]  = (uint8_t)(wave >> 8);
-            frame    [9]  = 0xAA;
+            frame[7]      = (uint8_t)(wave);
+            frame[8]      = (uint8_t)(wave >> 8);
+            frame[9]      = 0xAA;
 
             // ===== enqueue frame into ring buffer =====
             bool frame_enqueued = false;
@@ -285,7 +259,7 @@ int main(void) {
             }
         }
 
-        /* 上位机指令回复 */
+        /* UART1 Transmission */
         if (UART1_TX_send) {
             HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
             UART1_TX_send = false;
@@ -370,4 +344,3 @@ void assert_failed(uint8_t *file, uint32_t line) {
     /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-

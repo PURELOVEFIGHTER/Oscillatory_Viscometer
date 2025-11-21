@@ -8,55 +8,50 @@ extern "C" {
 #include "stm32f1xx_hal.h"
 #include "config.h"
 
+/* =========================================================
+ *                     DRV8833 状态定义
+ * ========================================================= */
+typedef enum {
+    DRV_STAGE_COAST = 0, // 滑行
+    DRV_STAGE_FORWARD,   // 正转
+    DRV_STAGE_REVERSE,   // 反转
+    DRV_STAGE_BRAKE      // 刹车
+} DRV_Direction_t;
+/* =========================================================
+ *                     DRV8833 通道定义
+ * ========================================================= */
 typedef struct {
-    GPIO_TypeDef *IN1_Port;
-    uint16_t IN1_Pin;
-
-    GPIO_TypeDef *IN2_Port;
-    uint16_t IN2_Pin;
+    volatile DRV_Direction_t direction;
+    TIM_HandleTypeDef *htim;
+    uint32_t CH1;
+    uint32_t CH2;
 } DRV8833_Channel;
-
+/* =========================================================
+ *                   DRV8833 句柄结构体定义
+ * ========================================================= */
 typedef struct {
     DRV8833_Channel CHANNEL_A;
-
-#if DRV8833_USE_CHANNEL_B
     DRV8833_Channel CHANNEL_B;
-#endif
-
     GPIO_TypeDef *nSLEEP_Port;
     uint16_t nSLEEP_Pin;
-
-    GPIO_TypeDef *nFAULT_Port;
-    uint16_t nFAULT_Pin;
-
 } DRV8833_HandleTypeDef;
+/* =========================================================
+ *                     DRV8833 内部函数
+ * ========================================================= */
+static inline uint32_t DRV_GetPWMPeriod(TIM_HandleTypeDef *htim);
 
-typedef enum {
-    DRV_STAGE_COAST   = 0, // 滑行
-    DRV_STAGE_FORWARD = 1, // 正转
-    DRV_STAGE_REVERSE = 2, // 反转
-    DRV_STAGE_BRAKE   = 3  // 刹车
-} DRV_Stage_t;
-
-extern volatile DRV_Stage_t drv_stage;
-
-extern volatile uint8_t drv_FAULT;
-
-void DRV8833_Init(DRV8833_HandleTypeDef *hdrv);
-
+/* =========================================================
+ *                     DRV8833 外部接口
+ * ========================================================= */
+void DRV_Init(DRV8833_HandleTypeDef *hdrv);
 void DRV_Wake(DRV8833_HandleTypeDef *hdrv);
-
 void DRV_Sleep(DRV8833_HandleTypeDef *hdrv);
-
-void DRV_Coast(DRV8833_Channel *ch);
-
-void DRV_Forward(DRV8833_Channel *ch);
-
-void DRV_Reverse(DRV8833_Channel *ch);
-
-void DRV_Brake(DRV8833_Channel *ch);
-
-uint8_t DRV_Fault(DRV8833_HandleTypeDef *hdrv);
+void DRV_Coast(DRV8833_HandleTypeDef *hdrv, DRV8833_Channel *channel);
+void DRV_Forward(DRV8833_HandleTypeDef *hdrv, DRV8833_Channel *channel);
+void DRV_Reverse(DRV8833_HandleTypeDef *hdrv, DRV8833_Channel *channel);
+void DRV_Brake(DRV8833_HandleTypeDef *hdrv, DRV8833_Channel *channel);
+void DRV_SetDirection(DRV8833_Channel *channel, DRV_Direction_t direction);
+void DRV_updateDirection(DRV8833_HandleTypeDef *hdrv, DRV8833_Channel *channel);
 
 #ifdef __cplusplus
 }

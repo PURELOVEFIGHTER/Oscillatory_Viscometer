@@ -32,7 +32,7 @@ void Command_Parse(void) {
     /* 启动频率扫描 */
     else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "FR Sweep", 8) == 0) {
         freq_sweep_enabled = true;
-        drv_PWM_freq       = FREQ_SWEEP_START_HZ;
+        drv_PWM_freq       = FREQ_SCAN_START_HZ;
         HAL_TIM_Base_Start_IT(&htim4);
         sprintf(UART1_TX_buffer, "Frequency sweeping start.\r\n");
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
@@ -40,7 +40,7 @@ void Command_Parse(void) {
     /* 启动占空比扫描 */
     else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "DR Sweep", 8) == 0) {
         DR_sweep_enabled = true;
-        drv_PWM_DR       = DUTY_RATIO_SWEEP_START;
+        drv_PWM_DR       = DUTY_RATIO_SCAN_START;
         HAL_TIM_Base_Start_IT(&htim4);
         sprintf(UART1_TX_buffer, "Duty Ratio sweeping start.\r\n");
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
@@ -71,10 +71,8 @@ void Command_Parse(void) {
         }
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
     } else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "UART3 Stat", 10) == 0) {
-        snprintf(UART1_TX_buffer, MSG_LEN,
-                 "UART3 TX Frames=%lu Dropped=%lu DMA=%u\r\n",
-                 (unsigned long)UART3_TX_frameCount, (unsigned long)UART3_TX_dropCount,
-                 UART3_DMA_busy ? 1U : 0U);
+        snprintf(UART1_TX_buffer, MSG_LEN, "UART3 TX Frames=%lu Dropped=%lu DMA=%u\r\n",
+                 (unsigned long)UART3_TX_frameCount, (unsigned long)UART3_TX_dropCount, UART3_DMA_busy ? 1U : 0U);
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
     } else {
         sprintf(UART1_TX_buffer, "Unknown command\r\n");

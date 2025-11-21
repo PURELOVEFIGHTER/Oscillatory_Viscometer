@@ -4,7 +4,7 @@ BasedOnStyle      : LLVM
 UseTab            : Never       # 使用空格而不是制表符。
 IndentWidth       : 4           # 缩进宽度为4个空格。
 TabWidth          : 4           # Tab长度
-ColumnLimit       : 120         # 单行的长度不超过80字符
+ColumnLimit       : 80         # 单行的长度不超过120字符
 IndentPPDirectives: BeforeHash  # 嵌套宏缩进风格为‘#’前缩进
 PPIndentWidth     : -1          # 嵌套宏的缩进，使用IndentWidth
 
@@ -37,5 +37,3 @@ BitFieldColonSpacing        : None         # 位域前没有空格
 AlignEscapedNewlines        : Left         # 分行符靠左对齐
                                            # AlignConsecutiveDeclarations: Consecutive # 对齐定义，用处不大，不启用
 
-BinPackArguments           : true
-AllowAllArgumentsOnNextLine: false

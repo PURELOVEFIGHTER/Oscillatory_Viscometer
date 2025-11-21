@@ -67,7 +67,7 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 /* DRV8833 --------------------------------------------------------*/
-extern DRV8833_HandleTypeDef drv1;
+extern DRV8833_HandleTypeDef hdrv1;
 
 // 扫描状态
 extern volatile bool freq_sweep_enabled;
@@ -77,7 +77,8 @@ extern volatile bool drv_excitingLevel; // 低频 PWM 激励电平
 extern uint16_t drv_PWM_freq;           // 低频 PWM 频率
 extern uint8_t drv_PWM_DR;              // 低频 PWM 占空比
 extern uint32_t drv_PWM_cnt;            // 低频 PWM 频率所需计数值
-
+extern uint32_t drv_PWM_halfCnt;        // 低频 PWM 频率一半计数值
+extern uint32_t drv_PWM_assertCnt;      // 低频 PWM 有效电平计数值
 /* LDC1101 --------------------------------------------------------*/
 extern LDC1101_HandleTypeDef ldc2;
 // Status Variables

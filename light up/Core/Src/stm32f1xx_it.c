@@ -327,15 +327,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         static uint32_t tim1_drv_cnt = 0;
         static uint32_t tim1_led_cnt = 0;
 
-        // PWM 驱动阶段
-        if (tim1_drv_cnt < ((uint32_t)drv_PWM_cnt / 2 * drv_PWM_DR / 100)) {
-            drv_stage = DRV_STAGE_FORWARD;
-        } else if (tim1_drv_cnt < ((uint32_t)drv_PWM_cnt / 2)) {
-            drv_stage = DRV_STAGE_COAST;
-        } else if (tim1_drv_cnt < ((uint32_t)drv_PWM_cnt / 2) + ((uint32_t)drv_PWM_cnt * drv_PWM_DR / 100 / 2)) {
-            drv_stage = DRV_STAGE_REVERSE;
-        } else if (tim1_drv_cnt < ((uint32_t)drv_PWM_cnt)) {
-            drv_stage = DRV_STAGE_COAST;
+        if (tim1_drv_cnt < drv_PWM_assertCnt) {
+            DRV_SetDirection(&(hdrv1.CHANNEL_A), DRV_STAGE_FORWARD);
+        } else if (tim1_drv_cnt < drv_PWM_halfCnt) {
+            DRV_SetDirection(&(hdrv1.CHANNEL_A), DRV_STAGE_COAST);
+        } else if (tim1_drv_cnt < drv_PWM_halfCnt + drv_PWM_assertCnt) {
+            DRV_SetDirection(&(hdrv1.CHANNEL_A), DRV_STAGE_REVERSE);
+        } else if (tim1_drv_cnt < drv_PWM_cnt) {
+            DRV_SetDirection(&(hdrv1.CHANNEL_A), DRV_STAGE_COAST);
         } else {
             tim1_drv_cnt = 0;
         }
@@ -354,22 +353,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         tim4_cnt++;
 
         if (freq_sweep_enabled) {
-            if (tim4_cnt > FREQ_SWEEP_HOLD_TIME_MS) {
+            if (tim4_cnt > FREQ_SCAN_HOLD_TIME_MS) {
                 tim4_cnt = 0;
-                drv_PWM_freq += FREQ_SWEEP_STEP_HZ;
-
-                if (drv_PWM_freq >= FREQ_SWEEP_END_HZ) {
+                drv_PWM_freq += FREQ_SCAN_STEP_HZ;
+                if (drv_PWM_freq >= FREQ_SCAN_END_HZ) {
                     freq_sweep_enabled = false;
                     HAL_TIM_Base_Stop_IT(&htim4);
                 }
             }
         }
         if (DR_sweep_enabled) {
-            if (tim4_cnt > DUTY_RATIO_SWEEP_HOLD_TIME_MS) {
+            if (tim4_cnt > DUTY_RATIO_SCAN_HOLD_TIME_MS) {
                 tim4_cnt = 0;
-                drv_PWM_DR += DUTY_RATIO_SWEEP_STEP;
-
-                if (drv_PWM_DR >= DUTY_RATIO_SWEEP_END) {
+                drv_PWM_DR += DUTY_RATIO_SCAN_STEP;
+                if (drv_PWM_DR >= DUTY_RATIO_SCAN_END) {
                     DR_sweep_enabled = false;
                     HAL_TIM_Base_Stop_IT(&htim4);
                 }
@@ -433,6 +430,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
             UART3_DMA_busy                = false;
             __set_PRIMASK(primask);
         }
+
         UART1_TX_send = true;
     }
     if (GPIO_Pin == GPIO_PIN_12) {
