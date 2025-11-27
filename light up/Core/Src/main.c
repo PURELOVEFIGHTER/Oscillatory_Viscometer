@@ -72,15 +72,20 @@ volatile bool freq_sweep_enabled = false;
 volatile bool DR_sweep_enabled   = false;
 
 /* LDC1101 --------------------------------------------------------*/
-LDC1101_HandleTypeDef ldc2   = {&hspi2, LDC2_CS_GPIO_PORT, LDC2_CS_PIN};
-volatile bool ldc2_isWorking = false;
-volatile bool ldc2_isReading = false;
-volatile bool ldc2_dataReady = false;
-uint16_t Rp_data             = 0;
-uint16_t L_data              = 0;
-uint32_t LHR_data            = 0;
-uint8_t LDC_status           = 0;
-uint16_t ldc2_cnt            = 0;
+LDC1101_HandleTypeDef ldc2        = {&hspi2, LDC2_CS_GPIO_PORT, LDC2_CS_PIN};
+volatile bool ldc2_isWorking      = false;
+volatile bool ldc2_isReading      = false;
+volatile bool ldc2_dataReady      = false;
+uint16_t Rp_data                  = 0;
+uint16_t L_data                   = 0;
+uint32_t LHR_data                 = 0;
+uint32_t LHR_data_min             = UINT32_MAX;
+uint32_t LHR_data_max             = 0;
+uint32_t last_LHR_data_sent       = 0;
+bool has_LHR_baseline             = false;
+volatile uint8_t ldc2_skipSamples = 0;
+uint8_t LDC_status                = 0;
+uint16_t ldc2_cnt                 = 0;
 
 /* UART -----------------------------------------------------------*/
 /* UART1 */
@@ -202,31 +207,50 @@ int main(void) {
             drv_PWM_halfCnt   = drv_PWM_cnt / 2;
             drv_PWM_assertCnt = (uint32_t)(drv_PWM_cnt * drv_PWM_DR / 100);
         }
-        DRV_updateDirection(&hdrv1, &hdrv1.CHANNEL_A);
+        // DRV_updateDirection(&hdrv1, &hdrv1.CHANNEL_A);
 
         if (ldc2_isWorking && ldc2_isReading && ldc2_dataReady) {
             ldc2_dataReady = false;
 
             LHR_data = ldc1101_getLHRData(&ldc2);
-            LHR_data -= 3220000;
-            // === frame [LHR(4B)][Freq(2B)][Duty(1B)][Pad(1B)] ===
-            frame[0]      = (uint8_t)(LHR_data);
-            frame[1]      = (uint8_t)(LHR_data >> 8);
-            frame[2]      = (uint8_t)(LHR_data >> 16);
-            frame[3]      = (uint8_t)(LHR_data >> 24);
-            frame[4]      = (uint8_t)(drv_PWM_freq);
-            frame[5]      = (uint8_t)(drv_PWM_freq >> 8);
-            frame[6]      = drv_PWM_DR;
-            uint16_t wave = 3000 + 5000 * (uint16_t)drv_excitingLevel;
-            frame[7]      = (uint8_t)(wave);
-            frame[8]      = (uint8_t)(wave >> 8);
-            frame[9]      = 0xAA;
+            if (ldc2_skipSamples) {
+                ldc2_skipSamples--;
+                continue;
+            }
+            if (has_LHR_baseline && (LHR_data == last_LHR_data_sent)) {
+                continue;
+            }
+            has_LHR_baseline   = true;
+            last_LHR_data_sent = LHR_data;
+
+            if (LHR_data < LHR_data_min) {
+                LHR_data_min = LHR_data;
+            }
+            if (LHR_data > LHR_data_max) {
+                LHR_data_max = LHR_data;
+            }
+
+            // LHR_data -= 3220000;
+            // === frame [LHR(4B)][Freq(2B)][Duty(1B)][Wave(2B)][Pad(1B)] ===
+            frame[0]                = (uint8_t)(LHR_data);
+            frame[1]                = (uint8_t)(LHR_data >> 8);
+            frame[2]                = (uint8_t)(LHR_data >> 16);
+            frame[3]                = (uint8_t)(LHR_data >> 24);
+            frame[4]                = (uint8_t)(drv_PWM_freq);
+            frame[5]                = (uint8_t)(drv_PWM_freq >> 8);
+            frame[6]                = drv_PWM_DR;
+            uint32_t wave_amplitude = (LHR_data_max > LHR_data_min) ? (LHR_data_max - LHR_data_min) : 0;
+            uint32_t wave_val       = LHR_data_min + wave_amplitude * (uint32_t)drv_excitingLevel;
+            uint16_t wave           = (wave_val > UINT16_MAX) ? UINT16_MAX : (uint16_t)wave_val;
+            frame[7]                = (uint8_t)(wave);
+            frame[8]                = (uint8_t)(wave >> 8);
+            frame[9]                = 0xAA;
 
             // ===== enqueue frame into ring buffer =====
             bool frame_enqueued = false;
             uint32_t primask    = __get_PRIMASK();
             __disable_irq();
-
+            // Critical section start
             const uint16_t buffer_len = sizeof(UART3_TX_buffer);
             uint16_t used             = UART3_BufferUsedUnsafe();
             uint16_t free_space       = buffer_len - used - 1;
@@ -243,9 +267,8 @@ int main(void) {
             } else {
                 UART3_TX_dropCount++;
             }
-
+            // Critical section end
             __set_PRIMASK(primask);
-
             if (frame_enqueued && !UART3_DMA_busy && (UART3_TX_head != UART3_TX_tail)) {
                 UART3_DMA_busy = true;
 
@@ -318,8 +341,7 @@ void SystemClock_Config(void) {
  */
 void Error_Handler(void) {
     /* USER CODE BEGIN Error_Handler_Debug */
-    /* User can add his own implementation to report the HAL error return state
-     */
+    /* User can add his own implementation to report the HAL error return state */
     __disable_irq();
 
     while (1) {

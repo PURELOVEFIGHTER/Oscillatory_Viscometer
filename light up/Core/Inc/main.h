@@ -90,6 +90,11 @@ extern uint8_t LDC_status;
 extern uint16_t Rp_data;
 extern uint16_t L_data;
 extern uint32_t LHR_data;
+extern uint32_t LHR_data_min;
+extern uint32_t LHR_data_max;
+extern uint32_t last_LHR_data_sent;
+extern bool has_LHR_baseline;
+extern volatile uint8_t ldc2_skipSamples;
 extern uint16_t ldc2_cnt;
 
 /* UART -----------------------------------------------------------*/
@@ -101,7 +106,7 @@ extern char UART1_TX_buffer[MSG_LEN];
 extern bool UART1_TX_send;
 
 /* UART3 */
-#define QUEUE_LEN 512
+#define QUEUE_LEN 1024
 extern uint8_t UART3_TX_buffer[QUEUE_LEN * 10];
 extern uint8_t frame[10];
 extern uint8_t * volatile UART3_TX_head;

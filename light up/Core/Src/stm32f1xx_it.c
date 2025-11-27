@@ -328,13 +328,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         static uint32_t tim1_led_cnt = 0;
 
         if (tim1_drv_cnt < drv_PWM_assertCnt) {
-            DRV_SetDirection(&(hdrv1.CHANNEL_A), DRV_STAGE_FORWARD);
+            DRV_Forward(&hdrv1, &hdrv1.CHANNEL_A);
+            drv_excitingLevel = true;
         } else if (tim1_drv_cnt < drv_PWM_halfCnt) {
-            DRV_SetDirection(&(hdrv1.CHANNEL_A), DRV_STAGE_COAST);
+            DRV_Coast(&hdrv1, &hdrv1.CHANNEL_A);
         } else if (tim1_drv_cnt < drv_PWM_halfCnt + drv_PWM_assertCnt) {
-            DRV_SetDirection(&(hdrv1.CHANNEL_A), DRV_STAGE_REVERSE);
+            DRV_Reverse(&hdrv1, &hdrv1.CHANNEL_A);
+            drv_excitingLevel = false;
         } else if (tim1_drv_cnt < drv_PWM_cnt) {
-            DRV_SetDirection(&(hdrv1.CHANNEL_A), DRV_STAGE_COAST);
+            DRV_Coast(&hdrv1, &hdrv1.CHANNEL_A);
         } else {
             tim1_drv_cnt = 0;
         }
@@ -418,6 +420,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
             ldc2_dataReady      = false;
             UART3_TX_frameCount = 0;
             UART3_TX_dropCount  = 0;
+            LHR_data_min        = UINT32_MAX;
+            LHR_data_max        = 0;
+            last_LHR_data_sent  = 0;
+            has_LHR_baseline    = false;
+            ldc2_skipSamples    = 1; // ignore first sample after toggle to avoid spike
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
         } else {
             sprintf(UART1_TX_buffer, "Stopped LHR Data Reading.\r\n");
