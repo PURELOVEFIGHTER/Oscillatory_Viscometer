@@ -40,6 +40,9 @@ uint8_t ldc1101_init(LDC1101_HandleTypeDef *dev, uint8_t RP_MIN) {
     // LHR 模式下只关注 RPMIN
     ldc1101_writeByte(dev, _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE, RP_MIN | _LDC1101_RP_SET_RP_MAX_3KOhm);
 
+    // 配置 RPL 转换时间(0x04,0xE7)
+    ldc1101_writeByte(dev, _LDC1101_REG_CFG_RP_L_CONVERSION_INTERVAL, 0xE7);
+
     // LHR 模式设置必需(0x05,0x01)(0x0C,0x01)
     ldc1101_writeByte(dev, _LDC1101_REG_CFG_ADDITIONAL_DEVICE, _LDC1101_ALT_CFG_L_OPTIMAL_ENABLE);
     ldc1101_writeByte(dev, _LDC1101_REG_AMPLITUDE_CONTROL_REQUIREMENT, 0x01); // LHR 持续转换

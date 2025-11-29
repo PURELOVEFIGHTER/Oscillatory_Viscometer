@@ -43,24 +43,20 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -68,17 +64,17 @@ void Error_Handler(void);
 /* USER CODE BEGIN Private defines */
 /* DRV8833 --------------------------------------------------------*/
 extern DRV8833_HandleTypeDef hdrv1;
-
-// 扫描状态
+/* Sweep state */
 extern volatile bool freq_sweep_enabled;
 extern volatile bool DR_sweep_enabled;
 
-extern volatile bool drv_excitingLevel; // 低频 PWM 激励电平
-extern uint16_t drv_PWM_freq;           // 低频 PWM 频率
-extern uint8_t drv_PWM_DR;              // 低频 PWM 占空比
-extern uint32_t drv_PWM_cnt;            // 低频 PWM 频率所需计数值
-extern uint32_t drv_PWM_halfCnt;        // 低频 PWM 频率一半计数值
-extern uint32_t drv_PWM_assertCnt;      // 低频 PWM 有效电平计数值
+extern volatile bool drv_excitingLevel; // PWM level of the excitation signal
+extern uint16_t drv_PWM_freq;
+extern uint8_t drv_PWM_DR;
+extern uint32_t drv_PWM_cnt;
+extern uint32_t drv_PWM_halfCnt;
+extern uint32_t drv_PWM_assertCnt;
+
 /* LDC1101 --------------------------------------------------------*/
 extern LDC1101_HandleTypeDef ldc2;
 // Status Variables
@@ -92,11 +88,6 @@ extern uint16_t L_data;
 extern uint32_t LHR_data;
 extern uint32_t LHR_data_min;
 extern uint32_t LHR_data_max;
-extern uint32_t last_LHR_data_sent;
-extern bool has_LHR_baseline;
-extern volatile uint8_t ldc2_skipSamples;
-extern uint16_t ldc2_cnt;
-
 /* UART -----------------------------------------------------------*/
 #define MSG_LEN 64
 /* UART1 */
@@ -104,7 +95,6 @@ extern volatile uint8_t UART1_RX_activeBuffer;
 extern char UART1_RX_DMA_buffer[2][MSG_LEN];
 extern char UART1_TX_buffer[MSG_LEN];
 extern bool UART1_TX_send;
-
 /* UART3 */
 #define QUEUE_LEN 1024
 extern uint8_t UART3_TX_buffer[QUEUE_LEN * 10];
@@ -114,6 +104,7 @@ extern uint8_t * volatile UART3_TX_tail;
 extern volatile bool UART3_DMA_busy;
 extern volatile uint32_t UART3_TX_frameCount;
 extern volatile uint32_t UART3_TX_dropCount;
+void UART3_KickTx(void);
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

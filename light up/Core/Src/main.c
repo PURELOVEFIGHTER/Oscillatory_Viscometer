@@ -81,11 +81,8 @@ uint16_t L_data                   = 0;
 uint32_t LHR_data                 = 0;
 uint32_t LHR_data_min             = UINT32_MAX;
 uint32_t LHR_data_max             = 0;
-uint32_t last_LHR_data_sent       = 0;
-bool has_LHR_baseline             = false;
 volatile uint8_t ldc2_skipSamples = 0;
 uint8_t LDC_status                = 0;
-uint16_t ldc2_cnt                 = 0;
 
 /* UART -----------------------------------------------------------*/
 /* UART1 */
@@ -126,6 +123,59 @@ static uint16_t UART3_BufferUsedUnsafe(void) {
         return head_offset - tail_offset;
     }
     return buffer_len - (tail_offset - head_offset);
+}
+
+static bool UART3_EnqueueFrame(const uint8_t *data, uint16_t len) {
+    uint32_t primask = __get_PRIMASK();
+    __disable_irq();
+
+    const uint16_t buffer_len = sizeof(UART3_TX_buffer);
+    uint16_t used             = UART3_BufferUsedUnsafe();
+    uint16_t free_space       = buffer_len - used - 1;
+
+    if (free_space < len) {
+        UART3_TX_dropCount++;
+        __set_PRIMASK(primask);
+        return false;
+    }
+
+    for (uint16_t i = 0; i < len; i++) {
+        *UART3_TX_head = data[i];
+        UART3_TX_head++;
+        if (UART3_TX_head >= UART3_TX_buffer + buffer_len) {
+            UART3_TX_head = UART3_TX_buffer;
+        }
+    }
+    UART3_TX_frameCount++;
+    __set_PRIMASK(primask);
+    return true;
+}
+
+void UART3_KickTx(void) {
+    uint32_t primask = __get_PRIMASK();
+    __disable_irq();
+    if (UART3_DMA_busy || (UART3_TX_head == UART3_TX_tail)) {
+        __set_PRIMASK(primask);
+        return;
+    }
+
+    const uint16_t buffer_len = sizeof(UART3_TX_buffer);
+    uint8_t *start            = UART3_TX_tail;
+    uint16_t size;
+    if (UART3_TX_head > UART3_TX_tail) {
+        size = (uint16_t)(UART3_TX_head - UART3_TX_tail);
+    } else {
+        size = (uint16_t)((UART3_TX_buffer + buffer_len) - UART3_TX_tail);
+    }
+    UART3_DMA_busy = true;
+    __set_PRIMASK(primask);
+
+    if (HAL_UART_Transmit_DMA(&huart3, start, size) != HAL_OK) {
+        primask = __get_PRIMASK();
+        __disable_irq();
+        UART3_DMA_busy = false;
+        __set_PRIMASK(primask);
+    }
 }
 
 /* USER CODE END 0 */
@@ -199,7 +249,7 @@ int main(void) {
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
     while (1) {
-        /* DRV8833 */
+        /* DRV8833 Frequency Control */
         if (drv_PWM_freq == 0)
             drv_PWM_cnt = drv_PWM_cnt;
         else {
@@ -209,19 +259,16 @@ int main(void) {
         }
         // DRV_updateDirection(&hdrv1, &hdrv1.CHANNEL_A);
 
+        /* LDC Data Get and Transmit */
         if (ldc2_isWorking && ldc2_isReading && ldc2_dataReady) {
             ldc2_dataReady = false;
 
             LHR_data = ldc1101_getLHRData(&ldc2);
+            // LHR_data -= 3220000;
             if (ldc2_skipSamples) {
                 ldc2_skipSamples--;
                 continue;
             }
-            if (has_LHR_baseline && (LHR_data == last_LHR_data_sent)) {
-                continue;
-            }
-            has_LHR_baseline   = true;
-            last_LHR_data_sent = LHR_data;
 
             if (LHR_data < LHR_data_min) {
                 LHR_data_min = LHR_data;
@@ -229,8 +276,6 @@ int main(void) {
             if (LHR_data > LHR_data_max) {
                 LHR_data_max = LHR_data;
             }
-
-            // LHR_data -= 3220000;
             // === frame [LHR(4B)][Freq(2B)][Duty(1B)][Wave(2B)][Pad(1B)] ===
             frame[0]                = (uint8_t)(LHR_data);
             frame[1]                = (uint8_t)(LHR_data >> 8);
@@ -247,38 +292,11 @@ int main(void) {
             frame[9]                = 0xAA;
 
             // ===== enqueue frame into ring buffer =====
-            bool frame_enqueued = false;
-            uint32_t primask    = __get_PRIMASK();
-            __disable_irq();
-            // Critical section start
-            const uint16_t buffer_len = sizeof(UART3_TX_buffer);
-            uint16_t used             = UART3_BufferUsedUnsafe();
-            uint16_t free_space       = buffer_len - used - 1;
+            bool frame_enqueued = UART3_EnqueueFrame(frame, sizeof(frame));
 
-            if (free_space >= sizeof(frame)) {
-                for (int i = 0; i < (int)sizeof(frame); i++) {
-                    *UART3_TX_head = frame[i];
-                    UART3_TX_head++;
-                    if (UART3_TX_head >= UART3_TX_buffer + buffer_len)
-                        UART3_TX_head = UART3_TX_buffer;
-                }
-                frame_enqueued = true;
-                UART3_TX_frameCount++;
-            } else {
-                UART3_TX_dropCount++;
-            }
-            // Critical section end
-            __set_PRIMASK(primask);
-            if (frame_enqueued && !UART3_DMA_busy && (UART3_TX_head != UART3_TX_tail)) {
-                UART3_DMA_busy = true;
-
-                uint16_t size;
-                if (UART3_TX_head > UART3_TX_tail)
-                    size = UART3_TX_head - UART3_TX_tail;
-                else
-                    size = (UART3_TX_buffer + sizeof(UART3_TX_buffer)) - UART3_TX_tail;
-
-                HAL_UART_Transmit_DMA(&huart3, UART3_TX_tail, size);
+            // ===== Data Transmission =====
+            if (frame_enqueued) {
+                UART3_KickTx();
             }
         }
 

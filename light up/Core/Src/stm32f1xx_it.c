@@ -57,7 +57,6 @@
 
 /* External variables --------------------------------------------------------*/
 extern TIM_HandleTypeDef htim1;
-extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim4;
 extern DMA_HandleTypeDef hdma_usart1_rx;
 extern DMA_HandleTypeDef hdma_usart3_tx;
@@ -248,20 +247,6 @@ void TIM1_UP_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles TIM2 global interrupt.
-  */
-void TIM2_IRQHandler(void)
-{
-  /* USER CODE BEGIN TIM2_IRQn 0 */
-
-  /* USER CODE END TIM2_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim2);
-  /* USER CODE BEGIN TIM2_IRQn 1 */
-
-  /* USER CODE END TIM2_IRQn 1 */
-}
-
-/**
   * @brief This function handles TIM4 global interrupt.
   */
 void TIM4_IRQHandler(void)
@@ -392,22 +377,16 @@ void HAL_UART_IdleLineCallback(UART_HandleTypeDef *huart) {
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == USART3) {
+        uint32_t primask = __get_PRIMASK();
+        __disable_irq();
         UART3_TX_tail += huart->TxXferSize;
-        if (UART3_TX_tail >= UART3_TX_buffer + sizeof(UART3_TX_buffer))
+        if (UART3_TX_tail >= UART3_TX_buffer + sizeof(UART3_TX_buffer)) {
             UART3_TX_tail -= sizeof(UART3_TX_buffer);
-
-        if (UART3_TX_head != UART3_TX_tail) {
-            UART3_DMA_busy = true;
-            uint16_t size;
-            if (UART3_TX_head > UART3_TX_tail)
-                size = UART3_TX_head - UART3_TX_tail;
-            else
-                size = (UART3_TX_buffer + sizeof(UART3_TX_buffer)) - UART3_TX_tail;
-
-            HAL_UART_Transmit_DMA(&huart3, UART3_TX_tail, size);
-        } else {
-            UART3_DMA_busy = false;
         }
+        UART3_DMA_busy = false;
+        __set_PRIMASK(primask);
+
+        UART3_KickTx();
     }
 }
 
@@ -422,9 +401,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
             UART3_TX_dropCount  = 0;
             LHR_data_min        = UINT32_MAX;
             LHR_data_max        = 0;
-            last_LHR_data_sent  = 0;
-            has_LHR_baseline    = false;
-            ldc2_skipSamples    = 1; // ignore first sample after toggle to avoid spike
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
         } else {
             sprintf(UART1_TX_buffer, "Stopped LHR Data Reading.\r\n");
@@ -437,13 +413,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
             UART3_DMA_busy                = false;
             __set_PRIMASK(primask);
         }
-
         UART1_TX_send = true;
     }
     if (GPIO_Pin == GPIO_PIN_12) {
         if (ldc2_isReading) {
             ldc2_dataReady = true;
-            ldc2_cnt++;
         }
     }
 }
