@@ -68,8 +68,8 @@ uint8_t drv_PWM_DR              = 50;
 uint32_t drv_PWM_cnt;
 uint32_t drv_PWM_halfCnt;
 uint32_t drv_PWM_assertCnt;
-volatile bool freq_sweep_enabled = false;
-volatile bool DR_sweep_enabled   = false;
+volatile bool freq_scan_enabled = false;
+volatile bool DR_scan_enabled   = false;
 
 /* LDC1101 --------------------------------------------------------*/
 LDC1101_HandleTypeDef ldc2        = {&hspi2, LDC2_CS_GPIO_PORT, LDC2_CS_PIN};
@@ -79,8 +79,6 @@ volatile bool ldc2_dataReady      = false;
 uint16_t Rp_data                  = 0;
 uint16_t L_data                   = 0;
 uint32_t LHR_data                 = 0;
-uint32_t LHR_data_min             = UINT32_MAX;
-uint32_t LHR_data_max             = 0;
 volatile uint8_t ldc2_skipSamples = 0;
 uint8_t LDC_status                = 0;
 
@@ -91,13 +89,11 @@ volatile uint8_t UART1_RX_activeBuffer = 0;
 bool UART1_TX_send                     = false;
 char UART1_TX_buffer[MSG_LEN];
 /* UART3 */
-uint8_t UART3_TX_buffer[QUEUE_LEN * 10];
-uint8_t frame[10];
-uint8_t * volatile UART3_TX_head      = UART3_TX_buffer;
-uint8_t * volatile UART3_TX_tail      = UART3_TX_buffer;
-volatile bool UART3_DMA_busy          = false;
-volatile uint32_t UART3_TX_frameCount = 0;
-volatile uint32_t UART3_TX_dropCount  = 0;
+uint8_t UART3_TX_buffer[QUEUE_LEN * 9];
+uint8_t frame[9];
+uint8_t * volatile UART3_TX_head = UART3_TX_buffer;
+uint8_t * volatile UART3_TX_tail = UART3_TX_buffer;
+volatile bool UART3_DMA_busy     = false;
 
 /* OLED -----------------------------------------------------------*/
 char OLED_Line1[20];
@@ -134,7 +130,6 @@ static bool UART3_EnqueueFrame(const uint8_t *data, uint16_t len) {
     uint16_t free_space       = buffer_len - used - 1;
 
     if (free_space < len) {
-        UART3_TX_dropCount++;
         __set_PRIMASK(primask);
         return false;
     }
@@ -146,7 +141,6 @@ static bool UART3_EnqueueFrame(const uint8_t *data, uint16_t len) {
             UART3_TX_head = UART3_TX_buffer;
         }
     }
-    UART3_TX_frameCount++;
     __set_PRIMASK(primask);
     return true;
 }
@@ -228,9 +222,6 @@ int main(void) {
 
     /* DRV8833 Init */
     DRV_Init(&hdrv1);
-    HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH1);
-    HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH2);
-    HAL_TIM_Base_Start_IT(&htim1);
     sprintf(UART1_TX_buffer, "[DRV8833]Oscillation On.\r\n");
     HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
     // printf("[DRV8833]Oscillation On.\r\n");
@@ -265,31 +256,16 @@ int main(void) {
 
             LHR_data = ldc1101_getLHRData(&ldc2);
             // LHR_data -= 3220000;
-            if (ldc2_skipSamples) {
-                ldc2_skipSamples--;
-                continue;
-            }
-
-            if (LHR_data < LHR_data_min) {
-                LHR_data_min = LHR_data;
-            }
-            if (LHR_data > LHR_data_max) {
-                LHR_data_max = LHR_data;
-            }
-            // === frame [LHR(4B)][Freq(2B)][Duty(1B)][Wave(2B)][Pad(1B)] ===
-            frame[0]                = (uint8_t)(LHR_data);
-            frame[1]                = (uint8_t)(LHR_data >> 8);
-            frame[2]                = (uint8_t)(LHR_data >> 16);
-            frame[3]                = (uint8_t)(LHR_data >> 24);
-            frame[4]                = (uint8_t)(drv_PWM_freq);
-            frame[5]                = (uint8_t)(drv_PWM_freq >> 8);
-            frame[6]                = drv_PWM_DR;
-            uint32_t wave_amplitude = (LHR_data_max > LHR_data_min) ? (LHR_data_max - LHR_data_min) : 0;
-            uint32_t wave_val       = LHR_data_min + wave_amplitude * (uint32_t)drv_excitingLevel;
-            uint16_t wave           = (wave_val > UINT16_MAX) ? UINT16_MAX : (uint16_t)wave_val;
-            frame[7]                = (uint8_t)(wave);
-            frame[8]                = (uint8_t)(wave >> 8);
-            frame[9]                = 0xAA;
+            // === frame [LHR(4B)][Freq(2B)][Duty(1B)][Level(1B)][Pad(2B)] ===
+            frame[0] = (uint8_t)(LHR_data);
+            frame[1] = (uint8_t)(LHR_data >> 8);
+            frame[2] = (uint8_t)(LHR_data >> 16);
+            frame[3] = (uint8_t)(LHR_data >> 24);
+            frame[4] = (uint8_t)(drv_PWM_freq);
+            frame[5] = (uint8_t)(drv_PWM_freq >> 8);
+            frame[6] = drv_PWM_DR;
+            frame[7] = (uint8_t)drv_excitingLevel;
+            frame[8] = 0xAA;
 
             // ===== enqueue frame into ring buffer =====
             bool frame_enqueued = UART3_EnqueueFrame(frame, sizeof(frame));

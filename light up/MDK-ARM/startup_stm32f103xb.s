@@ -3,12 +3,12 @@
 ;* Author             : MCD Application Team
 ;* Description        : STM32F103xB Devices vector table for MDK-ARM toolchain. 
 ;*                      This module performs:
-;*                      - Set the initial SP
-;*                      - Set the initial PC == Reset_Handler
-;*                      - Set the vector table entries with the exceptions ISR address
-;*                      - Configure the clock system
+;*                      - Set the initial SP                                             ;* 初始化堆栈指针（Stack Pointer）
+;*                      - Set the initial PC == Reset_Handler                            ;* 初始化程序计数器（Program Counter），指向复位处理函数（Reset Handler）
+;*                      - Set the vector table entries with the exceptions ISR address   ;* 设置中断向量表
+;*                      - Configure the clock system                                     ;* 配置时钟系统
 ;*                      - Branches to __main in the C library (which eventually
-;*                        calls main()).
+;*                        calls main()).                                                 ;* 跳转到C库中的__main函数，最终调用main函数
 ;*                      After Reset the Cortex-M3 processor is in Thread mode,
 ;*                      priority is Privileged, and the Stack is set to Main.
 ;******************************************************************************
@@ -24,33 +24,35 @@
 ;*
 ;******************************************************************************
 
-; Amount of memory (in bytes) allocated for Stack
+; Amount of memory (in bytes) allocated for Stack   ;* 分配系统的栈空间
 ; Tailor this value to your application needs
 ; <h> Stack Configuration
 ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Stack_Size		EQU     0x400
-
+Stack_Size		EQU     0x400  ;* 4×256 = 1KB
+                    ;*  名称    不初始化  可读可写   8字节对齐
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
 Stack_Mem       SPACE   Stack_Size
-__initial_sp
+__initial_sp ;* 指向栈空间结束地址即栈顶
+;* 栈空间一般存储局部变量、函数调用过程中的传递参数、保护现场
+;* 栈空间大小可手动调整，但是不能超过内部 SRAM 大小（如果不修改栈大小，会导致栈溢出，让程序出现未知问题，类似Linux系统中的段错误）
 
 
-; <h> Heap Configuration
+; <h> Heap Configuration   ;* 分配系统的堆空间
 ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Heap_Size      EQU     0x200
-
+Heap_Size      EQU     0x200  ;* 2×256 = 512B
+                    ;*  名称   不初始化  可读可写   8字节对齐
                 AREA    HEAP, NOINIT, READWRITE, ALIGN=3
 __heap_base
 Heap_Mem        SPACE   Heap_Size
-__heap_limit
+__heap_limit ;* 指向堆空间结束地址即堆顶
 
-                PRESERVE8
-                THUMB
-
+                PRESERVE8 ;* 8字节对齐
+                THUMB     ;* 兼容Thumb指令集，是 ARM 处理器之前的16位指令集
+                          ;* ARM 现在使用的是 Thumb-2 32位指令集，向下兼容 Thumb 指令集
 
 ; Vector Table Mapped to Address 0 at Reset
                 AREA    RESET, DATA, READONLY
@@ -223,7 +225,7 @@ Default_Handler PROC
                 EXPORT  USART2_IRQHandler          [WEAK]
                 EXPORT  USART3_IRQHandler          [WEAK]
                 EXPORT  EXTI15_10_IRQHandler       [WEAK]
-                EXPORT  RTC_Alarm_IRQHandler        [WEAK]
+                EXPORT  RTC_Alarm_IRQHandler       [WEAK]
                 EXPORT  USBWakeUp_IRQHandler       [WEAK]
 
 WWDG_IRQHandler

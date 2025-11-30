@@ -65,8 +65,8 @@ void Error_Handler(void);
 /* DRV8833 --------------------------------------------------------*/
 extern DRV8833_HandleTypeDef hdrv1;
 /* Sweep state */
-extern volatile bool freq_sweep_enabled;
-extern volatile bool DR_sweep_enabled;
+extern volatile bool freq_scan_enabled;
+extern volatile bool DR_scan_enabled;
 
 extern volatile bool drv_excitingLevel; // PWM level of the excitation signal
 extern uint16_t drv_PWM_freq;
@@ -86,8 +86,6 @@ extern uint8_t LDC_status;
 extern uint16_t Rp_data;
 extern uint16_t L_data;
 extern uint32_t LHR_data;
-extern uint32_t LHR_data_min;
-extern uint32_t LHR_data_max;
 /* UART -----------------------------------------------------------*/
 #define MSG_LEN 64
 /* UART1 */
@@ -97,13 +95,11 @@ extern char UART1_TX_buffer[MSG_LEN];
 extern bool UART1_TX_send;
 /* UART3 */
 #define QUEUE_LEN 1024
-extern uint8_t UART3_TX_buffer[QUEUE_LEN * 10];
-extern uint8_t frame[10];
+extern uint8_t UART3_TX_buffer[QUEUE_LEN * 9];
+extern uint8_t frame[9];
 extern uint8_t * volatile UART3_TX_head;
 extern uint8_t * volatile UART3_TX_tail;
 extern volatile bool UART3_DMA_busy;
-extern volatile uint32_t UART3_TX_frameCount;
-extern volatile uint32_t UART3_TX_dropCount;
 void UART3_KickTx(void);
 /* USER CODE END Private defines */
 

@@ -31,16 +31,16 @@ void Command_Parse(void) {
     }
     /* 启动频率扫描 */
     else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "FR Sweep", 8) == 0) {
-        freq_sweep_enabled = true;
-        drv_PWM_freq       = FREQ_SCAN_START_HZ;
+        freq_scan_enabled = true;
+        drv_PWM_freq      = FREQ_SCAN_START_HZ;
         HAL_TIM_Base_Start_IT(&htim4);
         sprintf(UART1_TX_buffer, "Frequency sweeping start.\r\n");
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
     }
     /* 启动占空比扫描 */
     else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "DR Sweep", 8) == 0) {
-        DR_sweep_enabled = true;
-        drv_PWM_DR       = DUTY_RATIO_SCAN_START;
+        DR_scan_enabled = true;
+        drv_PWM_DR      = DUTY_RATIO_SCAN_START;
         HAL_TIM_Base_Start_IT(&htim4);
         sprintf(UART1_TX_buffer, "Duty Ratio sweeping start.\r\n");
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
