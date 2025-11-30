@@ -64,13 +64,13 @@ void Error_Handler(void);
 /* USER CODE BEGIN Private defines */
 /* DRV8833 --------------------------------------------------------*/
 extern DRV8833_HandleTypeDef hdrv1;
-/* Sweep state */
+/* Scan state */
 extern volatile bool freq_scan_enabled;
 extern volatile bool DR_scan_enabled;
 
-extern volatile bool drv_excitingLevel; // PWM level of the excitation signal
-extern uint16_t drv_PWM_freq;
-extern uint8_t drv_PWM_DR;
+extern volatile bool drv_excitingLevel;
+extern float drv_PWM_freq;
+extern float drv_PWM_DR;
 extern uint32_t drv_PWM_cnt;
 extern uint32_t drv_PWM_halfCnt;
 extern uint32_t drv_PWM_assertCnt;

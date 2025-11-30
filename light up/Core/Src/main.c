@@ -63,11 +63,11 @@ DRV8833_HandleTypeDef hdrv1 = {
 };
 
 volatile bool drv_excitingLevel = 0;
-uint16_t drv_PWM_freq           = 200;
-uint8_t drv_PWM_DR              = 50;
-uint32_t drv_PWM_cnt;
-uint32_t drv_PWM_halfCnt;
-uint32_t drv_PWM_assertCnt;
+float drv_PWM_freq              = 200.0f;
+float drv_PWM_DR                = 50.0f;
+uint32_t drv_PWM_cnt            = 0;
+uint32_t drv_PWM_halfCnt        = 0;
+uint32_t drv_PWM_assertCnt      = 0;
 volatile bool freq_scan_enabled = false;
 volatile bool DR_scan_enabled   = false;
 
@@ -241,31 +241,42 @@ int main(void) {
     /* USER CODE BEGIN WHILE */
     while (1) {
         /* DRV8833 Frequency Control */
-        if (drv_PWM_freq == 0)
-            drv_PWM_cnt = drv_PWM_cnt;
-        else {
-            drv_PWM_cnt       = 100000 / drv_PWM_freq;
+        if (drv_PWM_freq > 0.0f) {
+            // TIM1 中断频率 = 100kHz  (72MHz / 72 / 10)
+            const float baseFreq = 100000.0f;
+            // 计算一个周期所需的中断次数
+            float cnt_f       = baseFreq / drv_PWM_freq;
+            drv_PWM_cnt       = (uint32_t)(cnt_f + 0.5f); // 四舍五入，保证频率尽可能接近
+            float assert_f    = cnt_f * (drv_PWM_DR / 100.0f);
+            drv_PWM_assertCnt = (uint32_t)(assert_f + 0.5f); // 同样四舍五入
             drv_PWM_halfCnt   = drv_PWM_cnt / 2;
-            drv_PWM_assertCnt = (uint32_t)(drv_PWM_cnt * drv_PWM_DR / 100);
         }
-        // DRV_updateDirection(&hdrv1, &hdrv1.CHANNEL_A);
 
         /* LDC Data Get and Transmit */
         if (ldc2_isWorking && ldc2_isReading && ldc2_dataReady) {
             ldc2_dataReady = false;
 
+            static uint32_t last_LHR_sent = 0;
+            static bool first_LHR_sent    = true;
+
             LHR_data = ldc1101_getLHRData(&ldc2);
             // LHR_data -= 3220000;
+            if (!first_LHR_sent && (LHR_data == last_LHR_sent)) {
+                continue;
+            }
+            last_LHR_sent  = LHR_data;
+            first_LHR_sent = false;
             // === frame [LHR(4B)][Freq(2B)][Duty(1B)][Level(1B)][Pad(2B)] ===
-            frame[0] = (uint8_t)(LHR_data);
-            frame[1] = (uint8_t)(LHR_data >> 8);
-            frame[2] = (uint8_t)(LHR_data >> 16);
-            frame[3] = (uint8_t)(LHR_data >> 24);
-            frame[4] = (uint8_t)(drv_PWM_freq);
-            frame[5] = (uint8_t)(drv_PWM_freq >> 8);
-            frame[6] = drv_PWM_DR;
-            frame[7] = (uint8_t)drv_excitingLevel;
-            frame[8] = 0xAA;
+            frame[0]             = (uint8_t)(LHR_data);
+            frame[1]             = (uint8_t)(LHR_data >> 8);
+            frame[2]             = (uint8_t)(LHR_data >> 16);
+            frame[3]             = (uint8_t)(LHR_data >> 24);
+            uint16_t freq_scaled = (uint16_t)(drv_PWM_freq * 100.0f);
+            frame[4]             = (uint8_t)(freq_scaled);
+            frame[5]             = (uint8_t)(freq_scaled >> 8);
+            frame[6]             = (uint8_t)(drv_PWM_DR);
+            frame[7]             = (uint8_t)drv_excitingLevel;
+            frame[8]             = 0xAA;
 
             // ===== enqueue frame into ring buffer =====
             bool frame_enqueued = UART3_EnqueueFrame(frame, sizeof(frame));

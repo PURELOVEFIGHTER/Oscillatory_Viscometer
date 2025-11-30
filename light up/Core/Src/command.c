@@ -9,8 +9,8 @@ extern UART_HandleTypeDef huart1;
 extern char UART1_RX_DMA_buffer[2][MSG_LEN];
 extern char UART1_TX_buffer[MSG_LEN];
 
-extern uint16_t drv_PWM_freq;
-extern uint8_t drv_PWM_DR;
+extern float drv_PWM_freq;
+extern float drv_PWM_DR;
 
 extern LDC1101_HandleTypeDef ldc2;
 extern bool isLHR;
