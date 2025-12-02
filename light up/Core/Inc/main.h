@@ -71,6 +71,7 @@ extern volatile bool DR_scan_enabled;
 extern volatile bool drv_excitingLevel;
 extern float drv_PWM_freq;
 extern float drv_PWM_DR;
+extern bool drv_PWM_isChanged;
 extern uint32_t drv_PWM_cnt;
 extern uint32_t drv_PWM_halfCnt;
 extern uint32_t drv_PWM_assertCnt;
@@ -101,6 +102,10 @@ extern uint8_t * volatile UART3_TX_head;
 extern uint8_t * volatile UART3_TX_tail;
 extern volatile bool UART3_DMA_busy;
 void UART3_KickTx(void);
+/* KEY */
+extern volatile uint8_t key_pending;
+extern volatile uint32_t key_time;
+void Key_Process(void);
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

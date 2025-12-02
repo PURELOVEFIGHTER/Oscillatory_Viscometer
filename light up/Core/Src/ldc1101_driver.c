@@ -49,8 +49,8 @@ uint8_t ldc1101_init(LDC1101_HandleTypeDef *dev, uint8_t RP_MIN) {
                       _LDC1101_INTB_MODE_REPORT_INTB_ON_SDO_PIN | _LDC1101_INTB_MODE_REPORT_LHR_DATA_READY);
 
     // 计数周期
-    ldc1101_writeByte(dev, _LDC1101_REG_LHR_RCOUNT_LSB, 0x49);
-    ldc1101_writeByte(dev, _LDC1101_REG_LHR_RCOUNT_MSB, 0x01);
+    ldc1101_writeByte(dev, _LDC1101_REG_LHR_RCOUNT_LSB, 0xA5);
+    ldc1101_writeByte(dev, _LDC1101_REG_LHR_RCOUNT_MSB, 0x00);
 
     // 在静止状态下读取偏移量再进行设置
     ldc1101_writeByte(dev, _LDC1101_REG_LHR_OFFSET_LSB, 0x00);

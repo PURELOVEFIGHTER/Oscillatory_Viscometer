@@ -20,12 +20,14 @@ void Command_Parse(void) {
     /* 设置占空比 */
     if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "DR:", 3) == 0) {
         drv_PWM_DR = atoi(&UART1_RX_DMA_buffer[UART1_RX_activeBuffer][3]);
+        drv_PWM_isChanged = true;
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
         sprintf(UART1_TX_buffer, "PWM_DR set to %d\r\n", drv_PWM_DR);
     }
     /* 设置频率 */
     else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "FR:", 3) == 0) {
         drv_PWM_freq = atoi(&UART1_RX_DMA_buffer[UART1_RX_activeBuffer][3]);
+        drv_PWM_isChanged = true;
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
         sprintf(UART1_TX_buffer, "PWM_FREQ set to %dHz\r\n", drv_PWM_freq);
     }

@@ -321,8 +321,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
         if (freq_scan_enabled) {
             if (tim4_cnt > FREQ_SCAN_HOLD_TIME_MS) {
-                tim4_cnt     = 0;
+                tim4_cnt = 0;
                 drv_PWM_freq += FREQ_SCAN_STEP_HZ;
+                drv_PWM_isChanged = true;
                 if (drv_PWM_freq >= FREQ_SCAN_END_HZ) {
                     freq_scan_enabled = false;
                     HAL_TIM_Base_Stop_IT(&htim4);
@@ -331,8 +332,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         }
         if (DR_scan_enabled) {
             if (tim4_cnt > DUTY_RATIO_SCAN_HOLD_TIME_MS) {
-                tim4_cnt     = 0;
+                tim4_cnt = 0;
                 drv_PWM_DR += DUTY_RATIO_SCAN_STEP;
+                drv_PWM_isChanged = true;
                 if (drv_PWM_DR >= DUTY_RATIO_SCAN_END) {
                     DR_scan_enabled = false;
                     HAL_TIM_Base_Stop_IT(&htim4);
@@ -372,30 +374,8 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     if (GPIO_Pin == GPIO_PIN_11) {
-        ldc2_isReading = !ldc2_isReading;
-        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
-        if (ldc2_isReading) {
-            sprintf(UART1_TX_buffer, "Reading LHR Data.\r\n");
-            ldc2_dataReady      = false;
-            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-            HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH1);
-            HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH2);
-            HAL_TIM_Base_Start_IT(&htim1);
-        } else {// ldc2_isReading == false
-            HAL_TIM_PWM_Stop(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH1);
-            HAL_TIM_PWM_Stop(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH2);
-            HAL_TIM_Base_Stop_IT(&htim1);
-            sprintf(UART1_TX_buffer, "Stopped LHR Data Reading.\r\n");
-            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
-            ldc2_dataReady = false;
-            HAL_UART_DMAStop(&huart3);
-            uint32_t primask = __get_PRIMASK();
-            __disable_irq();
-            UART3_TX_head = UART3_TX_tail = UART3_TX_buffer;
-            UART3_DMA_busy                = false;
-            __set_PRIMASK(primask);
-        }
-        UART1_TX_send = true;
+        key_pending = 1;
+        key_time    = HAL_GetTick() + 10;
     }
     if (GPIO_Pin == GPIO_PIN_12) {
         if (ldc2_isReading) {

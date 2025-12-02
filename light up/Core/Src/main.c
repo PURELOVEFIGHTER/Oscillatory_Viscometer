@@ -65,6 +65,7 @@ DRV8833_HandleTypeDef hdrv1 = {
 volatile bool drv_excitingLevel = 0;
 float drv_PWM_freq              = 200.0f;
 float drv_PWM_DR                = 50.0f;
+bool drv_PWM_isChanged          = true;
 uint32_t drv_PWM_cnt            = 0;
 uint32_t drv_PWM_halfCnt        = 0;
 uint32_t drv_PWM_assertCnt      = 0;
@@ -94,7 +95,9 @@ uint8_t frame[9];
 uint8_t * volatile UART3_TX_head = UART3_TX_buffer;
 uint8_t * volatile UART3_TX_tail = UART3_TX_buffer;
 volatile bool UART3_DMA_busy     = false;
-
+/* KEY ------------------------------------------------------------*/
+volatile uint8_t key_pending = 0;
+volatile uint32_t key_time   = 0;
 /* OLED -----------------------------------------------------------*/
 char OLED_Line1[20];
 char OLED_Line2[20];
@@ -172,6 +175,33 @@ void UART3_KickTx(void) {
     }
 }
 
+void Key_Process(void) {
+    ldc2_isReading = !ldc2_isReading;
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
+    if (ldc2_isReading) {
+        sprintf(UART1_TX_buffer, "Reading LHR Data.\r\n");
+        ldc2_dataReady = false;
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
+        HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH1);
+        HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH2);
+        HAL_TIM_Base_Start_IT(&htim1);
+    } else { // ldc2_isReading == false
+        HAL_TIM_PWM_Stop(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH1);
+        HAL_TIM_PWM_Stop(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH2);
+        HAL_TIM_Base_Stop_IT(&htim1);
+        sprintf(UART1_TX_buffer, "Stopped LHR Data Reading.\r\n");
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
+        ldc2_dataReady = false;
+        HAL_UART_DMAStop(&huart3);
+        uint32_t primask = __get_PRIMASK();
+        __disable_irq();
+        UART3_TX_head = UART3_TX_tail = UART3_TX_buffer;
+        UART3_DMA_busy                = false;
+        memset(UART3_TX_buffer, 0, sizeof(UART3_TX_buffer));
+        __set_PRIMASK(primask);
+    }
+    UART1_TX_send = true;
+}
 /* USER CODE END 0 */
 
 /**
@@ -224,7 +254,6 @@ int main(void) {
     DRV_Init(&hdrv1);
     sprintf(UART1_TX_buffer, "[DRV8833]Oscillation On.\r\n");
     HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
-    // printf("[DRV8833]Oscillation On.\r\n");
 
     /* LDC1101 Init */
     if (ldc1101_init(&ldc2, _LDC1101_RP_SET_RP_MIN_1_5KOhm)) {
@@ -240,32 +269,30 @@ int main(void) {
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
     while (1) {
+        /* KEY Press Process */
+        if (key_pending && HAL_GetTick() > key_time) {
+            key_pending = 0;
+            if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET) {
+                Key_Process();
+            }
+        }
         /* DRV8833 Frequency Control */
-        if (drv_PWM_freq > 0.0f) {
-            // TIM1 中断频率 = 100kHz  (72MHz / 72 / 10)
+        if (drv_PWM_isChanged) {
+            // TIM1 Interrupt Frequency = 100kHz  (72MHz / 72 / 10)
             const float baseFreq = 100000.0f;
-            // 计算一个周期所需的中断次数
+            // Calculate the number of interrupts needed for one period
             float cnt_f       = baseFreq / drv_PWM_freq;
-            drv_PWM_cnt       = (uint32_t)(cnt_f + 0.5f); // 四舍五入，保证频率尽可能接近
+            drv_PWM_cnt       = (uint32_t)(cnt_f + 0.5f);
             float assert_f    = cnt_f * (drv_PWM_DR / 100.0f);
-            drv_PWM_assertCnt = (uint32_t)(assert_f + 0.5f); // 同样四舍五入
+            drv_PWM_assertCnt = (uint32_t)(assert_f + 0.5f);
             drv_PWM_halfCnt   = drv_PWM_cnt / 2;
         }
 
         /* LDC Data Get and Transmit */
         if (ldc2_isWorking && ldc2_isReading && ldc2_dataReady) {
             ldc2_dataReady = false;
-
-            static uint32_t last_LHR_sent = 0;
-            static bool first_LHR_sent    = true;
-
-            LHR_data = ldc1101_getLHRData(&ldc2);
+            LHR_data       = ldc1101_getLHRData(&ldc2);
             // LHR_data -= 3220000;
-            if (!first_LHR_sent && (LHR_data == last_LHR_sent)) {
-                continue;
-            }
-            last_LHR_sent  = LHR_data;
-            first_LHR_sent = false;
             // === frame [LHR(4B)][Freq(2B)][Duty(1B)][Level(1B)][Pad(2B)] ===
             frame[0]             = (uint8_t)(LHR_data);
             frame[1]             = (uint8_t)(LHR_data >> 8);
@@ -274,7 +301,7 @@ int main(void) {
             uint16_t freq_scaled = (uint16_t)(drv_PWM_freq * 100.0f);
             frame[4]             = (uint8_t)(freq_scaled);
             frame[5]             = (uint8_t)(freq_scaled >> 8);
-            frame[6]             = (uint8_t)(drv_PWM_DR);
+            frame[6]             = (uint8_t)drv_PWM_DR;
             frame[7]             = (uint8_t)drv_excitingLevel;
             frame[8]             = 0xAA;
 
@@ -286,7 +313,6 @@ int main(void) {
                 UART3_KickTx();
             }
         }
-
         /* UART1 Transmission */
         if (UART1_TX_send) {
             HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
