@@ -87,6 +87,7 @@ extern uint8_t LDC_status;
 extern uint16_t Rp_data;
 extern uint16_t L_data;
 extern uint32_t LHR_data;
+extern uint32_t LHR_dataLast;
 /* UART -----------------------------------------------------------*/
 #define MSG_LEN 64
 /* UART1 */

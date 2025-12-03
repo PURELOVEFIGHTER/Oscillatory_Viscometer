@@ -73,15 +73,15 @@ volatile bool freq_scan_enabled = false;
 volatile bool DR_scan_enabled   = false;
 
 /* LDC1101 --------------------------------------------------------*/
-LDC1101_HandleTypeDef ldc2        = {&hspi2, LDC2_CS_GPIO_PORT, LDC2_CS_PIN};
-volatile bool ldc2_isWorking      = false;
-volatile bool ldc2_isReading      = false;
-volatile bool ldc2_dataReady      = false;
-uint16_t Rp_data                  = 0;
-uint16_t L_data                   = 0;
-uint32_t LHR_data                 = 0;
-volatile uint8_t ldc2_skipSamples = 0;
-uint8_t LDC_status                = 0;
+LDC1101_HandleTypeDef ldc2   = {&hspi2, LDC2_CS_GPIO_PORT, LDC2_CS_PIN};
+volatile bool ldc2_isWorking = false;
+volatile bool ldc2_isReading = false;
+volatile bool ldc2_dataReady = false;
+uint16_t Rp_data             = 0;
+uint16_t L_data              = 0;
+uint32_t LHR_data            = 0;
+uint32_t LHR_dataLast        = 0;
+uint8_t LDC_status           = 0;
 
 /* UART -----------------------------------------------------------*/
 /* UART1 */
@@ -186,13 +186,15 @@ void Key_Process(void) {
         HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH2);
         HAL_TIM_Base_Start_IT(&htim1);
     } else { // ldc2_isReading == false
+        sprintf(UART1_TX_buffer, "Stopped LHR Data Reading.\r\n");
+        ldc2_dataReady = false;
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
         HAL_TIM_PWM_Stop(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH1);
         HAL_TIM_PWM_Stop(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH2);
         HAL_TIM_Base_Stop_IT(&htim1);
-        sprintf(UART1_TX_buffer, "Stopped LHR Data Reading.\r\n");
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
-        ldc2_dataReady = false;
+
         HAL_UART_DMAStop(&huart3);
+        
         uint32_t primask = __get_PRIMASK();
         __disable_irq();
         UART3_TX_head = UART3_TX_tail = UART3_TX_buffer;
@@ -289,9 +291,13 @@ int main(void) {
         }
 
         /* LDC Data Get and Transmit */
-        if (ldc2_isWorking && ldc2_isReading && ldc2_dataReady) {
+        if (ldc2_isReading && ldc2_dataReady) {
             ldc2_dataReady = false;
+            LHR_dataLast   = LHR_data;
             LHR_data       = ldc1101_getLHRData(&ldc2);
+            if (LHR_data == LHR_dataLast) {
+                continue;
+            }
             // LHR_data -= 3220000;
             // === frame [LHR(4B)][Freq(2B)][Duty(1B)][Level(1B)][Pad(2B)] ===
             frame[0]             = (uint8_t)(LHR_data);

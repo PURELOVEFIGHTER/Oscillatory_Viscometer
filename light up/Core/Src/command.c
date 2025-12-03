@@ -19,32 +19,44 @@ extern uint8_t LDC_status;
 void Command_Parse(void) {
     /* 设置占空比 */
     if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "DR:", 3) == 0) {
-        drv_PWM_DR = atoi(&UART1_RX_DMA_buffer[UART1_RX_activeBuffer][3]);
+        drv_PWM_DR        = atoi(&UART1_RX_DMA_buffer[UART1_RX_activeBuffer][3]);
         drv_PWM_isChanged = true;
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
-        sprintf(UART1_TX_buffer, "PWM_DR set to %d\r\n", drv_PWM_DR);
+        sprintf(UART1_TX_buffer, "PWM_DR set to %.2f\
+            %\r\n",
+                drv_PWM_DR);
     }
     /* 设置频率 */
     else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "FR:", 3) == 0) {
-        drv_PWM_freq = atoi(&UART1_RX_DMA_buffer[UART1_RX_activeBuffer][3]);
+        drv_PWM_freq      = atoi(&UART1_RX_DMA_buffer[UART1_RX_activeBuffer][3]);
         drv_PWM_isChanged = true;
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
-        sprintf(UART1_TX_buffer, "PWM_FREQ set to %dHz\r\n", drv_PWM_freq);
+        sprintf(UART1_TX_buffer, "PWM_FREQ set to %.2fHz\r\n", drv_PWM_freq);
     }
     /* 启动频率扫描 */
-    else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "FR Sweep", 8) == 0) {
+    else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "FR Scan", 7) == 0) {
         freq_scan_enabled = true;
         drv_PWM_freq      = FREQ_SCAN_START_HZ;
+        ldc2_isReading    = true;
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
+        HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH1);
+        HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH2);
+        HAL_TIM_Base_Start_IT(&htim1);
         HAL_TIM_Base_Start_IT(&htim4);
-        sprintf(UART1_TX_buffer, "Frequency sweeping start.\r\n");
+        sprintf(UART1_TX_buffer, "Frequency scan start.\r\n");
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
     }
     /* 启动占空比扫描 */
-    else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "DR Sweep", 8) == 0) {
+    else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "DR Scan", 7) == 0) {
         DR_scan_enabled = true;
         drv_PWM_DR      = DUTY_RATIO_SCAN_START;
+        ldc2_isReading  = true;
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
+        HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH1);
+        HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH2);
+        HAL_TIM_Base_Start_IT(&htim1);
         HAL_TIM_Base_Start_IT(&htim4);
-        sprintf(UART1_TX_buffer, "Duty Ratio sweeping start.\r\n");
+        sprintf(UART1_TX_buffer, "Duty Ratio scan start.\r\n");
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
     }
     /* 读取LDC寄存器 */

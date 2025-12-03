@@ -6,6 +6,7 @@ extern "C" {
 /* =========================================================
  *                     ??????
  * ========================================================= */
+#define FREQ_SCAN_DEFAULT_HZ   200
 #define FREQ_SCAN_START_HZ     150 // ??????
 #define FREQ_SCAN_END_HZ       250 // ??????
 #define FREQ_SCAN_STEP_HZ      1   // ??????
@@ -14,6 +15,7 @@ extern "C" {
 /* =========================================================
  *                  ??????????
  * ========================================================= */
+#define DUTY_RATIO_DEFAULT           50
 #define DUTY_RATIO_SCAN_START        0   // ????????
 #define DUTY_RATIO_SCAN_END          100 // ????????
 #define DUTY_RATIO_SCAN_STEP         1   // ????????

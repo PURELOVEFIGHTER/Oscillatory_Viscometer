@@ -324,8 +324,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
                 tim4_cnt = 0;
                 drv_PWM_freq += FREQ_SCAN_STEP_HZ;
                 drv_PWM_isChanged = true;
-                if (drv_PWM_freq >= FREQ_SCAN_END_HZ) {
+                if (drv_PWM_freq > FREQ_SCAN_END_HZ) {
+                    drv_PWM_freq      = FREQ_SCAN_DEFAULT_HZ;
                     freq_scan_enabled = false;
+                    ldc2_isReading    = false;
                     HAL_TIM_Base_Stop_IT(&htim4);
                 }
             }
@@ -335,8 +337,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
                 tim4_cnt = 0;
                 drv_PWM_DR += DUTY_RATIO_SCAN_STEP;
                 drv_PWM_isChanged = true;
-                if (drv_PWM_DR >= DUTY_RATIO_SCAN_END) {
+                if (drv_PWM_DR > DUTY_RATIO_SCAN_END) {
+                    drv_PWM_DR      = DUTY_RATIO_DEFAULT;
                     DR_scan_enabled = false;
+                    ldc2_isReading  = false;
                     HAL_TIM_Base_Stop_IT(&htim4);
                 }
             }
