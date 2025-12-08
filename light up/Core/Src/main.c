@@ -194,7 +194,7 @@ void Key_Process(void) {
         HAL_TIM_Base_Stop_IT(&htim1);
 
         HAL_UART_DMAStop(&huart3);
-        
+
         uint32_t primask = __get_PRIMASK();
         __disable_irq();
         UART3_TX_head = UART3_TX_tail = UART3_TX_buffer;
@@ -295,9 +295,9 @@ int main(void) {
             ldc2_dataReady = false;
             LHR_dataLast   = LHR_data;
             LHR_data       = ldc1101_getLHRData(&ldc2);
-            if (LHR_data == LHR_dataLast) {
-                continue;
-            }
+            // if (LHR_data == LHR_dataLast) {
+            //     continue;
+            // }
             // LHR_data -= 3220000;
             // === frame [LHR(4B)][Freq(2B)][Duty(1B)][Level(1B)][Pad(2B)] ===
             frame[0]             = (uint8_t)(LHR_data);
