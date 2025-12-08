@@ -175,6 +175,20 @@ void UART3_KickTx(void) {
     }
 }
 
+void UART1_Log(const char *level, const char *file, int line, const char *message) {
+    uint32_t ticks   = HAL_GetTick();
+    uint32_t hours   = ticks / 3600000U;
+    uint32_t minutes = (ticks / 60000U) % 60U;
+    uint32_t seconds = (ticks / 1000U) % 60U;
+    uint32_t millis  = ticks % 1000U;
+    char time_buf[16];
+    snprintf(time_buf, sizeof(time_buf), "%02lu:%02lu:%02lu.%03lu", (unsigned long)hours, (unsigned long)minutes,
+             (unsigned long)seconds, (unsigned long)millis);
+
+    snprintf(UART1_TX_buffer, MSG_LEN, "[%s] [%s] [%s:%d] %s\r\n", level, time_buf, file, line, message);
+    HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
+}
+
 void Key_Process(void) {
     ldc2_isReading = !ldc2_isReading;
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
@@ -254,16 +268,23 @@ int main(void) {
 
     /* DRV8833 Init */
     DRV_Init(&hdrv1);
-    sprintf(UART1_TX_buffer, "[DRV8833]Oscillation On.\r\n");
-    HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
+    UART1_Log("INFO", "main.c", __LINE__, "DRV8833 Initialization Done...");
 
     /* LDC1101 Init */
     if (ldc1101_init(&ldc2, _LDC1101_RP_SET_RP_MIN_1_5KOhm)) {
-        sprintf(UART1_TX_buffer, "[LDC1101]LDC1101 Initialization Failed.\r\n");
-        HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
+        UART1_Log("ERROR", "main.c", __LINE__, "LDC1101 Initialization Failed...");
     } else {
-        sprintf(UART1_TX_buffer, "[LDC1101]LDC1101 Initialization Done.\r\n");
-        HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
+        UART1_Log("INFO", "main.c", __LINE__, "LDC1101 Initialization Done...");
+        uint16_t rcount = (uint16_t)(ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_RCOUNT_LSB));
+        rcount |= (uint16_t)(ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_RCOUNT_MSB) << 8);
+        const float f_clk_hz    = 16000000.0f;                 // 16 MHz crystal
+        const float conv_cycles = (float)(rcount * 16U + 55U); // RCOUNT*16 + 55 reference cycles
+        float sample_rate_hz    = f_clk_hz / conv_cycles;
+        float sample_rate_ksps  = sample_rate_hz / 1000.0f;
+        char trace_msg[64];
+        snprintf(trace_msg, sizeof(trace_msg), "LDC1101 sample rate: %.3f kSPS (RCOUNT=0x%04X)", sample_rate_ksps,
+                 rcount);
+        UART1_Log("TRACE", "main.c", __LINE__, trace_msg);
         ldc2_isWorking = true;
     }
     /* USER CODE END 2 */

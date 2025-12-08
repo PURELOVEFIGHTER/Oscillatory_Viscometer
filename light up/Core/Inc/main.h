@@ -89,7 +89,7 @@ extern uint16_t L_data;
 extern uint32_t LHR_data;
 extern uint32_t LHR_dataLast;
 /* UART -----------------------------------------------------------*/
-#define MSG_LEN 64
+#define MSG_LEN 128
 /* UART1 */
 extern volatile uint8_t UART1_RX_activeBuffer;
 extern char UART1_RX_DMA_buffer[2][MSG_LEN];
@@ -103,6 +103,7 @@ extern uint8_t * volatile UART3_TX_head;
 extern uint8_t * volatile UART3_TX_tail;
 extern volatile bool UART3_DMA_busy;
 void UART3_KickTx(void);
+void UART1_Log(const char *level, const char *file, int line, const char *message);
 /* KEY */
 extern volatile uint8_t key_pending;
 extern volatile uint32_t key_time;
