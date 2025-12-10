@@ -39,8 +39,8 @@ extern "C" {
 // #define DRV_BIN1_PWM_CH1 0
 // #define DRV_BIN2_PWM_CH2 0
 /* *************** Sleep Pin *************** */
-#define DRV_nSLEEP_GPIO_PORT GPIOA
-#define DRV_nSLEEP_PIN       GPIO_PIN_2
+#define DRV_nSLEEP_GPIO_PORT GPIOB
+#define DRV_nSLEEP_PIN       GPIO_PIN_3
 
 #ifdef __cplusplus
 }
