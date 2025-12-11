@@ -113,6 +113,20 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void DRV_Start(DRV8833_Channel *ch, TIM_HandleTypeDef *htim) {
+    HAL_TIM_PWM_Start(ch->htim, ch->CH1);
+    HAL_TIM_PWM_Start(ch->htim, ch->CH2);
+
+    HAL_TIM_Base_Start_IT(htim);
+}
+
+void DRV_Stop(DRV8833_Channel *ch, TIM_HandleTypeDef *htim) {
+    HAL_TIM_PWM_Stop(ch->htim, ch->CH1);
+    HAL_TIM_PWM_Stop(ch->htim, ch->CH2);
+
+    HAL_TIM_Base_Stop_IT(htim);
+}
+
 static uint16_t UART3_BufferUsedUnsafe(void) {
     const uint16_t buffer_len = sizeof(UART3_TX_buffer);
     uint16_t head_offset      = (uint16_t)(UART3_TX_head - UART3_TX_buffer);
@@ -126,14 +140,14 @@ static uint16_t UART3_BufferUsedUnsafe(void) {
 
 static bool UART3_EnqueueFrame(const uint8_t *data, uint16_t len) {
     uint32_t primask = __get_PRIMASK();
-    __disable_irq();
+    __disable_irq(); /* Critical Section Begin */
 
     const uint16_t buffer_len = sizeof(UART3_TX_buffer);
     uint16_t used             = UART3_BufferUsedUnsafe();
     uint16_t free_space       = buffer_len - used - 1;
 
     if (free_space < len) {
-        __set_PRIMASK(primask);
+        __set_PRIMASK(primask); /* Critical Section End */
         return false;
     }
 
@@ -144,15 +158,15 @@ static bool UART3_EnqueueFrame(const uint8_t *data, uint16_t len) {
             UART3_TX_head = UART3_TX_buffer;
         }
     }
-    __set_PRIMASK(primask);
+    __set_PRIMASK(primask); /* Critical Section End */
     return true;
 }
 
 void UART3_KickTx(void) {
     uint32_t primask = __get_PRIMASK();
-    __disable_irq();
+    __disable_irq(); /* Critical Section Begin */
     if (UART3_DMA_busy || (UART3_TX_head == UART3_TX_tail)) {
-        __set_PRIMASK(primask);
+        __set_PRIMASK(primask); /* Critical Section End */
         return;
     }
 
@@ -169,9 +183,9 @@ void UART3_KickTx(void) {
 
     if (HAL_UART_Transmit_DMA(&huart3, start, size) != HAL_OK) {
         primask = __get_PRIMASK();
-        __disable_irq();
+        __disable_irq(); /* Critical Section Begin */
         UART3_DMA_busy = false;
-        __set_PRIMASK(primask);
+        __set_PRIMASK(primask); /* Critical Section End */
     }
 }
 
@@ -194,27 +208,21 @@ void Key_Process(void) {
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
     if (ldc2_isReading) {
         sprintf(UART1_TX_buffer, "Reading LHR Data.\r\n");
-        ldc2_dataReady = false;
         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-        HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH1);
-        HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH2);
-        HAL_TIM_Base_Start_IT(&htim1);
+        DRV_Start(&hdrv1.CHANNEL_A, &htim1);
     } else { // ldc2_isReading == false
         sprintf(UART1_TX_buffer, "Stopped LHR Data Reading.\r\n");
-        ldc2_dataReady = false;
         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
-        HAL_TIM_PWM_Stop(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH1);
-        HAL_TIM_PWM_Stop(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH2);
-        HAL_TIM_Base_Stop_IT(&htim1);
+        DRV_Stop(&hdrv1.CHANNEL_A, &htim1);
 
         HAL_UART_DMAStop(&huart3);
 
         uint32_t primask = __get_PRIMASK();
-        __disable_irq();
+        __disable_irq(); /* Critical Section Begin */
         UART3_TX_head = UART3_TX_tail = UART3_TX_buffer;
         UART3_DMA_busy                = false;
         memset(UART3_TX_buffer, 0, sizeof(UART3_TX_buffer));
-        __set_PRIMASK(primask);
+        __set_PRIMASK(primask); /* Critical Section End */
     }
     UART1_TX_send = true;
 }
@@ -311,6 +319,7 @@ int main(void)
             float assert_f    = cnt_f * (drv_PWM_DR / 100.0f);
             drv_PWM_assertCnt = (uint32_t)(assert_f + 0.5f);
             drv_PWM_halfCnt   = drv_PWM_cnt / 2;
+            drv_PWM_isChanged = false;
         }
 
         /* LDC Data Get and Transmit */

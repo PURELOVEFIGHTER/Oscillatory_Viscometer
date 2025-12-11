@@ -338,7 +338,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (htim->Instance == TIM4) {
         static uint8_t tim4_cnt = 0;
         tim4_cnt++;
-
         if (freq_scan_enabled) {
             if (tim4_cnt > FREQ_SCAN_HOLD_TIME_MS) {
                 tim4_cnt = 0;
@@ -350,9 +349,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
                     drv_PWM_freq      = FREQ_SCAN_DEFAULT_HZ;
                     HAL_TIM_Base_Stop_IT(&htim4);
                     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
-                    HAL_TIM_PWM_Stop(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH1);
-                    HAL_TIM_PWM_Stop(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH2);
-                    HAL_TIM_Base_Stop_IT(&htim1);
+                    DRV_Stop(&hdrv1.CHANNEL_A, &htim1);
                 }
             }
         }
@@ -367,9 +364,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
                     drv_PWM_DR      = DUTY_RATIO_DEFAULT;
                     HAL_TIM_Base_Stop_IT(&htim4);
                     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
-                    HAL_TIM_PWM_Stop(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH1);
-                    HAL_TIM_PWM_Stop(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH2);
-                    HAL_TIM_Base_Stop_IT(&htim1);
+                    DRV_Stop(&hdrv1.CHANNEL_A, &htim1);
                 }
             }
         }

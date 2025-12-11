@@ -22,8 +22,7 @@ void Command_Parse(void) {
         drv_PWM_DR        = atoi(&UART1_RX_DMA_buffer[UART1_RX_activeBuffer][3]);
         drv_PWM_isChanged = true;
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
-        sprintf(UART1_TX_buffer, "PWM_DR set to %.2f\
-            %\r\n",
+        sprintf(UART1_TX_buffer, "PWM_DR set to %.2f%%\r\n",
                 drv_PWM_DR);
     }
     /* 设置频率 */
