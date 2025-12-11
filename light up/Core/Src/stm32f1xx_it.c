@@ -42,7 +42,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+volatile uint32_t key_block;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -383,10 +383,12 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     if (GPIO_Pin == GPIO_PIN_11) {
-        key_pending = 1;
-        key_time    = HAL_GetTick() + 10;
-    }
-    if (GPIO_Pin == GPIO_PIN_12) {
+        uint32_t now = HAL_GetTick();
+        if (now < key_block)
+            return;
+        Key_Process();
+        key_block = now + 30;
+    } else if (GPIO_Pin == GPIO_PIN_12) {
         ldc2_dataReady = true;
     }
 }

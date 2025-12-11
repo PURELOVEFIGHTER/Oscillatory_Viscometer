@@ -297,13 +297,6 @@ int main(void) {
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
     while (1) {
-        /* KEY Press Process */
-        if (key_pending && HAL_GetTick() > key_time) {
-            key_pending = 0;
-            if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO_PIN_RESET) {
-                Key_Process();
-            }
-        }
         /* DRV8833 Frequency Control */
         if (drv_PWM_isChanged) {
             // TIM1 Interrupt Frequency = 100kHz  (72MHz / 72 / 10)

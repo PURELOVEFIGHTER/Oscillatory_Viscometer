@@ -105,8 +105,6 @@ extern volatile bool UART3_DMA_busy;
 void UART3_KickTx(void);
 void UART1_Log(const char *level, const char *file, int line, const char *message);
 /* KEY */
-extern volatile uint8_t key_pending;
-extern volatile uint32_t key_time;
 void Key_Process(void);
 /* USER CODE END Private defines */
 
