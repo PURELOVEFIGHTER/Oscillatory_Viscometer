@@ -22,8 +22,7 @@ void Command_Parse(void) {
         drv_PWM_DR        = atoi(&UART1_RX_DMA_buffer[UART1_RX_activeBuffer][3]);
         drv_PWM_isChanged = true;
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
-        sprintf(UART1_TX_buffer, "PWM_DR set to %.2f%%\r\n",
-                drv_PWM_DR);
+        sprintf(UART1_TX_buffer, "PWM_DR set to %.2f%%\r\n", drv_PWM_DR);
     }
     /* 设置频率 */
     else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "FR:", 3) == 0) {
@@ -35,12 +34,9 @@ void Command_Parse(void) {
     /* 启动频率扫描 */
     else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "FR Scan", 7) == 0) {
         freq_scan_enabled = true;
-        drv_PWM_freq      = FREQ_SCAN_START_HZ;
         ldc2_isReading    = true;
         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-        HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH1);
-        HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH2);
-        HAL_TIM_Base_Start_IT(&htim1);
+        DRV_Start(&hdrv1.CHANNEL_A, &htim1);
         HAL_TIM_Base_Start_IT(&htim4);
         sprintf(UART1_TX_buffer, "Frequency scan start.\r\n");
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
@@ -48,12 +44,9 @@ void Command_Parse(void) {
     /* 启动占空比扫描 */
     else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "DR Scan", 7) == 0) {
         DR_scan_enabled = true;
-        drv_PWM_DR      = DUTY_RATIO_SCAN_START;
         ldc2_isReading  = true;
         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-        HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH1);
-        HAL_TIM_PWM_Start(hdrv1.CHANNEL_A.htim, hdrv1.CHANNEL_A.CH2);
-        HAL_TIM_Base_Start_IT(&htim1);
+        DRV_Start(&hdrv1.CHANNEL_A, &htim1);
         HAL_TIM_Base_Start_IT(&htim4);
         sprintf(UART1_TX_buffer, "Duty Ratio scan start.\r\n");
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
