@@ -1,4 +1,4 @@
-arm-none-eabi-objcopy --update-section ER_IROM1="C:\Users\Administrator\AppData\Local\Temp\\light up_jzSZK180.bin" "d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\build\light up/light up.axf" "d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\build\light up/light up.elf"
+arm-none-eabi-objcopy --update-section ER_IROM1="C:\Users\Administrator\AppData\Local\Temp\\light up_suBpzDYc.bin" "d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\build\light up/light up.axf" "d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\build\light up/light up.elf"
 
 arm-none-eabi-objcopy: d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\build\light up/light up.elf: warning: allocated section `RW_IRAM1' not in segment
 

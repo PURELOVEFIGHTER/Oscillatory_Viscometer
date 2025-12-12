@@ -1,20 +1,20 @@
 >>> cc
 
-".\..\Core\Src\command.c", line 39: Warning:  #223-D: function "DRV_Start" declared implicitly
+".\..\Core\Src\command.c", line 40: Warning:  #223-D: function "DRV_Start" declared implicitly
           DRV_Start(&hdrv1.CHANNEL_A, &htim1);
           ^
-".\..\Core\Src\command.c", line 49: Warning:  #223-D: function "DRV_Start" declared implicitly
+".\..\Core\Src\command.c", line 51: Warning:  #223-D: function "DRV_Start" declared implicitly
           DRV_Start(&hdrv1.CHANNEL_A, &htim1);
           ^
 .\..\Core\Src\command.c: 2 warnings, 0 errors
-".\..\Core\Src\stm32f1xx_it.c", line 333: Warning:  #223-D: function "DRV_Stop" declared implicitly
+".\..\Core\Src\stm32f1xx_it.c", line 332: Warning:  #223-D: function "DRV_Stop" declared implicitly
                       DRV_Stop(&hdrv1.CHANNEL_A, &htim1);
                       ^
-".\..\Core\Src\stm32f1xx_it.c", line 349: Warning:  #223-D: function "DRV_Stop" declared implicitly
+".\..\Core\Src\stm32f1xx_it.c", line 347: Warning:  #223-D: function "DRV_Stop" declared implicitly
                       DRV_Stop(&hdrv1.CHANNEL_A, &htim1);
                       ^
 .\..\Core\Src\stm32f1xx_it.c: 2 warnings, 0 errors
 
 >>> ld
 
-Program Size: Code=23794 RO-data=798 RW-data=164 ZI-data=11940  
+Program Size: Code=23970 RO-data=798 RW-data=164 ZI-data=11940  

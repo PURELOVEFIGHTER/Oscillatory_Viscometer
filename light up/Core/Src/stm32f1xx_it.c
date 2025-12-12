@@ -319,7 +319,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         static uint8_t tim4_cnt = 0;
         tim4_cnt++;
         if (freq_scan_enabled) {
-            drv_PWM_freq = FREQ_SCAN_START_HZ;
             if (tim4_cnt > FREQ_SCAN_HOLD_TIME_MS) {
                 tim4_cnt = 0;
                 drv_PWM_freq += FREQ_SCAN_STEP_HZ;
@@ -335,7 +334,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
             }
         }
         if (DR_scan_enabled) {
-            drv_PWM_DR = DUTY_RATIO_SCAN_START;
             if (tim4_cnt > DUTY_RATIO_SCAN_HOLD_TIME_MS) {
                 tim4_cnt = 0;
                 drv_PWM_DR += DUTY_RATIO_SCAN_STEP;
