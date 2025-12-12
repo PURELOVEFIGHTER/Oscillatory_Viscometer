@@ -199,28 +199,30 @@ void UART1_Log(const char *level, const char *file, int line, const char *messag
     HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
 }
 
+void StartReading(void) {
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
+    DRV_Start(&hdrv1.CHANNEL_A, &htim1);
+    EXTI->IMR |= (1U << 12);
+}
+void StopReading(void) {
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
+    DRV_Stop(&hdrv1.CHANNEL_A, &htim1);
+
+    EXTI->IMR &= ~(1U << 12); // ¹Ø±Õ EXTI12
+
+    HAL_UART_DMAStop(&huart3);
+    UART3_TX_head = UART3_TX_tail = UART3_TX_buffer;
+    memset(UART3_TX_buffer, 0, sizeof(UART3_TX_buffer));
+}
 void Key_Process(void) {
     ldc2_isReading = !ldc2_isReading;
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
-    if (ldc2_isReading) {
-        sprintf(UART1_TX_buffer, "Reading LHR Data.\r\n");
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-        DRV_Start(&hdrv1.CHANNEL_A, &htim1);
-    } else { // ldc2_isReading == false
-        sprintf(UART1_TX_buffer, "Stopped LHR Data Reading.\r\n");
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
-        DRV_Stop(&hdrv1.CHANNEL_A, &htim1);
-
-        HAL_UART_DMAStop(&huart3);
-
-        uint32_t primask = __get_PRIMASK();
-        __disable_irq(); /* Critical Section Begin */
-        UART3_TX_head = UART3_TX_tail = UART3_TX_buffer;
-        UART3_DMA_busy                = false;
-        memset(UART3_TX_buffer, 0, sizeof(UART3_TX_buffer));
-        __set_PRIMASK(primask); /* Critical Section End */
-    }
+    sprintf(UART1_TX_buffer, ldc2_isReading ? "Reading LHR Data.\r\n" : "Stopped LHR Data Reading.\r\n");
     UART1_TX_send = true;
+    if (ldc2_isReading)
+        StartReading();
+    else
+        StopReading();
 }
 /* USER CODE END 0 */
 

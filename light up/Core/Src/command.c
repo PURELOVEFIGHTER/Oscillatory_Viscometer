@@ -36,9 +36,9 @@ void Command_Parse(void) {
         drv_PWM_freq      = FREQ_SCAN_START_HZ;
         freq_scan_enabled = true;
         ldc2_isReading    = true;
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-        DRV_Start(&hdrv1.CHANNEL_A, &htim1);
+        StartReading();
         HAL_TIM_Base_Start_IT(&htim4);
+
         sprintf(UART1_TX_buffer, "Frequency scan start.\r\n");
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
     }
@@ -47,9 +47,9 @@ void Command_Parse(void) {
         drv_PWM_DR      = DUTY_RATIO_SCAN_START;
         DR_scan_enabled = true;
         ldc2_isReading  = true;
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-        DRV_Start(&hdrv1.CHANNEL_A, &htim1);
+        StartReading();
         HAL_TIM_Base_Start_IT(&htim4);
+
         sprintf(UART1_TX_buffer, "Duty Ratio scan start.\r\n");
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
     }
