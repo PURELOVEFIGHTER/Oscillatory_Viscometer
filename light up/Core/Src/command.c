@@ -36,7 +36,6 @@ void Command_Parse(void) {
         drv_PWM_freq      = FREQ_SCAN_START_HZ;
         freq_scan_enabled = true;
         ldc2_isReading    = true;
-        StartReading();
         HAL_TIM_Base_Start_IT(&htim4);
 
         sprintf(UART1_TX_buffer, "Frequency scan start.\r\n");
@@ -47,7 +46,6 @@ void Command_Parse(void) {
         drv_PWM_DR      = DUTY_RATIO_SCAN_START;
         DR_scan_enabled = true;
         ldc2_isReading  = true;
-        StartReading();
         HAL_TIM_Base_Start_IT(&htim4);
 
         sprintf(UART1_TX_buffer, "Duty Ratio scan start.\r\n");

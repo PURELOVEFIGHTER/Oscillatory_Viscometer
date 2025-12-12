@@ -73,22 +73,23 @@ volatile bool freq_scan_enabled = false;
 volatile bool DR_scan_enabled   = false;
 
 /* LDC1101 --------------------------------------------------------*/
-LDC1101_HandleTypeDef ldc2   = {&hspi2, LDC2_CS_GPIO_PORT, LDC2_CS_PIN};
-volatile bool ldc2_isWorking = false;
-volatile bool ldc2_isReading = false;
-volatile bool ldc2_dataReady = false;
-uint16_t Rp_data             = 0;
-uint16_t L_data              = 0;
-uint32_t LHR_data            = 0;
-uint32_t LHR_dataLast        = 0;
-uint8_t LDC_status           = 0;
+LDC1101_HandleTypeDef ldc2       = {&hspi2, LDC2_CS_GPIO_PORT, LDC2_CS_PIN};
+volatile bool ldc2_isWorking     = false;
+volatile bool ldc2_isReading     = false;
+volatile bool ldc2_isReadingPrev = false;
+volatile bool ldc2_dataReady     = false;
+uint8_t LDC_status               = 0;
+uint16_t Rp_data                 = 0;
+uint16_t L_data                  = 0;
+uint32_t LHR_data                = 0;
+uint32_t LHR_dataLast            = 0;
 
 /* UART -----------------------------------------------------------*/
 /* UART1 */
-char UART1_RX_DMA_buffer[2][MSG_LEN];
 volatile uint8_t UART1_RX_activeBuffer = 0;
+char UART1_RX_DMA_buffer[2][MSG_LEN]   = {0};
+char UART1_TX_buffer[MSG_LEN]          = {0};
 bool UART1_TX_send                     = false;
-char UART1_TX_buffer[MSG_LEN];
 /* UART3 */
 uint8_t UART3_TX_buffer[QUEUE_LEN * 9];
 uint8_t frame[9];
@@ -96,8 +97,7 @@ uint8_t * volatile UART3_TX_head = UART3_TX_buffer;
 uint8_t * volatile UART3_TX_tail = UART3_TX_buffer;
 volatile bool UART3_DMA_busy     = false;
 /* KEY ------------------------------------------------------------*/
-volatile uint8_t key_pending = 0;
-volatile uint32_t key_time   = 0;
+
 /* OLED -----------------------------------------------------------*/
 char OLED_Line1[20];
 char OLED_Line2[20];
@@ -199,12 +199,12 @@ void UART1_Log(const char *level, const char *file, int line, const char *messag
     HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
 }
 
-void StartReading(void) {
+static void StartReading(void) {
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
     DRV_Start(&hdrv1.CHANNEL_A, &htim1);
     EXTI->IMR |= (1U << 12);
 }
-void StopReading(void) {
+static void StopReading(void) {
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
     DRV_Stop(&hdrv1.CHANNEL_A, &htim1);
 
@@ -216,13 +216,10 @@ void StopReading(void) {
 }
 void Key_Process(void) {
     ldc2_isReading = !ldc2_isReading;
+
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
     sprintf(UART1_TX_buffer, ldc2_isReading ? "Reading LHR Data.\r\n" : "Stopped LHR Data Reading.\r\n");
     UART1_TX_send = true;
-    if (ldc2_isReading)
-        StartReading();
-    else
-        StopReading();
 }
 /* USER CODE END 0 */
 
@@ -313,6 +310,13 @@ int main(void) {
         }
 
         /* LDC Data Get and Transmit */
+        if (ldc2_isReading != ldc2_isReadingPrev) {
+            if (ldc2_isReading)
+                StartReading();
+            else
+                StopReading();
+            ldc2_isReadingPrev = ldc2_isReading;
+        }
         if (ldc2_isReading) {
             EXTI->IMR |= (1U << 12);
             if (ldc2_dataReady) {
@@ -343,8 +347,7 @@ int main(void) {
                     UART3_KickTx();
                 }
             }
-        } else // ldc2_isReading == false
-            EXTI->IMR &= ~(1U << 12);
+        }
         /* UART1 Transmission */
         if (UART1_TX_send) {
             HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);

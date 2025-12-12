@@ -64,10 +64,12 @@ void Error_Handler(void);
 /* USER CODE BEGIN Private defines */
 /* DRV8833 --------------------------------------------------------*/
 extern DRV8833_HandleTypeDef hdrv1;
+void DRV_Start(DRV8833_Channel *ch, TIM_HandleTypeDef *htim);
+void DRV_Stop(DRV8833_Channel *ch, TIM_HandleTypeDef *htim);
 /* Scan state */
 extern volatile bool freq_scan_enabled;
 extern volatile bool DR_scan_enabled;
-
+/* Frequency Control */
 extern volatile bool drv_excitingLevel;
 extern float drv_PWM_freq;
 extern float drv_PWM_DR;
@@ -81,6 +83,7 @@ extern LDC1101_HandleTypeDef ldc2;
 // Status Variables
 extern volatile bool ldc2_isWorking;
 extern volatile bool ldc2_isReading;
+extern volatile bool ldc2_isReadingPrev;
 extern volatile bool ldc2_dataReady;
 extern uint8_t LDC_status;
 // Data Variables
@@ -106,6 +109,11 @@ void UART3_KickTx(void);
 void UART1_Log(const char *level, const char *file, int line, const char *message);
 /* KEY */
 void Key_Process(void);
+/* OLED */
+extern char OLED_Line1[20];
+extern char OLED_Line2[20];
+extern char OLED_Line3[20];
+extern char OLED_Line4[20];
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
