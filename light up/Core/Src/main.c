@@ -318,14 +318,15 @@ int main(void) {
             ldc2_isReadingPrev = ldc2_isReading;
         }
         if (ldc2_isReading) {
-            EXTI->IMR |= (1U << 12);
             if (ldc2_dataReady) {
                 ldc2_dataReady = false;
                 LHR_dataLast   = LHR_data;
-                LHR_data       = ldc1101_getLHRData(&ldc2);
-                if (LHR_data == LHR_dataLast) {
-                    continue;
-                }
+                EXTI->IMR &= ~EXTI_IMR_MR12;
+                LHR_data = ldc1101_getLHRData(&ldc2);
+                EXTI->IMR |= EXTI_IMR_MR12;
+                // if (LHR_data == LHR_dataLast) {
+                //     continue;
+                // }
                 // LHR_data -= 3220000;
                 // === frame [LHR(4B)][Freq(2B)][Duty(1B)][Level(1B)][Pad(2B)] ===
                 frame[0]             = (uint8_t)(LHR_data);

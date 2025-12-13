@@ -10,7 +10,7 @@ extern "C" {
 #define FREQ_SCAN_START_HZ     150 // ??????
 #define FREQ_SCAN_END_HZ       250 // ??????
 #define FREQ_SCAN_STEP_HZ      0.5 // ??????
-#define FREQ_SCAN_HOLD_TIME_MS 50 // ????????(ms)
+#define FREQ_SCAN_HOLD_TIME_MS 50  // ????????(ms)
 
 /* =========================================================
  *                  Assert Level Configuration

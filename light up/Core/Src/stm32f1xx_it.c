@@ -42,7 +42,8 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-volatile uint32_t key_block;
+static volatile uint32_t key_block;
+// static uint32_t last_exti_cycle = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -315,6 +316,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         tim1_led_cnt++;
     }
 
+    if (htim->Instance == TIM2) {
+    }
     if (htim->Instance == TIM4) {
         static uint8_t tim4_cnt = 0;
         tim4_cnt++;
@@ -386,7 +389,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
             return;
         Key_Process();
         key_block = now + 30;
-    } else if (GPIO_Pin == GPIO_PIN_12) {
+    }
+    if (GPIO_Pin == GPIO_PIN_12) {
         ldc2_dataReady = true;
     }
 }
