@@ -35,8 +35,8 @@ void Command_Parse(void) {
     else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "FR Scan", 7) == 0) {
         drv_PWM_freq      = FREQ_SCAN_START_HZ;
         freq_scan_enabled = true;
-        ldc2_isReading    = true;
         HAL_TIM_Base_Start_IT(&htim4);
+        ldc2_isReading = true;
 
         sprintf(UART1_TX_buffer, "Frequency scan start.\r\n");
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
@@ -45,8 +45,8 @@ void Command_Parse(void) {
     else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "DR Scan", 7) == 0) {
         drv_PWM_DR      = DUTY_RATIO_SCAN_START;
         DR_scan_enabled = true;
-        ldc2_isReading  = true;
         HAL_TIM_Base_Start_IT(&htim4);
+        ldc2_isReading = true;
 
         sprintf(UART1_TX_buffer, "Duty Ratio scan start.\r\n");
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);

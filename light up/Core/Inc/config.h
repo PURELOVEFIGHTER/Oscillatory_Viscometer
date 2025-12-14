@@ -3,6 +3,15 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/* =========================================================
+ *             System Working Mode Configuration
+ * ========================================================= */
+typedef enum {
+    MODE_MEASUREMENT = 0, // Mode0：正常测量
+    MODE_CALIBRITION = 1  // Mode1：静态位移标定
+} sysWorkMode;
+
 /* =========================================================
  *               Frequency Scan Configuration
  * ========================================================= */
@@ -41,6 +50,18 @@ extern "C" {
 /* *************** Sleep Pin *************** */
 #define DRV_nSLEEP_GPIO_PORT GPIOB
 #define DRV_nSLEEP_PIN       GPIO_PIN_3
+
+/* =========================================================
+ *                  Calibrition Configuration
+ * ========================================================= */
+#define CAL_SAMPLE_NUM     1000
+#define CAL_SETTLE_TIME_MS 200U
+typedef enum { CAL_IDLE = 0, CAL_WAIT_SETTLE, CAL_SAMPLING, CAL_DONE } CalState_t;
+
+/* =========================================================
+ *                      Key Configuration
+ * ========================================================= */
+#define KEY_DEBOUNCE_MS 100U
 
 #ifdef __cplusplus
 }

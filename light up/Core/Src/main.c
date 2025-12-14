@@ -48,6 +48,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+sysWorkMode system_mode = MODE_CALIBRITION;
 /* DRV8833 --------------------------------------------------------*/
 DRV8833_HandleTypeDef hdrv1 = {
     .CHANNEL_A = {.direction = DRV_STAGE_COAST,
@@ -83,6 +84,14 @@ uint16_t Rp_data                 = 0;
 uint16_t L_data                  = 0;
 uint32_t LHR_data                = 0;
 
+/* Calibrition --------------------------------------------------------*/
+uint32_t cal_wait_start_tick  = 0;
+uint32_t cal_sample_cnt       = 0;
+uint64_t cal_sum              = 0;
+uint64_t cal_sum_sq           = 0;
+volatile CalState_t cal_state = CAL_IDLE;
+static bool cal_result_sent   = false;
+
 /* UART -----------------------------------------------------------*/
 /* UART1 */
 volatile uint8_t UART1_RX_activeBuffer = 0;
@@ -113,12 +122,14 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void DRV_Start(DRV8833_Channel *ch, TIM_HandleTypeDef *htim) {
+    HAL_GPIO_WritePin(hdrv1.nSLEEP_Port, hdrv1.nSLEEP_Pin, GPIO_PIN_SET);
     HAL_TIM_PWM_Start(ch->htim, ch->CH1);
     HAL_TIM_PWM_Start(ch->htim, ch->CH2);
 
     HAL_TIM_Base_Start_IT(htim);
 }
 void DRV_Stop(DRV8833_Channel *ch, TIM_HandleTypeDef *htim) {
+    HAL_GPIO_WritePin(hdrv1.nSLEEP_Port, hdrv1.nSLEEP_Pin, GPIO_PIN_RESET);
     HAL_TIM_PWM_Stop(ch->htim, ch->CH1);
     HAL_TIM_PWM_Stop(ch->htim, ch->CH2);
 
@@ -184,6 +195,19 @@ void UART3_KickTx(void) {
         __set_PRIMASK(primask); /* Critical Section End */
     }
 }
+static void UART3_SendCalResult(float mean, float var) {
+    /* Frame: [0xC1][mean(4B float LE)][var(4B float LE)][0xC4] */
+    uint8_t cal_frame[10];
+    cal_frame[0] = 0xC1;
+    memcpy(&cal_frame[1], &mean, sizeof(float));
+    memcpy(&cal_frame[1 + sizeof(float)], &var, sizeof(float));
+    cal_frame[9] = 0xC4;
+
+    bool enqueued = UART3_EnqueueFrame(cal_frame, sizeof(cal_frame));
+    if (enqueued) {
+        UART3_KickTx();
+    }
+}
 void UART1_Log(const char *level, const char *file, int line, const char *message) {
     uint32_t ticks   = HAL_GetTick();
     uint32_t hours   = ticks / 3600000U;
@@ -194,31 +218,43 @@ void UART1_Log(const char *level, const char *file, int line, const char *messag
     snprintf(time_buf, sizeof(time_buf), "%02lu:%02lu:%02lu.%03lu", (unsigned long)hours, (unsigned long)minutes,
              (unsigned long)seconds, (unsigned long)millis);
 
-    snprintf(UART1_TX_buffer, MSG_LEN, "[%s] [%s] [%s:%d] %s\r\n", level, time_buf, file, line, message);
+    char msg_copy[MSG_LEN];
+    strncpy(msg_copy, message, MSG_LEN - 1);
+    msg_copy[MSG_LEN - 1] = '\0';
+
+    snprintf(UART1_TX_buffer, MSG_LEN, "[%s] [%s] [%s:%d] %s\r\n", level, time_buf, file, line, msg_copy);
     HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
 }
 
-static void StartReading(void) {
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-    DRV_Start(&hdrv1.CHANNEL_A, &htim1);
-    EXTI->IMR |= (1U << 12);
-}
+static void StartReading(void) { DRV_Start(&hdrv1.CHANNEL_A, &htim1); }
 static void StopReading(void) {
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
     DRV_Stop(&hdrv1.CHANNEL_A, &htim1);
-
-    EXTI->IMR &= ~(1U << 12); // ¹Ø±Õ EXTI12
 
     HAL_UART_DMAStop(&huart3);
     UART3_TX_head = UART3_TX_tail = UART3_TX_buffer;
     memset(UART3_TX_buffer, 0, sizeof(UART3_TX_buffer));
 }
 void Key_Process(void) {
-    ldc2_isReading = !ldc2_isReading;
+    if (system_mode == MODE_MEASUREMENT) {
+        ldc2_isReading = !ldc2_isReading;
 
-    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
-    sprintf(UART1_TX_buffer, ldc2_isReading ? "Reading LHR Data.\r\n" : "Stopped LHR Data Reading.\r\n");
-    UART1_TX_send = true;
+        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
+        sprintf(UART1_TX_buffer, ldc2_isReading ? "Reading LHR Data.\r\n" : "Stopped LHR Data Reading.\r\n");
+        UART1_TX_send = true;
+    } else if (system_mode == MODE_CALIBRITION) {
+        if (cal_state == CAL_IDLE) {
+            cal_state           = CAL_WAIT_SETTLE;
+            cal_sample_cnt      = 0;
+            cal_sum             = 0;
+            cal_sum_sq          = 0;
+            cal_wait_start_tick = HAL_GetTick();
+            cal_result_sent     = false;
+
+            HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
+            sprintf(UART1_TX_buffer, "Calibration started.\r\n");
+            UART1_TX_send = true;
+        }
+    }
 }
 /* USER CODE END 0 */
 
@@ -260,7 +296,9 @@ int main(void) {
     MX_TIM1_Init();
     MX_TIM3_Init();
     /* USER CODE BEGIN 2 */
-    HAL_TIM_Base_Start_IT(&htim2);
+    snprintf(UART1_TX_buffer, sizeof(UART1_TX_buffer), "System Mode: %s", system_mode ? "MEASUREMENT" : "CALIBRITION");
+    UART1_Log("INFO", "main.c", __LINE__, UART1_TX_buffer);
+
     /* UART1 DMA Init */
     HAL_UART_Receive_DMA(&huart1, (uint8_t *)UART1_RX_DMA_buffer[UART1_RX_activeBuffer], MSG_LEN);
     __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
@@ -285,10 +323,9 @@ int main(void) {
         const float conv_cycles = (float)(rcount * 16U + 55U); // RCOUNT*16 + 55 reference cycles
         float sample_rate_hz    = f_clk_hz / conv_cycles;
         float sample_rate_ksps  = sample_rate_hz / 1000.0f;
-        char trace_msg[64];
-        snprintf(trace_msg, sizeof(trace_msg), "LDC1101 sample rate: %.3f kSPS (RCOUNT=0x%04X)", sample_rate_ksps,
-                 rcount);
-        UART1_Log("TRACE", "main.c", __LINE__, trace_msg);
+        snprintf(UART1_TX_buffer, sizeof(UART1_TX_buffer), "LDC1101 sample rate: %.3f kSPS (RCOUNT=0x%04X)",
+                 sample_rate_ksps, rcount);
+        UART1_Log("TRACE", "main.c", __LINE__, UART1_TX_buffer);
         ldc2_isWorking = true;
     }
     /* USER CODE END 2 */
@@ -296,68 +333,103 @@ int main(void) {
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
     while (1) {
-        /* DRV8833 Frequency Control */
-        if (drv_PWM_isChanged) {
-            // TIM1 Interrupt Frequency = 100kHz  (72MHz / 72 / 10)
-            const float baseFreq = 100000.0f;
-            // Calculate the number of interrupts needed for one period
-            float cnt_f       = baseFreq / drv_PWM_freq;
-            drv_PWM_cnt       = (uint32_t)(cnt_f + 0.5f);
-            float assert_f    = cnt_f * (drv_PWM_DR / 100.0f);
-            drv_PWM_assertCnt = (uint32_t)(assert_f + 0.5f);
-            drv_PWM_halfCnt   = drv_PWM_cnt / 2;
-            drv_PWM_isChanged = false;
-        }
+        if (system_mode == MODE_MEASUREMENT) {
+            /* DRV8833 Frequency Control */
+            if (drv_PWM_isChanged) {
+                // TIM1 Interrupt Frequency = 100kHz  (72MHz / 72 / 10)
+                const float baseFreq = 100000.0f;
+                // Calculate the number of interrupts needed for one period
+                float cnt_f       = baseFreq / drv_PWM_freq;
+                drv_PWM_cnt       = (uint32_t)(cnt_f + 0.5f);
+                float assert_f    = cnt_f * (drv_PWM_DR / 100.0f);
+                drv_PWM_assertCnt = (uint32_t)(assert_f + 0.5f);
+                drv_PWM_halfCnt   = drv_PWM_cnt / 2;
+                drv_PWM_isChanged = false;
+            }
 
-        /* LDC Reading Control */
-        if (ldc2_isReading != ldc2_isReadingPrev) {
-            if (ldc2_isReading)
-                StartReading();
-            else
-                StopReading();
-            ldc2_isReadingPrev = ldc2_isReading;
-        }
-        /* LDC Data Get and Transmit */
-        if (ldc2_isReading) {
-            LDC_status = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
-            if ((LDC_status & 0x01) == 0)
-                ldc2_dataReady = true;
-            if (ldc2_dataReady) {
-                ldc2_dataReady = false;
-                LHR_data       = ldc1101_getLHRData(&ldc2);
-                // === frame [LHR(4B)][Freq(2B)][Duty(1B)][Level(1B)][Pad(2B)] ===
-                frame[0]             = (uint8_t)(LHR_data);
-                frame[1]             = (uint8_t)(LHR_data >> 8);
-                frame[2]             = (uint8_t)(LHR_data >> 16);
-                frame[3]             = (uint8_t)(LHR_data >> 24);
-                uint16_t freq_scaled = (uint16_t)(drv_PWM_freq * 100.0f);
-                frame[4]             = (uint8_t)(freq_scaled);
-                frame[5]             = (uint8_t)(freq_scaled >> 8);
-                frame[6]             = (uint8_t)drv_PWM_DR;
-                frame[7]             = (uint8_t)drv_excitingLevel;
-                frame[8]             = 0xAA;
+            /* LDC Reading Control */
+            if (ldc2_isReading != ldc2_isReadingPrev) {
+                if (ldc2_isReading)
+                    StartReading();
+                else
+                    StopReading();
+                ldc2_isReadingPrev = ldc2_isReading;
+            }
+            /* LDC Data Get and Transmit */
+            if (ldc2_isReading) {
+                LDC_status = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
+                if ((LDC_status & 0x01) == 0)
+                    ldc2_dataReady = true;
+                if (ldc2_dataReady) {
+                    ldc2_dataReady = false;
+                    LHR_data       = ldc1101_getLHRData(&ldc2);
+                    // === frame [LHR(4B)][Freq(2B)][Duty(1B)][Level(1B)][Pad(2B)] ===
+                    frame[0]             = (uint8_t)(LHR_data);
+                    frame[1]             = (uint8_t)(LHR_data >> 8);
+                    frame[2]             = (uint8_t)(LHR_data >> 16);
+                    frame[3]             = (uint8_t)(LHR_data >> 24);
+                    uint16_t freq_scaled = (uint16_t)(drv_PWM_freq * 100.0f);
+                    frame[4]             = (uint8_t)(freq_scaled);
+                    frame[5]             = (uint8_t)(freq_scaled >> 8);
+                    frame[6]             = (uint8_t)drv_PWM_DR;
+                    frame[7]             = (uint8_t)drv_excitingLevel;
+                    frame[8]             = 0xAA;
 
-                // ===== enqueue frame into ring buffer =====
-                bool frame_enqueued = UART3_EnqueueFrame(frame, sizeof(frame));
+                    // ===== enqueue frame into ring buffer =====
+                    bool frame_enqueued = UART3_EnqueueFrame(frame, sizeof(frame));
 
-                // ===== Data Transmission =====
-                if (frame_enqueued) {
-                    UART3_KickTx();
+                    // ===== Data Transmission =====
+                    if (frame_enqueued) {
+                        UART3_KickTx();
+                    }
                 }
             }
+        } else if (system_mode == MODE_CALIBRITION) {
+            /* LDC Reading Control */
+            if (cal_state == CAL_WAIT_SETTLE) {
+                if ((HAL_GetTick() - cal_wait_start_tick) >= CAL_SETTLE_TIME_MS) {
+                    cal_state      = CAL_SAMPLING;
+                    cal_sample_cnt = 0;
+                    cal_sum        = 0;
+                    cal_sum_sq     = 0;
+                }
+            }
+            if (cal_state == CAL_SAMPLING) {
+                LDC_status = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
+                if ((LDC_status & 0x01) == 0)
+                    ldc2_dataReady = true;
+                if (ldc2_dataReady) {
+                    ldc2_dataReady = false;
+                    LHR_data       = ldc1101_getLHRData(&ldc2);
+                    cal_sum += LHR_data;
+                    cal_sum_sq += (uint64_t)LHR_data * LHR_data;
+                    cal_sample_cnt++;
+                    // ===== Data Transmission =====
+                    if (cal_sample_cnt > CAL_SAMPLE_NUM)
+                        cal_state = CAL_DONE;
+                }
+            }
+            if (cal_state == CAL_DONE) {
+                float mean = (float)cal_sum / CAL_SAMPLE_NUM;
+                float var  = (float)cal_sum_sq / CAL_SAMPLE_NUM - mean * mean;
+                if (!cal_result_sent) {
+                    UART3_SendCalResult(mean, var);
+                    cal_result_sent = true;
+                }
+            }
+            /* UART1 Transmission */
+            if (UART1_TX_send) {
+                HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
+                UART1_TX_send = false;
+                memset(UART1_TX_buffer, 0, MSG_LEN);
+            }
         }
-        /* UART1 Transmission */
-        if (UART1_TX_send) {
-            HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
-            UART1_TX_send = false;
-            memset(UART1_TX_buffer, 0, MSG_LEN);
-        }
+        /* USER CODE END WHILE */
+
+        /* USER CODE BEGIN 3 */
+
+        /* USER CODE END 3 */
     }
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
-
-    /* USER CODE END 3 */
 }
 
 /**

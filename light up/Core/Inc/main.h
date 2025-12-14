@@ -62,6 +62,7 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 
 /* USER CODE BEGIN Private defines */
+extern sysWorkMode system_mode;
 /* DRV8833 --------------------------------------------------------*/
 extern DRV8833_HandleTypeDef hdrv1;
 void DRV_Start(DRV8833_Channel *ch, TIM_HandleTypeDef *htim);
@@ -113,6 +114,14 @@ extern char OLED_Line1[20];
 extern char OLED_Line2[20];
 extern char OLED_Line3[20];
 extern char OLED_Line4[20];
+
+/* Calibrition -------------------------------------------------- */
+extern uint32_t cal_wait_start_tick;
+extern uint32_t cal_sample_cnt;
+extern uint64_t cal_sum;
+extern uint64_t cal_sum_sq;
+extern volatile CalState_t cal_state;
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
