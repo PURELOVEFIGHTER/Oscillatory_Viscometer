@@ -1518,3 +1518,115 @@ These source files will be recompiled
 [2025-12-14 00:26:17]	[done]
 	build successfully !
 
+[2025-12-14 01:05:25]	[done]
+	build successfully !
+
+[2025-12-14 01:10:19]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+
+[2025-12-14 01:10:20]	[done]
+	build successfully !
+
+[2025-12-14 01:12:48]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+
+[2025-12-14 01:12:48]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c", exit code: 1
+command: 
+  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I. -I.cmsis/include -I"RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\Core\Src\stm32f1xx_it.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\Core\Src\stm32f1xx_it.d" .\..\Core\Src\stm32f1xx_it.c
+   at unify_builder.Program.Main(String[] args_)
+---
+".\..\Core\Src\stm32f1xx_it.c", line 455: Error:  #65: expected a ";"
+          key_block = now + 5 0;
+                              ^
+.\..\Core\Src\stm32f1xx_it.c: 0 warnings, 1 error
+
+[2025-12-14 01:12:53]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+
+[2025-12-14 01:12:54]	[done]
+	build successfully !
+
+[2025-12-14 01:14:12]	[done]
+	build successfully !
+
+[2025-12-14 01:47:50]	[done]
+	build successfully !
+
+[2025-12-14 14:11:46]	[info] incremental build: 4 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
+
+[2025-12-14 14:11:56]	[done]
+	build successfully !
+
+[2025-12-14 14:12:36]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+
+[2025-12-14 14:12:36]	[done]
+	build successfully !
+
+[2025-12-14 14:12:50]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+
+[2025-12-14 14:12:51]	[done]
+	build successfully !
+
+[2025-12-14 14:13:42]	[info] incremental build: 10 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\command.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\..\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\dma.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\..\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\gpio.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\..\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\i2c.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\..\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\spi.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\..\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_hal_msp.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\..\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\..\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\..\Core\Inc\main.h' has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\usart.c': dependence 'd:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\..\Core\Inc\main.h' has been changed.
+
+[2025-12-14 14:13:44]	[done]
+	build successfully !
+
+[2025-12-14 14:15:41]	[info] incremental build: 3 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
+
+[2025-12-14 14:15:42]	[done]
+	build successfully !
+
+[2025-12-14 14:16:22]	[info] incremental build: 2 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
+
+[2025-12-14 14:16:23]	[done]
+	build successfully !
+
+[2025-12-14 14:17:50]	[info] incremental build: 2 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+
+[2025-12-14 14:17:51]	[done]
+	build successfully !
+

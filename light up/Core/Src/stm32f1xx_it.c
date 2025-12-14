@@ -58,7 +58,6 @@ static volatile uint32_t key_block;
 
 /* External variables --------------------------------------------------------*/
 extern TIM_HandleTypeDef htim1;
-extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
 extern DMA_HandleTypeDef hdma_usart1_rx;
@@ -250,20 +249,6 @@ void TIM1_UP_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles TIM2 global interrupt.
-  */
-void TIM2_IRQHandler(void)
-{
-  /* USER CODE BEGIN TIM2_IRQn 0 */
-
-  /* USER CODE END TIM2_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim2);
-  /* USER CODE BEGIN TIM2_IRQn 1 */
-
-  /* USER CODE END TIM2_IRQn 1 */
-}
-
-/**
   * @brief This function handles TIM3 global interrupt.
   */
 void TIM3_IRQHandler(void)
@@ -365,21 +350,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         tim1_led_cnt++;
     }
 
-    if (htim->Instance == TIM2) {
-        // static uint8_t tim2_readInterval_cnt = 0;
-        // tim2_readInterval_cnt++;
-        // if (tim2_readInterval_cnt >= 5U) {
-        //     tim2_readInterval_cnt = 0;
-        //     LDC_status = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
+    if (htim->Instance == TIM3) {
+        // static uint8_t tim3_readInterval_cnt = 0;
+        // tim3_readInterval_cnt++;
+        // if (tim3_readInterval_cnt >= 33U) {
+        //     tim3_readInterval_cnt = 0;
+        //     LDC_status            = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
         //     if ((LDC_status & 0x01) == 0)
         //         ldc2_dataReady = true;
         // }
-    }
-
-    if (htim->Instance == TIM3) {
-        // LDC_status = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
-        // if ((LDC_status & 0x01) == 0)
-        //     ldc2_dataReady = true;
     }
 
     if (htim->Instance == TIM4) {
@@ -452,10 +431,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
         if (now < key_block)
             return;
         Key_Process();
-        key_block = now + 30;
+        key_block = now + 50;
     }
-    if (GPIO_Pin == GPIO_PIN_12) {
-        ldc2_dataReady = true;
-    }
+    // if (GPIO_Pin == GPIO_PIN_12) {
+    //     ldc2_dataReady = true;
+    // }
 }
 /* USER CODE END 1 */

@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\build\light up\light up.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\build\light up\light up.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sun Dec 14 00:26:17 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sun Dec 14 14:17:51 2025
 <BR><P>
 <H3>Maximum Stack Usage =        324 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -72,7 +72,7 @@ Function Pointers
  <LI><a href="#[29]">TIM1_CC_IRQHandler</a> from startup_stm32f103xb.o(.text) referenced from startup_stm32f103xb.o(RESET)
  <LI><a href="#[28]">TIM1_TRG_COM_IRQHandler</a> from startup_stm32f103xb.o(.text) referenced from startup_stm32f103xb.o(RESET)
  <LI><a href="#[27]">TIM1_UP_IRQHandler</a> from stm32f1xx_it.o(i.TIM1_UP_IRQHandler) referenced from startup_stm32f103xb.o(RESET)
- <LI><a href="#[2a]">TIM2_IRQHandler</a> from stm32f1xx_it.o(i.TIM2_IRQHandler) referenced from startup_stm32f103xb.o(RESET)
+ <LI><a href="#[2a]">TIM2_IRQHandler</a> from startup_stm32f103xb.o(.text) referenced from startup_stm32f103xb.o(RESET)
  <LI><a href="#[2b]">TIM3_IRQHandler</a> from stm32f1xx_it.o(i.TIM3_IRQHandler) referenced from startup_stm32f103xb.o(RESET)
  <LI><a href="#[2c]">TIM4_IRQHandler</a> from stm32f1xx_it.o(i.TIM4_IRQHandler) referenced from startup_stm32f103xb.o(RESET)
  <LI><a href="#[43]">UART_DMAAbortOnError</a> from stm32f1xx_hal_uart.o(i.UART_DMAAbortOnError) referenced from stm32f1xx_hal_uart.o(i.HAL_UART_IRQHandler)
@@ -388,6 +388,9 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f103xb.o(RESET)
 </UL>
 <P><STRONG><a name="[28]"></a>TIM1_TRG_COM_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup_stm32f103xb.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> startup_stm32f103xb.o(RESET)
+</UL>
+<P><STRONG><a name="[2a]"></a>TIM2_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup_stm32f103xb.o(.text))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f103xb.o(RESET)
 </UL>
 <P><STRONG><a name="[34]"></a>USART2_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup_stm32f103xb.o(.text))
@@ -993,7 +996,7 @@ Global Symbols
 <LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DRV_Init
 </UL>
 
-<P><STRONG><a name="[aa]"></a>HAL_GPIO_EXTI_Callback</STRONG> (Thumb, 46 bytes, Stack size 16 bytes, stm32f1xx_it.o(i.HAL_GPIO_EXTI_Callback))
+<P><STRONG><a name="[aa]"></a>HAL_GPIO_EXTI_Callback</STRONG> (Thumb, 32 bytes, Stack size 16 bytes, stm32f1xx_it.o(i.HAL_GPIO_EXTI_Callback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160 + Unknown Stack Size
 <LI>Call Chain = HAL_GPIO_EXTI_Callback &rArr; Key_Process &rArr; __2sprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
@@ -1247,7 +1250,7 @@ Global Symbols
 <LI><a href="#[fb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_TIM1_Init
 </UL>
 
-<P><STRONG><a name="[c5]"></a>HAL_TIM_Base_MspInit</STRONG> (Thumb, 158 bytes, Stack size 8 bytes, tim.o(i.HAL_TIM_Base_MspInit))
+<P><STRONG><a name="[c5]"></a>HAL_TIM_Base_MspInit</STRONG> (Thumb, 144 bytes, Stack size 8 bytes, tim.o(i.HAL_TIM_Base_MspInit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = HAL_TIM_Base_MspInit &rArr; HAL_NVIC_SetPriority
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriority
@@ -1298,7 +1301,6 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM4_IRQHandler
 <LI><a href="#[2b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM3_IRQHandler
-<LI><a href="#[2a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM2_IRQHandler
 <LI><a href="#[27]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM1_UP_IRQHandler
 </UL>
 
@@ -1700,13 +1702,6 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f103xb.o(RESET)
 </UL>
-<P><STRONG><a name="[2a]"></a>TIM2_IRQHandler</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, stm32f1xx_it.o(i.TIM2_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = TIM2_IRQHandler &rArr; HAL_TIM_IRQHandler &rArr; HAL_TIM_PeriodElapsedCallback &rArr; DRV_Stop &rArr; HAL_TIM_PWM_Stop &rArr; TIM_CCxChannelCmd
-</UL>
-<BR>[Calls]<UL><LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_IRQHandler
-</UL>
-<BR>[Address Reference Count : 1]<UL><LI> startup_stm32f103xb.o(RESET)
-</UL>
 <P><STRONG><a name="[2b]"></a>TIM3_IRQHandler</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, stm32f1xx_it.o(i.TIM3_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = TIM3_IRQHandler &rArr; HAL_TIM_IRQHandler &rArr; HAL_TIM_PeriodElapsedCallback &rArr; DRV_Stop &rArr; HAL_TIM_PWM_Stop &rArr; TIM_CCxChannelCmd
 </UL>
@@ -1846,7 +1841,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ldc1101_init
 </UL>
 
-<P><STRONG><a name="[61]"></a>main</STRONG> (Thumb, 578 bytes, Stack size 80 bytes, main.o(i.main))
+<P><STRONG><a name="[61]"></a>main</STRONG> (Thumb, 574 bytes, Stack size 80 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 280 + Unknown Stack Size
 <LI>Call Chain = main &rArr; UART1_Log &rArr; __2snprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
