@@ -48,7 +48,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-sysWorkMode system_mode = MODE_CALIBRITION;
+sysWorkMode system_mode = MODE_CALIBRITION; // MODE_MEASUREMENT
 /* DRV8833 --------------------------------------------------------*/
 DRV8833_HandleTypeDef hdrv1 = {
     .CHANNEL_A = {.direction = DRV_STAGE_COAST,
@@ -85,12 +85,12 @@ uint16_t L_data                  = 0;
 uint32_t LHR_data                = 0;
 
 /* Calibrition --------------------------------------------------------*/
-uint32_t cal_wait_start_tick  = 0;
-uint32_t cal_sample_cnt       = 0;
-uint64_t cal_sum              = 0;
-uint64_t cal_sum_sq           = 0;
-volatile CalState_t cal_state = CAL_IDLE;
-static bool cal_result_sent   = false;
+uint32_t cal_wait_start_tick     = 0;
+uint32_t cal_sample_cnt          = 0;
+uint64_t cal_sum                 = 0;
+uint64_t cal_sum_sq              = 0;
+volatile CalState_t cal_state    = CAL_IDLE;
+uint16_t cal_current_position_um = 0;
 
 /* UART -----------------------------------------------------------*/
 /* UART1 */
@@ -195,18 +195,27 @@ void UART3_KickTx(void) {
         __set_PRIMASK(primask); /* Critical Section End */
     }
 }
-static void UART3_SendCalResult(float mean, float var) {
-    /* Frame: [0xC1][mean(4B float LE)][var(4B float LE)][0xC4] */
-    uint8_t cal_frame[10];
-    cal_frame[0] = 0xC1;
-    memcpy(&cal_frame[1], &mean, sizeof(float));
-    memcpy(&cal_frame[1 + sizeof(float)], &var, sizeof(float));
-    cal_frame[9] = 0xC4;
+static void UART3_SendCalResult(uint16_t position_um, float mean, float var) {
+    /* Frame: [cal_current_position_um(2B)][mean(4B float LE)][var(4B float LE)][0xAA] */
+    uint8_t cal_frame[11];
+    memcpy(&cal_frame[0], &position_um, sizeof(position_um));
+    memcpy(&cal_frame[2], &mean, sizeof(float));
+    memcpy(&cal_frame[6], &var, sizeof(float));
+    cal_frame[10] = 0xAA;
 
     bool enqueued = UART3_EnqueueFrame(cal_frame, sizeof(cal_frame));
     if (enqueued) {
         UART3_KickTx();
     }
+}
+
+static void UART3_SendInitFrame(void) {
+    /* Program init frame: 11 bytes all 0xFF (same length as cal frame) */
+    uint8_t init_frame[11];
+    memset(init_frame, 0xFF, sizeof(init_frame));
+
+    /* Send directly (blocking) to guarantee delivery at startup */
+    HAL_UART_Transmit(&huart3, init_frame, sizeof(init_frame), HAL_MAX_DELAY);
 }
 void UART1_Log(const char *level, const char *file, int line, const char *message) {
     uint32_t ticks   = HAL_GetTick();
@@ -243,15 +252,16 @@ void Key_Process(void) {
         UART1_TX_send = true;
     } else if (system_mode == MODE_CALIBRITION) {
         if (cal_state == CAL_IDLE) {
-            cal_state           = CAL_WAIT_SETTLE;
+            // 状态切换到等待稳定
+            cal_state = CAL_WAIT_SETTLE;
+            // 数据清零
             cal_sample_cnt      = 0;
             cal_sum             = 0;
             cal_sum_sq          = 0;
             cal_wait_start_tick = HAL_GetTick();
-            cal_result_sent     = false;
 
             HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
-            sprintf(UART1_TX_buffer, "Calibration started.\r\n");
+            sprintf(UART1_TX_buffer, "Calibration start.\r\n");
             UART1_TX_send = true;
         }
     }
@@ -296,7 +306,13 @@ int main(void) {
     MX_TIM1_Init();
     MX_TIM3_Init();
     /* USER CODE BEGIN 2 */
-    snprintf(UART1_TX_buffer, sizeof(UART1_TX_buffer), "System Mode: %s", system_mode ? "MEASUREMENT" : "CALIBRITION");
+    if (system_mode == MODE_CALIBRITION) {
+        cal_current_position_um = CALIBRITION_START_UM;
+        /* Send program init frame: all bytes 0xFF */
+        UART3_SendInitFrame();
+    }
+
+    snprintf(UART1_TX_buffer, sizeof(UART1_TX_buffer), "System Mode: %s", system_mode ? "CALIBRITION" : "MEASUREMENT");
     UART1_Log("INFO", "main.c", __LINE__, UART1_TX_buffer);
 
     /* UART1 DMA Init */
@@ -387,12 +403,8 @@ int main(void) {
         } else if (system_mode == MODE_CALIBRITION) {
             /* LDC Reading Control */
             if (cal_state == CAL_WAIT_SETTLE) {
-                if ((HAL_GetTick() - cal_wait_start_tick) >= CAL_SETTLE_TIME_MS) {
-                    cal_state      = CAL_SAMPLING;
-                    cal_sample_cnt = 0;
-                    cal_sum        = 0;
-                    cal_sum_sq     = 0;
-                }
+                if ((HAL_GetTick() - cal_wait_start_tick) >= CAL_SETTLE_TIME_MS)
+                    cal_state = CAL_SAMPLING;
             }
             if (cal_state == CAL_SAMPLING) {
                 LDC_status = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
@@ -401,21 +413,21 @@ int main(void) {
                 if (ldc2_dataReady) {
                     ldc2_dataReady = false;
                     LHR_data       = ldc1101_getLHRData(&ldc2);
+                    cal_sample_cnt++;
                     cal_sum += LHR_data;
                     cal_sum_sq += (uint64_t)LHR_data * LHR_data;
-                    cal_sample_cnt++;
                     // ===== Data Transmission =====
-                    if (cal_sample_cnt > CAL_SAMPLE_NUM)
+                    if (cal_sample_cnt >= CAL_SAMPLE_NUM)
                         cal_state = CAL_DONE;
                 }
             }
-            if (cal_state == CAL_DONE) {
-                float mean = (float)cal_sum / CAL_SAMPLE_NUM;
-                float var  = (float)cal_sum_sq / CAL_SAMPLE_NUM - mean * mean;
-                if (!cal_result_sent) {
-                    UART3_SendCalResult(mean, var);
-                    cal_result_sent = true;
-                }
+            if ((cal_state == CAL_DONE)) {
+                float sample_cnt = (float)cal_sample_cnt;
+                float mean       = (float)cal_sum / sample_cnt;
+                float var        = (float)cal_sum_sq / sample_cnt - mean * mean;
+                UART3_SendCalResult(cal_current_position_um, mean, var);
+                cal_current_position_um += CALIBRITION_STEP_UM;
+                cal_state = CAL_IDLE; // ready for the next button-triggered sampling
             }
             /* UART1 Transmission */
             if (UART1_TX_send) {

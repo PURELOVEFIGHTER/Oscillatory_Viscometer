@@ -116,6 +116,7 @@ extern char OLED_Line3[20];
 extern char OLED_Line4[20];
 
 /* Calibrition -------------------------------------------------- */
+extern uint16_t cal_current_position_um;
 extern uint32_t cal_wait_start_tick;
 extern uint32_t cal_sample_cnt;
 extern uint64_t cal_sum;

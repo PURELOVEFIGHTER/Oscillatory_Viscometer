@@ -54,8 +54,10 @@ typedef enum {
 /* =========================================================
  *                  Calibrition Configuration
  * ========================================================= */
-#define CAL_SAMPLE_NUM     1000
-#define CAL_SETTLE_TIME_MS 200U
+#define CAL_SAMPLE_NUM       1000U
+#define CAL_SETTLE_TIME_MS   200U
+#define CALIBRITION_START_UM 450U
+#define CALIBRITION_STEP_UM  1U
 typedef enum { CAL_IDLE = 0, CAL_WAIT_SETTLE, CAL_SAMPLING, CAL_DONE } CalState_t;
 
 /* =========================================================
