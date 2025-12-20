@@ -48,7 +48,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-sysWorkMode system_mode = MODE_CALIBRITION; // MODE_MEASUREMENT
+sysWorkMode system_mode = MODE_MEASUREMENT; // MODE_MEASUREMENT
 /* DRV8833 --------------------------------------------------------*/
 DRV8833_HandleTypeDef hdrv1 = {
     .CHANNEL_A = {.direction = DRV_STAGE_COAST,
@@ -429,17 +429,16 @@ int main(void) {
                 cal_current_position_um += CALIBRITION_STEP_UM;
                 cal_state = CAL_IDLE; // ready for the next button-triggered sampling
             }
-            /* UART1 Transmission */
-            if (UART1_TX_send) {
-                HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
-                UART1_TX_send = false;
-                memset(UART1_TX_buffer, 0, MSG_LEN);
-            }
         }
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
-
+        /* UART1 Transmission */
+        if (UART1_TX_send) {
+            HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
+            UART1_TX_send = false;
+            memset(UART1_TX_buffer, 0, MSG_LEN);
+        }
         /* USER CODE END 3 */
     }
 }
