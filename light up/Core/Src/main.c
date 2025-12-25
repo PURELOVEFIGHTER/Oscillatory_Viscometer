@@ -48,7 +48,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-sysWorkMode system_mode = MODE_MEASUREMENT; // MODE_MEASUREMENT
+sysWorkMode system_mode = MODE_MEASUREMENT;
 /* DRV8833 --------------------------------------------------------*/
 DRV8833_HandleTypeDef hdrv1 = {
     .CHANNEL_A = {.direction = DRV_STAGE_COAST,
@@ -146,7 +146,8 @@ static uint16_t UART3_BufferUsedUnsafe(void) {
     }
     return buffer_len - (tail_offset - head_offset);
 }
-static bool UART3_EnqueueFrame(const uint8_t *data, uint16_t len) {
+/* Queue arbitrary TX bytes; call UART3_StartTx() after batching frames */
+bool UART3_Enqueue(const uint8_t *data, uint16_t len) {
     uint32_t primask = __get_PRIMASK();
     __disable_irq(); /* Critical Section Begin */
 
@@ -169,7 +170,8 @@ static bool UART3_EnqueueFrame(const uint8_t *data, uint16_t len) {
     __set_PRIMASK(primask); /* Critical Section End */
     return true;
 }
-void UART3_KickTx(void) {
+/* Start DMA transmission if idle; safe to call repeatedly */
+void UART3_StartTx(void) {
     uint32_t primask = __get_PRIMASK();
     __disable_irq(); /* Critical Section Begin */
     if (UART3_DMA_busy || (UART3_TX_head == UART3_TX_tail)) {
@@ -194,28 +196,6 @@ void UART3_KickTx(void) {
         UART3_DMA_busy = false;
         __set_PRIMASK(primask); /* Critical Section End */
     }
-}
-static void UART3_SendCalResult(uint16_t position_um, float mean, float var) {
-    /* Frame: [cal_current_position_um(2B)][mean(4B float LE)][var(4B float LE)][0xAA] */
-    uint8_t cal_frame[11];
-    memcpy(&cal_frame[0], &position_um, sizeof(position_um));
-    memcpy(&cal_frame[2], &mean, sizeof(float));
-    memcpy(&cal_frame[6], &var, sizeof(float));
-    cal_frame[10] = 0xAA;
-
-    bool enqueued = UART3_EnqueueFrame(cal_frame, sizeof(cal_frame));
-    if (enqueued) {
-        UART3_KickTx();
-    }
-}
-
-static void UART3_SendInitFrame(void) {
-    /* Program init frame: 11 bytes all 0xFF (same length as cal frame) */
-    uint8_t init_frame[11];
-    memset(init_frame, 0xFF, sizeof(init_frame));
-
-    /* Send directly (blocking) to guarantee delivery at startup */
-    HAL_UART_Transmit(&huart3, init_frame, sizeof(init_frame), HAL_MAX_DELAY);
 }
 void UART1_Log(const char *level, const char *file, int line, const char *message) {
     uint32_t ticks   = HAL_GetTick();
@@ -252,9 +232,9 @@ void Key_Process(void) {
         UART1_TX_send = true;
     } else if (system_mode == MODE_CALIBRITION) {
         if (cal_state == CAL_IDLE) {
-            // ◊¥Ã¨«–ªªµΩµ»¥˝Œ»∂®
+            // Áä∂ÊÄÅÂàáÊç¢Âà∞Á≠âÂæÖÁ®≥ÂÆö
             cal_state = CAL_WAIT_SETTLE;
-            //  ˝æ›«Â¡„
+            // Êï∞ÊçÆÊ∏ÖÈõ∂
             cal_sample_cnt      = 0;
             cal_sum             = 0;
             cal_sum_sq          = 0;
@@ -308,8 +288,12 @@ int main(void) {
     /* USER CODE BEGIN 2 */
     if (system_mode == MODE_CALIBRITION) {
         cal_current_position_um = CALIBRITION_START_UM;
-        /* Send program init frame: all bytes 0xFF */
-        UART3_SendInitFrame();
+        uint8_t init_frame[11];
+        memset(init_frame, 0xFF, sizeof(init_frame));
+        bool init_enqueued = UART3_Enqueue(init_frame, sizeof(init_frame));
+        if (init_enqueued) {
+            UART3_StartTx();
+        }
     }
 
     snprintf(UART1_TX_buffer, sizeof(UART1_TX_buffer), "System Mode: %s", system_mode ? "CALIBRITION" : "MEASUREMENT");
@@ -392,11 +376,11 @@ int main(void) {
                     frame[8]             = 0xAA;
 
                     // ===== enqueue frame into ring buffer =====
-                    bool frame_enqueued = UART3_EnqueueFrame(frame, sizeof(frame));
+                    bool frame_enqueued = UART3_Enqueue(frame, sizeof(frame));
 
                     // ===== Data Transmission =====
                     if (frame_enqueued) {
-                        UART3_KickTx();
+                        UART3_StartTx();
                     }
                 }
             }
@@ -425,7 +409,17 @@ int main(void) {
                 float sample_cnt = (float)cal_sample_cnt;
                 float mean       = (float)cal_sum / sample_cnt;
                 float var        = (float)cal_sum_sq / sample_cnt - mean * mean;
-                UART3_SendCalResult(cal_current_position_um, mean, var);
+                uint8_t cal_frame[11];
+                /* Frame: [cal_current_position_um(2B)][mean(4B float LE)][var(4B float LE)][0xAA] */
+                memcpy(&cal_frame[0], &cal_current_position_um, sizeof(cal_current_position_um));
+                memcpy(&cal_frame[2], &mean, sizeof(float));
+                memcpy(&cal_frame[6], &var, sizeof(float));
+                cal_frame[10] = 0xAA;
+
+                bool enqueued = UART3_Enqueue(cal_frame, sizeof(cal_frame));
+                if (enqueued) {
+                    UART3_StartTx();
+                }
                 cal_current_position_um += CALIBRITION_STEP_UM;
                 cal_state = CAL_IDLE; // ready for the next button-triggered sampling
             }

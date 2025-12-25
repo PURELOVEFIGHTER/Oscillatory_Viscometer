@@ -105,7 +105,8 @@ extern uint8_t frame[9];
 extern uint8_t * volatile UART3_TX_head;
 extern uint8_t * volatile UART3_TX_tail;
 extern volatile bool UART3_DMA_busy;
-void UART3_KickTx(void);
+bool UART3_Enqueue(const uint8_t *data, uint16_t len);
+void UART3_StartTx(void);
 void UART1_Log(const char *level, const char *file, int line, const char *message);
 /* KEY */
 void Key_Process(void);

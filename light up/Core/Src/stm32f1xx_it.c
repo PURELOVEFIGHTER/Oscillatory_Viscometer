@@ -329,17 +329,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         tim1_led_cnt++;
     }
 
-    if (htim->Instance == TIM3) {
-        // static uint8_t tim3_readInterval_cnt = 0;
-        // tim3_readInterval_cnt++;
-        // if (tim3_readInterval_cnt >= 33U) {
-        //     tim3_readInterval_cnt = 0;
-        //     LDC_status            = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
-        //     if ((LDC_status & 0x01) == 0)
-        //         ldc2_dataReady = true;
-        // }
-    }
-
     if (htim->Instance == TIM4) {
         static uint8_t tim4_cnt = 0;
         tim4_cnt++;
@@ -400,7 +389,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
         UART3_DMA_busy = false;
         __set_PRIMASK(primask);
 
-        UART3_KickTx();
+        UART3_StartTx();
     }
 }
 

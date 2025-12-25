@@ -34,6 +34,7 @@ void Command_Parse(void) {
     /* 启动频率扫描 */
     else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "FR Scan", 7) == 0) {
         drv_PWM_freq      = FREQ_SCAN_START_HZ;
+        drv_PWM_isChanged = true;
         freq_scan_enabled = true;
         HAL_TIM_Base_Start_IT(&htim4);
         ldc2_isReading = true;
@@ -43,8 +44,9 @@ void Command_Parse(void) {
     }
     /* 启动占空比扫描 */
     else if (strncmp(UART1_RX_DMA_buffer[UART1_RX_activeBuffer], "DR Scan", 7) == 0) {
-        drv_PWM_DR      = DUTY_RATIO_SCAN_START;
-        DR_scan_enabled = true;
+        drv_PWM_DR        = DUTY_RATIO_SCAN_START;
+        drv_PWM_isChanged = true;
+        DR_scan_enabled   = true;
         HAL_TIM_Base_Start_IT(&htim4);
         ldc2_isReading = true;
 
