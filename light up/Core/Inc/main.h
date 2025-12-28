@@ -119,6 +119,9 @@ extern char OLED_Line4[20];
 /* Calibrition -------------------------------------------------- */
 extern uint16_t cal_current_position_um;
 extern uint32_t cal_wait_start_tick;
+
+extern float mean_episode[CAL_SAMPLE_EPISODE];
+extern uint8_t cal_episode_cnt;
 extern uint32_t cal_sample_cnt;
 extern uint64_t cal_sum;
 extern uint64_t cal_sum_sq;

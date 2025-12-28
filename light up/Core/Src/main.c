@@ -48,7 +48,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-sysWorkMode system_mode = MODE_MEASUREMENT;
+sysWorkMode system_mode = MODE_CALIBRITION;
 /* DRV8833 --------------------------------------------------------*/
 DRV8833_HandleTypeDef hdrv1 = {
     .CHANNEL_A = {.direction = DRV_STAGE_COAST,
@@ -85,12 +85,17 @@ uint16_t L_data                  = 0;
 uint32_t LHR_data                = 0;
 
 /* Calibrition --------------------------------------------------------*/
-uint32_t cal_wait_start_tick     = 0;
-uint32_t cal_sample_cnt          = 0;
-uint64_t cal_sum                 = 0;
-uint64_t cal_sum_sq              = 0;
-volatile CalState_t cal_state    = CAL_IDLE;
-uint16_t cal_current_position_um = 0;
+extern float mean_episode[CAL_SAMPLE_EPISODE] = {0};
+extern uint8_t cal_episode_cnt                = 0;
+uint32_t cal_wait_start_tick                  = 0;
+uint32_t cal_sample_cnt                       = 0;
+uint64_t cal_sum                              = 0;
+uint64_t cal_sum_sq                           = 0;
+uint32_t cal_total_sample_cnt                 = 0;
+uint64_t cal_total_sum                        = 0;
+uint64_t cal_total_sum_sq                     = 0;
+volatile CalState_t cal_state                 = CAL_IDLE;
+uint16_t cal_current_position_um              = 0;
 
 /* UART -----------------------------------------------------------*/
 /* UART1 */
@@ -235,10 +240,15 @@ void Key_Process(void) {
             // 鐘舵�佸垏鎹㈠埌绛夊緟绋冲畾
             cal_state = CAL_WAIT_SETTLE;
             // 鏁版嵁娓呴浂
-            cal_sample_cnt      = 0;
-            cal_sum             = 0;
-            cal_sum_sq          = 0;
-            cal_wait_start_tick = HAL_GetTick();
+            cal_episode_cnt = 0;
+            memset(mean_episode, 0, sizeof(mean_episode));
+            cal_sample_cnt       = 0;
+            cal_sum              = 0;
+            cal_sum_sq           = 0;
+            cal_total_sample_cnt = 0;
+            cal_total_sum        = 0;
+            cal_total_sum_sq     = 0;
+            cal_wait_start_tick  = HAL_GetTick();
 
             HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
             sprintf(UART1_TX_buffer, "Calibration start.\r\n");
@@ -319,7 +329,7 @@ int main(void) {
         UART1_Log("INFO", "main.c", __LINE__, "LDC1101 Initialization Done...");
         uint16_t rcount = (uint16_t)(ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_RCOUNT_LSB));
         rcount |= (uint16_t)(ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_RCOUNT_MSB) << 8);
-        const float f_clk_hz    = 16000000.0f;                 // 16 MHz crystal
+        const float f_clk_hz    = 16000000.0f;                 // LDC1101 外部输入参考时钟频率
         const float conv_cycles = (float)(rcount * 16U + 55U); // RCOUNT*16 + 55 reference cycles
         float sample_rate_hz    = f_clk_hz / conv_cycles;
         float sample_rate_ksps  = sample_rate_hz / 1000.0f;
@@ -400,28 +410,44 @@ int main(void) {
                     cal_sample_cnt++;
                     cal_sum += LHR_data;
                     cal_sum_sq += (uint64_t)LHR_data * LHR_data;
+                    cal_total_sample_cnt++;
+                    cal_total_sum += LHR_data;
+                    cal_total_sum_sq += (uint64_t)LHR_data * LHR_data;
                     // ===== Data Transmission =====
                     if (cal_sample_cnt >= CAL_SAMPLE_NUM)
                         cal_state = CAL_DONE;
                 }
             }
             if ((cal_state == CAL_DONE)) {
-                float sample_cnt = (float)cal_sample_cnt;
-                float mean       = (float)cal_sum / sample_cnt;
-                float var        = (float)cal_sum_sq / sample_cnt - mean * mean;
-                uint8_t cal_frame[11];
-                /* Frame: [cal_current_position_um(2B)][mean(4B float LE)][var(4B float LE)][0xAA] */
-                memcpy(&cal_frame[0], &cal_current_position_um, sizeof(cal_current_position_um));
-                memcpy(&cal_frame[2], &mean, sizeof(float));
-                memcpy(&cal_frame[6], &var, sizeof(float));
-                cal_frame[10] = 0xAA;
+                float sample_cnt              = (float)cal_sample_cnt;
+                float episode_mean            = (float)cal_sum / sample_cnt;
+                mean_episode[cal_episode_cnt] = episode_mean;
+                cal_episode_cnt++;
 
-                bool enqueued = UART3_Enqueue(cal_frame, sizeof(cal_frame));
-                if (enqueued) {
-                    UART3_StartTx();
+                if (cal_episode_cnt < CAL_SAMPLE_EPISODE) {
+                    cal_sample_cnt      = 0;
+                    cal_sum             = 0;
+                    cal_sum_sq          = 0;
+                    cal_wait_start_tick = HAL_GetTick();
+                    cal_state           = CAL_WAIT_SETTLE;
+                } else {
+                    float total_cnt = (float)cal_total_sample_cnt;
+                    float mean      = (float)cal_total_sum / total_cnt;
+                    float var       = (float)cal_total_sum_sq / total_cnt - mean * mean;
+                    uint8_t cal_frame[11];
+                    /* Frame: [cal_current_position_um(2B)][mean(4B float LE)][var(4B float LE)][0xAA] */
+                    memcpy(&cal_frame[0], &cal_current_position_um, sizeof(cal_current_position_um));
+                    memcpy(&cal_frame[2], &mean, sizeof(float));
+                    memcpy(&cal_frame[6], &var, sizeof(float));
+                    cal_frame[10] = 0xAA;
+
+                    bool enqueued = UART3_Enqueue(cal_frame, sizeof(cal_frame));
+                    if (enqueued) {
+                        UART3_StartTx();
+                    }
+                    cal_current_position_um += CALIBRITION_STEP_UM;
+                    cal_state = CAL_IDLE; // ready for the next button-triggered sampling
                 }
-                cal_current_position_um += CALIBRITION_STEP_UM;
-                cal_state = CAL_IDLE; // ready for the next button-triggered sampling
             }
         }
         /* USER CODE END WHILE */

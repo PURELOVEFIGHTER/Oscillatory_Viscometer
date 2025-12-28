@@ -16,19 +16,19 @@ typedef enum {
  *               Frequency Scan Configuration
  * ========================================================= */
 #define FREQ_SCAN_DEFAULT_HZ   200
-#define FREQ_SCAN_START_HZ     150 // ??????
-#define FREQ_SCAN_END_HZ       250 // ??????
-#define FREQ_SCAN_STEP_HZ      0.5 // ??????
-#define FREQ_SCAN_HOLD_TIME_MS 50  // ????????(ms)
+#define FREQ_SCAN_START_HZ     150 // 扫频起始频率
+#define FREQ_SCAN_END_HZ       250 // 扫频终止频率
+#define FREQ_SCAN_STEP_HZ      0.5 // 扫频步进
+#define FREQ_SCAN_HOLD_TIME_MS 50  // 每个频率采集时间(ms)
 
 /* =========================================================
  *                  Assert Level Configuration
  * ========================================================= */
 #define DUTY_RATIO_DEFAULT           50
-#define DUTY_RATIO_SCAN_START        0   // ????????
-#define DUTY_RATIO_SCAN_END          100 // ????????
-#define DUTY_RATIO_SCAN_STEP         1   // ????????
-#define DUTY_RATIO_SCAN_HOLD_TIME_MS 30  // ??????????ms)
+#define DUTY_RATIO_SCAN_START        0   // 有效电平扫描起始比例
+#define DUTY_RATIO_SCAN_END          100 // 有效电平扫描终止比例
+#define DUTY_RATIO_SCAN_STEP         1   // 扫频步进
+#define DUTY_RATIO_SCAN_HOLD_TIME_MS 30  // 每个比例采集时间(ms)
 
 /* =========================================================
  *                   LDC1101 Configuration
@@ -54,6 +54,7 @@ typedef enum {
 /* =========================================================
  *                  Calibrition Configuration
  * ========================================================= */
+#define CAL_SAMPLE_EPISODE   10U
 #define CAL_SAMPLE_NUM       1000U
 #define CAL_SETTLE_TIME_MS   200U
 #define CALIBRITION_START_UM 450U
