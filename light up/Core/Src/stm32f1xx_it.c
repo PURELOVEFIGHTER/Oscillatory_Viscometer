@@ -403,8 +403,5 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
         key_last_tick = now;
         Key_Process();
     }
-    // if (GPIO_Pin == GPIO_PIN_12) {
-    //     ldc2_dataReady = true;
-    // }
 }
 /* USER CODE END 1 */

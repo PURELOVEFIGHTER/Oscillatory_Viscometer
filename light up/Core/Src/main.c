@@ -237,9 +237,9 @@ void Key_Process(void) {
         UART1_TX_send = true;
     } else if (system_mode == MODE_CALIBRITION) {
         if (cal_state == CAL_IDLE) {
-            // 鐘舵�佸垏鎹㈠埌绛夊緟绋冲畾
+            // 标定流程进入等待稳定阶段
             cal_state = CAL_WAIT_SETTLE;
-            // 鏁版嵁娓呴浂
+            // 数据清空
             cal_episode_cnt = 0;
             memset(mean_episode, 0, sizeof(mean_episode));
             cal_sample_cnt       = 0;
@@ -445,7 +445,7 @@ int main(void) {
                     if (enqueued) {
                         UART3_StartTx();
                     }
-                    cal_current_position_um += CALIBRITION_STEP_UM;
+                    cal_current_position_um -= CALIBRITION_STEP_UM;
                     cal_state = CAL_IDLE; // ready for the next button-triggered sampling
                 }
             }
