@@ -48,7 +48,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-sysWorkMode system_mode = MODE_CALIBRITION;
+sysWorkMode system_mode = MODE_MEASUREMENT;
 /* DRV8833 --------------------------------------------------------*/
 DRV8833_HandleTypeDef hdrv1 = {
     .CHANNEL_A = {.direction = DRV_STAGE_COAST,
@@ -112,10 +112,7 @@ volatile bool UART3_DMA_busy     = false;
 /* KEY ------------------------------------------------------------*/
 
 /* OLED -----------------------------------------------------------*/
-char OLED_Line1[20];
-char OLED_Line2[20];
-char OLED_Line3[20];
-char OLED_Line4[20];
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -237,9 +234,9 @@ void Key_Process(void) {
         UART1_TX_send = true;
     } else if (system_mode == MODE_CALIBRITION) {
         if (cal_state == CAL_IDLE) {
-            // ±Í∂®¡˜≥ÃΩ¯»Îµ»¥˝Œ»∂®Ω◊∂Œ
+            // Ê†áÂÆöÊµÅÁ®ãËøõÂÖ•Á≠âÂæÖÁ®≥ÂÆöÈò∂ÊÆµ
             cal_state = CAL_WAIT_SETTLE;
-            //  ˝æ›«Âø’
+            // Êï∞ÊçÆÊ∏ÖÁ©∫
             cal_episode_cnt = 0;
             memset(mean_episode, 0, sizeof(mean_episode));
             cal_sample_cnt       = 0;
@@ -318,6 +315,7 @@ int main(void) {
     OLED_Clear();
     OLED_Display_On();
 
+    HAL_TIM_Base_Start_IT(&htim3);
     /* DRV8833 Init */
     DRV_Init(&hdrv1);
     UART1_Log("INFO", "main.c", __LINE__, "DRV8833 Initialization Done...");
@@ -329,7 +327,7 @@ int main(void) {
         UART1_Log("INFO", "main.c", __LINE__, "LDC1101 Initialization Done...");
         uint16_t rcount = (uint16_t)(ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_RCOUNT_LSB));
         rcount |= (uint16_t)(ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_RCOUNT_MSB) << 8);
-        const float f_clk_hz    = 16000000.0f;                 // LDC1101 Õ‚≤ø ‰»Î≤Œøº ±÷”∆µ¬ 
+        const float f_clk_hz    = 16000000.0f;                 // LDC1101 Â§ñÈÉ®ËæìÂÖ•ÂèÇÔøΩ?ÔøΩÊó∂ÈíüÈ¢ëÔøΩ?
         const float conv_cycles = (float)(rcount * 16U + 55U); // RCOUNT*16 + 55 reference cycles
         float sample_rate_hz    = f_clk_hz / conv_cycles;
         float sample_rate_ksps  = sample_rate_hz / 1000.0f;

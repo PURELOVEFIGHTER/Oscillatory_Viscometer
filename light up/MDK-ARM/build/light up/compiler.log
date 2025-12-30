@@ -1,7 +1,10 @@
 >>> cc
 
-
+".\..\Core\Src\stm32f1xx_it.c", line 333: Warning:  #550-D: variable "tim3_oled_cnt"  was set but never used
+          static uint16_t tim3_oled_cnt = 0;
+                          ^
+.\..\Core\Src\stm32f1xx_it.c: 1 warning, 0 errors
 
 >>> ld
 
-Program Size: Code=24674 RO-data=798 RW-data=220 ZI-data=13516  
+Program Size: Code=25086 RO-data=2854 RW-data=220 ZI-data=11980  

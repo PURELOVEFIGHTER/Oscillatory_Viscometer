@@ -329,6 +329,26 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         tim1_led_cnt++;
     }
 
+    if (htim->Instance == TIM3) {
+        static uint16_t tim3_oled_cnt = 0;
+        const uint8_t text_size       = 12U;
+        const uint8_t text_invert     = 0U;
+        const char *line_text         = "Sys Mode: UNKNOWN   ";
+
+        tim3_oled_cnt = 0;
+        switch (system_mode) {
+            case MODE_MEASUREMENT:
+                line_text = "Sys Mode: Measurement";
+                break;
+            case MODE_CALIBRITION:
+                line_text = "Sys Mode: Calibration";
+                break;
+            default:
+                break;
+        }
+        OLED_ShowString(0, 0, (char *)line_text, text_size, text_invert);
+    }
+
     if (htim->Instance == TIM4) {
         static uint8_t tim4_cnt = 0;
         tim4_cnt++;

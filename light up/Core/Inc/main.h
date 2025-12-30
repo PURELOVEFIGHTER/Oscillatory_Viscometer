@@ -111,10 +111,6 @@ void UART1_Log(const char *level, const char *file, int line, const char *messag
 /* KEY */
 void Key_Process(void);
 /* OLED */
-extern char OLED_Line1[20];
-extern char OLED_Line2[20];
-extern char OLED_Line3[20];
-extern char OLED_Line4[20];
 
 /* Calibrition -------------------------------------------------- */
 extern uint16_t cal_current_position_um;
