@@ -59,6 +59,7 @@ typedef enum {
 #define CAL_SETTLE_TIME_MS   200U
 #define CALIBRITION_START_UM 450U
 #define CALIBRITION_STEP_UM  1U
+#define CALIBRITION_STEP_DIR 1U // 1: 减少，0：原地观测，-1：增加
 typedef enum { CAL_IDLE = 0, CAL_WAIT_SETTLE, CAL_SAMPLING, CAL_DONE } CalState_t;
 
 /* =========================================================

@@ -1,6 +1,9 @@
 >>> cc
 
-
+".\..\Core\Src\main.c", line 458: Warning:  #68-D: integer conversion resulted in a change of sign
+                          else if (CALIBRITION_STEP_DIR == -1) // 增加
+                                                           ^
+.\..\Core\Src\main.c: 1 warning, 0 errors
 
 >>> ld
 
