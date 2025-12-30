@@ -314,7 +314,6 @@ int main(void) {
     OLED_Init();
     OLED_Clear();
     OLED_Display_On();
-
     HAL_TIM_Base_Start_IT(&htim3);
     /* DRV8833 Init */
     DRV_Init(&hdrv1);
@@ -327,7 +326,7 @@ int main(void) {
         UART1_Log("INFO", "main.c", __LINE__, "LDC1101 Initialization Done...");
         uint16_t rcount = (uint16_t)(ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_RCOUNT_LSB));
         rcount |= (uint16_t)(ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_RCOUNT_MSB) << 8);
-        const float f_clk_hz    = 16000000.0f;                 // LDC1101 外部输入参�?�时钟频�?
+        const float f_clk_hz    = 16000000.0f;                 // LDC1101 外部输入参�?�时钟频�??
         const float conv_cycles = (float)(rcount * 16U + 55U); // RCOUNT*16 + 55 reference cycles
         float sample_rate_hz    = f_clk_hz / conv_cycles;
         float sample_rate_ksps  = sample_rate_hz / 1000.0f;
@@ -460,7 +459,7 @@ int main(void) {
         /* USER CODE END 3 */
     }
 }
-
+    
 /**
  * @brief System Clock Configuration
  * @retval None

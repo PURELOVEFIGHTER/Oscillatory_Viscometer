@@ -2960,3 +2960,65 @@ These source files will be recompiled
 [2025-12-30 10:32:42]	[done]
 	build successfully !
 
+[2025-12-30 11:50:39]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
+
+[2025-12-30 11:50:39]	[done]
+	build successfully !
+
+[2025-12-30 11:55:23]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+
+[2025-12-30 11:55:24]	[done]
+	build successfully !
+
+[2025-12-30 11:58:35]	[info] incremental build: 4 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
+
+[2025-12-30 11:58:36]	compilation failed at : "d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c", exit code: 1
+command: 
+  "D:\Keil528a\ARM\ARMCC\bin\armcc.exe" -c --apcs=interwork -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I. -I.cmsis/include -I"RTE/_light up" -D"USE_HAL_DRIVER" -D"STM32F103xB" --cpu Cortex-M3 --li --c99 -O3 --split_sections --diag_suppress=1 --diag_suppress=1295 -g -o ".\build\light up\.obj\__\Core\Src\main.o" --no_depend_system_headers --depend ".\build\light up\.obj\__\Core\Src\main.d" .\..\Core\Src\main.c
+   at unify_builder.Program.Main(String[] args_)
+---
+".\..\Core\Src\main.c", line 468: Error:  #65: expected a ";"
+  {
+  ^
+".\..\Core\Src\main.c", line 490: Warning:  #12-D: parsing restarts here after previous syntax error
+                                |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+                                                                        ^
+".\..\Core\Src\main.c", line 491: Warning:  #111-D: statement is unreachable
+    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+    ^
+".\..\Core\Src\main.c", line 491: Error:  #20: identifier "RCC_ClkInitStruct" is undefined
+    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+    ^
+.\..\Core\Src\main.c: 2 warnings, 2 errors
+
+[2025-12-30 11:58:46]	[info] incremental build: 4 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\stm32f1xx_it.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\tim.c': source file has been changed.
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\MDK-ARM\startup_stm32f103xb.s': source file has been changed.
+
+[2025-12-30 11:58:48]	[done]
+	build successfully !
+
+[2025-12-30 11:59:02]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'d:\STM32CUBE MX\Oscillating Viscometer\light up\Core\Src\main.c': source file has been changed.
+
+[2025-12-30 11:59:03]	[done]
+	build successfully !
+
