@@ -13,7 +13,7 @@ virtualFolder:
       folders:
         - name: MDK-ARM
           files:
-            - path: startup_stm32f103xb.s
+            - path: ../MDK-ARM/startup_stm32f103xb.s
           folders: []
         - name: User
           files: []
@@ -34,6 +34,8 @@ virtualFolder:
                 - path: ../Core/Src/usart.c
                 - path: ../Core/Src/stm32f1xx_it.c
                 - path: ../Core/Src/stm32f1xx_hal_msp.c
+                - path: ../Core/Src/multi_button.c
+                - path: ../Core/Src/my_button.c
               folders: []
     - name: Drivers
       files: []
@@ -67,7 +69,7 @@ virtualFolder:
 dependenceList: []
 outDir: build
 miscInfo:
-  uid: f8794d6c181c09fde33a64bbf1edb70a
+  uid: 85171c060652306c64753ef0851dd856
 targets:
   light up:
     cppPreprocessAttrs:
@@ -80,9 +82,9 @@ targets:
         - ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy
         - ../Drivers/CMSIS/Device/ST/STM32F1xx/Include
         - ../Drivers/CMSIS/Include
-        - .
+        - ../MDK-ARM
         - .cmsis/include
-        - RTE/_light up
+        - ../MDK-ARM/RTE/_light up
       libList: []
     excludeList: []
     toolchain: AC5
@@ -188,6 +190,43 @@ targets:
                 startAddr: "0x0"
               tag: IROM
         useCustomScatterFile: false
+      GCC:
+        archExtensions: ""
+        cpuType: Cortex-M3
+        floatingPointHardware: none
+        options:
+          version: 5
+          afterBuildTasks: []
+          asm-compiler:
+            ASM_FLAGS: ""
+          beforeBuildTasks: []
+          c/cpp-compiler:
+            CXX_FLAGS: ""
+            C_FLAGS: ""
+            language-c: c11
+            language-cpp: c++11
+            one-elf-section-per-data: true
+            one-elf-section-per-function: true
+            optimization: level-debug
+            warnings: all-warnings
+          global:
+            $float-abi-type: hard
+            misc-control: ""
+            not-use-syscalls: true
+            output-debug-info: enable
+            use-newlib-nano: true
+          linker:
+            $outputTaskExcludes:
+              - .bin
+            LD_FLAGS: ""
+            LIB_FLAGS: -lm
+            output-format: elf
+            remove-unused-input-sections: true
+        scatterFilePath: <YOUR_LINKER_SCRIPT>.lds
+        storageLayout:
+          RAM: []
+          ROM: []
+        useCustomScatterFile: true
     uploadConfigMap:
       JLink:
         baseAddr: ""

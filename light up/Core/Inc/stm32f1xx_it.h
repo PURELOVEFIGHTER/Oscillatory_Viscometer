@@ -62,7 +62,6 @@ void TIM3_IRQHandler(void);
 void TIM4_IRQHandler(void);
 void USART1_IRQHandler(void);
 void USART3_IRQHandler(void);
-void EXTI15_10_IRQHandler(void);
 /* USER CODE BEGIN EFP */
 void HAL_UART_IdleLineCallback(UART_HandleTypeDef *huart);
 /* USER CODE END EFP */

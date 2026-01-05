@@ -31,14 +31,17 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "ldc1101_driver.h"
 #include "drv8833_driver.h"
 #include "config.h"
 #include "command.h"
 #include "oled.h"
-#include "stdio.h"
-#include "stdlib.h"
-#include "string.h"
+#include "multi_button.h"
+#include "my_button.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -108,9 +111,9 @@ extern volatile bool UART3_DMA_busy;
 bool UART3_Enqueue(const uint8_t *data, uint16_t len);
 void UART3_StartTx(void);
 void UART1_Log(const char *level, const char *file, int line, const char *message);
-/* KEY */
-void Key_Process(void);
-/* OLED */
+/* KEY -----------------------------------------------------------*/
+
+/* OLED ----------------------------------------------------------*/
 
 /* Calibrition -------------------------------------------------- */
 extern uint16_t cal_current_position_um;

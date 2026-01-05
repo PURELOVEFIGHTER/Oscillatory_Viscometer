@@ -225,34 +225,7 @@ static void StopReading(void) {
     UART3_TX_head = UART3_TX_tail = UART3_TX_buffer;
     memset(UART3_TX_buffer, 0, sizeof(UART3_TX_buffer));
 }
-void Key_Process(void) {
-    if (system_mode == MODE_MEASUREMENT) {
-        ldc2_isReading = !ldc2_isReading;
 
-        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
-        sprintf(UART1_TX_buffer, ldc2_isReading ? "Reading LHR Data.\r\n" : "Stopped LHR Data Reading.\r\n");
-        UART1_TX_send = true;
-    } else if (system_mode == MODE_CALIBRITION) {
-        if (cal_state == CAL_IDLE) {
-            // 标定流程进入等待稳定阶段
-            cal_state = CAL_WAIT_SETTLE;
-            // 数据清空
-            cal_episode_cnt = 0;
-            memset(mean_episode, 0, sizeof(mean_episode));
-            cal_sample_cnt       = 0;
-            cal_sum              = 0;
-            cal_sum_sq           = 0;
-            cal_total_sample_cnt = 0;
-            cal_total_sum        = 0;
-            cal_total_sum_sq     = 0;
-            cal_wait_start_tick  = HAL_GetTick();
-
-            HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
-            sprintf(UART1_TX_buffer, "Calibration start.\r\n");
-            UART1_TX_send = true;
-        }
-    }
-}
 /* USER CODE END 0 */
 
 /**
@@ -326,7 +299,8 @@ int main(void) {
         UART1_Log("INFO", "main.c", __LINE__, "LDC1101 Initialization Done...");
         uint16_t rcount = (uint16_t)(ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_RCOUNT_LSB));
         rcount |= (uint16_t)(ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_RCOUNT_MSB) << 8);
-        const float f_clk_hz    = 16000000.0f;                 // LDC1101 外部输入参�?�时钟频�??
+        const float f_clk_hz =
+            16000000.0f; // LDC1101 外部输入参�?�时钟频�???
         const float conv_cycles = (float)(rcount * 16U + 55U); // RCOUNT*16 + 55 reference cycles
         float sample_rate_hz    = f_clk_hz / conv_cycles;
         float sample_rate_ksps  = sample_rate_hz / 1000.0f;
@@ -453,8 +427,8 @@ int main(void) {
                         }
                         if (CALIBRITION_STEP_DIR == 1) // 减少
                             cal_current_position_um -= CALIBRITION_STEP_UM;
-                        else if (CALIBRITION_STEP_DIR == 0)  // 原地观测
-                            ;                                // do nothing
+                        else if (CALIBRITION_STEP_DIR == 0) // 原地观测
+                            ;
                         else if (CALIBRITION_STEP_DIR == -1) // 增加
                             cal_current_position_um += CALIBRITION_STEP_UM;
                         cal_state = CAL_IDLE; // ready for the next button-triggered sampling

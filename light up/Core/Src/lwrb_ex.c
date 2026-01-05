@@ -31,14 +31,14 @@
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
  * Version:         v3.2.0
  */
-#include "lwrb/lwrb.h"
+#include "lwrb.h"
 
 #if defined(LWRB_DEV)
 
 /* Do not build if development mode isn't enabled */
 
 #define BUF_IS_VALID(b) ((b) != NULL && (b)->buff != NULL && (b)->size > 0)
-#define BUF_MIN(x, y)   ((x) < (y) ? (x) : (y))
+#define BUF_MIN(x, y) ((x) < (y) ? (x) : (y))
 
 /**
  * \brief           Writes data to buffer with overwrite function, if no enough space to hold
@@ -54,30 +54,35 @@
  *                      see documentation.
  */
 lwrb_sz_t
-lwrb_overwrite(lwrb_t* buff, const void* data, lwrb_sz_t btw) {
+lwrb_overwrite(lwrb_t *buff, const void *data, lwrb_sz_t btw)
+{
     lwrb_sz_t orig_btw = btw, max_cap;
-    const uint8_t* d = data;
+    const uint8_t *d = data;
 
-    if (!BUF_IS_VALID(buff) || data == NULL || btw == 0) {
+    if (!BUF_IS_VALID(buff) || data == NULL || btw == 0)
+    {
         return 0;
     }
 
     /* Process complete input array */
     max_cap = buff->size - 1; /* Maximum capacity buffer can hold */
-    if (btw > max_cap) {
+    if (btw > max_cap)
+    {
         /*
          * When data to write is larger than max buffer capacity,
-         * we can reset the buffer and simply write last part of 
+         * we can reset the buffer and simply write last part of
          * the input buffer.
-         * 
+         *
          * This is done here, by calculating remaining
          * length and then advancing to the end of input buffer
          */
         d += btw - max_cap; /* Advance data */
         btw = max_cap;      /* Limit data to write */
         lwrb_reset(buff);   /* Reset buffer */
-    } else {
-        /* 
+    }
+    else
+    {
+        /*
          * Bytes to write is less than capacity
          * We have to perform max one skip operation,
          * but only if free memory is less than
@@ -85,7 +90,8 @@ lwrb_overwrite(lwrb_t* buff, const void* data, lwrb_sz_t btw) {
          * and only write the data.
          */
         lwrb_sz_t f = lwrb_get_free(buff);
-        if (f < btw) {
+        if (f < btw)
+        {
             lwrb_skip(buff, btw - f);
         }
     }
@@ -94,21 +100,23 @@ lwrb_overwrite(lwrb_t* buff, const void* data, lwrb_sz_t btw) {
 }
 
 /**
- * \brief           Move one ring buffer to another, up to the amount of data in the source, or amount 
+ * \brief           Move one ring buffer to another, up to the amount of data in the source, or amount
  *                      of data free in the destination.
  * \param[in]       dest: Buffer handle that the copied data will be written to
  * \param[in]       src:  Buffer handle that the copied data will come from.
  *                      Source buffer will be effectively read upon operation.
  * \return          Number of bytes written to destination buffer
- * \note            This operation is a read op to the source, on success it will update the r index. 
+ * \note            This operation is a read op to the source, on success it will update the r index.
  *                  As well as a write op to the destination, and may update the w index.
  *                  For thread-safety mutexes may be desired, see documentation.
  */
 lwrb_sz_t
-lwrb_move(lwrb_t* dest, lwrb_t* src) {
+lwrb_move(lwrb_t *dest, lwrb_t *src)
+{
     lwrb_sz_t len_to_copy, len_to_copy_orig, src_full, dest_free;
 
-    if (!BUF_IS_VALID(dest) || !BUF_IS_VALID(src)) {
+    if (!BUF_IS_VALID(dest) || !BUF_IS_VALID(src))
+    {
         return 0;
     }
     src_full = lwrb_get_full(src);
@@ -118,10 +126,11 @@ lwrb_move(lwrb_t* dest, lwrb_t* src) {
 
     /* Calculations for available length to copy is done above.
         We safely assume operations inside loop will properly complete. */
-    while (len_to_copy > 0) {
+    while (len_to_copy > 0)
+    {
         lwrb_sz_t max_seq_read, max_seq_write, op_len;
-        const uint8_t* d_src;
-        uint8_t* d_dst;
+        const uint8_t *d_src;
+        uint8_t *d_dst;
 
         /* Calculate data */
         max_seq_read = lwrb_get_linear_block_read_length(src);
@@ -134,14 +143,16 @@ lwrb_move(lwrb_t* dest, lwrb_t* src) {
         d_dst = lwrb_get_linear_block_write_address(dest);
 
         /* Byte by byte copy */
-        for (lwrb_sz_t i = 0; i < op_len; ++i) {
+        for (lwrb_sz_t i = 0; i < op_len; ++i)
+        {
             *d_dst++ = *d_src++;
         }
 
         lwrb_advance(dest, op_len);
         lwrb_skip(src, op_len);
         len_to_copy -= op_len;
-        if (op_len == 0) {
+        if (op_len == 0)
+        {
             /* Hard error... */
             return 0;
         }

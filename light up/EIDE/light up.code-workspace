@@ -28,9 +28,7 @@
             "editor.insertSpaces": true,
             "editor.tabSize": 4,
             "editor.autoIndent": "advanced"
-        },
-        "cortex-debug.variableUseNaturalFormat": true,
-        "chatgpt.openOnStartup": true
+        }
     },
     "extensions": {
         "recommendations": [
@@ -39,6 +37,7 @@
             "xiaoyongdong.srecord",
             "hars.cppsnippets",
             "zixuanwang.linkerscript",
+            "redhat.vscode-yaml",
             "IBM.output-colorizer",
             "cschlosser.doxdocgen",
             "ms-vscode.vscode-serial-monitor",

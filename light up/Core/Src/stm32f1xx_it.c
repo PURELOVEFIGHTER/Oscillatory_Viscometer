@@ -20,9 +20,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f1xx_it.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "multi_button.h"
+#include "my_button.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,13 +44,11 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-static uint8_t key_locked     = 0;
-static uint32_t key_last_tick = 0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -287,19 +287,6 @@ void USART3_IRQHandler(void) {
     /* USER CODE END USART3_IRQn 1 */
 }
 
-/**
- * @brief This function handles EXTI line[15:10] interrupts.
- */
-void EXTI15_10_IRQHandler(void) {
-    /* USER CODE BEGIN EXTI15_10_IRQn 0 */
-
-    /* USER CODE END EXTI15_10_IRQn 0 */
-    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);
-    /* USER CODE BEGIN EXTI15_10_IRQn 1 */
-
-    /* USER CODE END EXTI15_10_IRQn 1 */
-}
-
 /* USER CODE BEGIN 1 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (htim->Instance == TIM1) {
@@ -327,6 +314,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
             tim1_led_cnt = 0;
         }
         tim1_led_cnt++;
+    }
+
+    if (htim->Instance == TIM2) {
+        static uint8_t tim2_button_cnt = 0;
+        if (tim2_button_cnt == 25) {
+            tim2_button_cnt = 0;
+            button_ticks();
+        }
+        tim2_button_cnt++;
     }
 
     if (htim->Instance == TIM3) {
@@ -410,18 +406,6 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
         __set_PRIMASK(primask);
 
         UART3_StartTx();
-    }
-}
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-    if (GPIO_Pin == GPIO_PIN_11) {
-        uint32_t now = HAL_GetTick();
-        if (key_locked && ((now - key_last_tick) < KEY_DEBOUNCE_MS)) {
-            return;
-        }
-        key_locked    = 1U;
-        key_last_tick = now;
-        Key_Process();
     }
 }
 /* USER CODE END 1 */
