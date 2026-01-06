@@ -1,11 +1,12 @@
 #include <stm32f1xx_hal.h>
 #include "my_button.h"
+#include "main.h"
 
-extern Button btn1;
+Button btn1;
 uint8_t getButtonLevel(uint8_t button_id) {
     switch (button_id) {
         case 1:
-            return HAL_GPIO_ReadPin(&GPIOA, GPIO_PIN_11);
+            return HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11);
         default:
             return 1; // 默认返回未按下状态
     }
@@ -45,12 +46,12 @@ void btn1_double_click_handler(Button *btn) {
     if (system_mode == MODE_MEASUREMENT) {
         // 切换到标定模式
         system_mode = MODE_CALIBRITION;
-        sprintf(UART1_TX_buffer, "Switched to Calibration Mode.\r\n");
+        sprintf(UART1_TX_buffer, "Switch to Calibration Mode.\r\n");
         UART1_TX_send = true;
     } else if (system_mode == MODE_CALIBRITION) {
         // 切换到测量模式
         system_mode = MODE_MEASUREMENT;
-        sprintf(UART1_TX_buffer, "Switched to Measurement Mode.\r\n");
+        sprintf(UART1_TX_buffer, "Switch to Measurement Mode.\r\n");
         UART1_TX_send = true;
     }
 }

@@ -124,6 +124,9 @@ extern uint8_t cal_episode_cnt;
 extern uint32_t cal_sample_cnt;
 extern uint64_t cal_sum;
 extern uint64_t cal_sum_sq;
+extern uint32_t cal_total_sample_cnt;
+extern uint64_t cal_total_sum;
+extern uint64_t cal_total_sum_sq;
 extern volatile CalState_t cal_state;
 
 /* USER CODE END Private defines */

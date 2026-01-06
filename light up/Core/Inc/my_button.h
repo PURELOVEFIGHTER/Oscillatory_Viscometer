@@ -9,6 +9,7 @@ extern "C" {
 
 extern Button btn1;
 uint8_t getButtonLevel(uint8_t button_id);
+void buttons_init(void);
 
 #ifdef __cplusplus
 }

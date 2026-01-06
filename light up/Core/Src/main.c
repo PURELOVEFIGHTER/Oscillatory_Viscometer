@@ -266,6 +266,8 @@ int main(void) {
     MX_TIM1_Init();
     MX_TIM3_Init();
     /* USER CODE BEGIN 2 */
+    buttons_init();
+    HAL_TIM_Base_Start_IT(&htim2);
     if (system_mode == MODE_CALIBRITION) {
         cal_current_position_um = CALIBRITION_START_UM;
         uint8_t init_frame[11];
@@ -299,8 +301,7 @@ int main(void) {
         UART1_Log("INFO", "main.c", __LINE__, "LDC1101 Initialization Done...");
         uint16_t rcount = (uint16_t)(ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_RCOUNT_LSB));
         rcount |= (uint16_t)(ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_RCOUNT_MSB) << 8);
-        const float f_clk_hz =
-            16000000.0f; // LDC1101 外部输入参�?�时钟频�???
+        const float f_clk_hz    = 16000000.0f;                 // LDC1101 Extenal Reference Clock Frequency = 16MHz
         const float conv_cycles = (float)(rcount * 16U + 55U); // RCOUNT*16 + 55 reference cycles
         float sample_rate_hz    = f_clk_hz / conv_cycles;
         float sample_rate_ksps  = sample_rate_hz / 1000.0f;
@@ -330,10 +331,13 @@ int main(void) {
 
             /* LDC Reading Control */
             if (ldc2_isReading != ldc2_isReadingPrev) {
-                if (ldc2_isReading)
+                if (ldc2_isReading) {
                     StartReading();
-                else
+                    HAL_TIM_Base_Start_IT(&htim3);
+                } else {
                     StopReading();
+                    HAL_TIM_Base_Stop_IT(&htim3);
+                }
                 ldc2_isReadingPrev = ldc2_isReading;
             }
             /* LDC Data Get and Transmit */
@@ -376,6 +380,7 @@ int main(void) {
                     }
                     /* fallthrough */
                 case CAL_SAMPLING:
+                    HAL_TIM_Base_Stop_IT(&htim3);
                     LDC_status = ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS);
                     if ((LDC_status & 0x01) == 0) {
                         ldc2_dataReady = true;
