@@ -136,6 +136,8 @@ void DRV_Stop(DRV8833_Channel *ch, TIM_HandleTypeDef *htim) {
     HAL_TIM_PWM_Stop(ch->htim, ch->CH2);
 
     HAL_TIM_Base_Stop_IT(htim);
+    /* Keep TIM2 running for button scanning even when PWM is stopped. */
+    HAL_TIM_Base_Start_IT(&htim2);
 }
 
 static uint16_t UART3_BufferUsedUnsafe(void) {
@@ -217,11 +219,16 @@ void UART1_Log(const char *level, const char *file, int line, const char *messag
     HAL_UART_Transmit(&huart1, (uint8_t *)UART1_TX_buffer, strlen(UART1_TX_buffer), HAL_MAX_DELAY);
 }
 
-static void StartReading(void) { DRV_Start(&hdrv1.CHANNEL_A, &htim1); }
+static void StartReading(void) {
+    DRV_Start(&hdrv1.CHANNEL_A, &htim1);
+    HAL_TIM_Base_Stop_IT(&htim3);
+}
 static void StopReading(void) {
     DRV_Stop(&hdrv1.CHANNEL_A, &htim1);
+    HAL_TIM_Base_Start_IT(&htim3);
 
     HAL_UART_DMAStop(&huart3);
+    UART3_DMA_busy = false;
     UART3_TX_head = UART3_TX_tail = UART3_TX_buffer;
     memset(UART3_TX_buffer, 0, sizeof(UART3_TX_buffer));
 }
@@ -331,13 +338,10 @@ int main(void) {
 
             /* LDC Reading Control */
             if (ldc2_isReading != ldc2_isReadingPrev) {
-                if (ldc2_isReading) {
+                if (ldc2_isReading)
                     StartReading();
-                    HAL_TIM_Base_Start_IT(&htim3);
-                } else {
+                else
                     StopReading();
-                    HAL_TIM_Base_Stop_IT(&htim3);
-                }
                 ldc2_isReadingPrev = ldc2_isReading;
             }
             /* LDC Data Get and Transmit */
@@ -437,6 +441,8 @@ int main(void) {
                         else if (CALIBRITION_STEP_DIR == -1) // 增加
                             cal_current_position_um += CALIBRITION_STEP_UM;
                         cal_state = CAL_IDLE; // ready for the next button-triggered sampling
+                        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
+                        HAL_TIM_Base_Start_IT(&htim3);
                     }
                     break;
                 }

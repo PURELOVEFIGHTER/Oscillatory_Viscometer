@@ -47,7 +47,14 @@ void btn1_double_click_handler(Button *btn) {
         // 切换到标定模式
         system_mode = MODE_CALIBRITION;
         sprintf(UART1_TX_buffer, "Switch to Calibration Mode.\r\n");
-        UART1_TX_send = true;
+        UART1_TX_send           = true;
+        cal_current_position_um = CALIBRITION_START_UM;
+        uint8_t init_frame[11];
+        memset(init_frame, 0xFF, sizeof(init_frame));
+        bool init_enqueued = UART3_Enqueue(init_frame, sizeof(init_frame));
+        if (init_enqueued) {
+            UART3_StartTx();
+        }
     } else if (system_mode == MODE_CALIBRITION) {
         // 切换到测量模式
         system_mode = MODE_MEASUREMENT;
