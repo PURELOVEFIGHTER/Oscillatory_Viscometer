@@ -6,13 +6,13 @@ light up\stm32f1xx_hal_spi.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_
 light up\stm32f1xx_hal_spi.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h
 light up\stm32f1xx_hal_spi.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h
 light up\stm32f1xx_hal_spi.o: ../Drivers/CMSIS/Include/core_cm3.h
-light up\stm32f1xx_hal_spi.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdint.h
+light up\stm32f1xx_hal_spi.o: F:\Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 light up\stm32f1xx_hal_spi.o: ../Drivers/CMSIS/Include/cmsis_version.h
 light up\stm32f1xx_hal_spi.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 light up\stm32f1xx_hal_spi.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
 light up\stm32f1xx_hal_spi.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h
 light up\stm32f1xx_hal_spi.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
-light up\stm32f1xx_hal_spi.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stddef.h
+light up\stm32f1xx_hal_spi.o: F:\Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 light up\stm32f1xx_hal_spi.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h
 light up\stm32f1xx_hal_spi.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h
 light up\stm32f1xx_hal_spi.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio_ex.h

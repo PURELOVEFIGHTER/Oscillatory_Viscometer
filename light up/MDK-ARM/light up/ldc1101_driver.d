@@ -1,7 +1,7 @@
 light up\ldc1101_driver.o: ..\Core\Src\ldc1101_driver.c
 light up\ldc1101_driver.o: ../Core/Inc/ldc1101_driver.h
-light up\ldc1101_driver.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdbool.h
-light up\ldc1101_driver.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdint.h
+light up\ldc1101_driver.o: F:\Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+light up\ldc1101_driver.o: F:\Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 light up\ldc1101_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
 light up\ldc1101_driver.o: ../Core/Inc/stm32f1xx_hal_conf.h
 light up\ldc1101_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h
@@ -14,7 +14,7 @@ light up\ldc1101_driver.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 light up\ldc1101_driver.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
 light up\ldc1101_driver.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h
 light up\ldc1101_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
-light up\ldc1101_driver.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stddef.h
+light up\ldc1101_driver.o: F:\Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 light up\ldc1101_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h
 light up\ldc1101_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h
 light up\ldc1101_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio_ex.h

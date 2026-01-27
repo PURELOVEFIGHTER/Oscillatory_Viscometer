@@ -1,4 +1,5 @@
 light up\drv8833_driver.o: ..\Core\Src\drv8833_driver.c
+light up\drv8833_driver.o: ../Core/Inc/config.h
 light up\drv8833_driver.o: ../Core/Inc/drv8833_driver.h
 light up\drv8833_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
 light up\drv8833_driver.o: ../Core/Inc/stm32f1xx_hal_conf.h
@@ -7,13 +8,13 @@ light up\drv8833_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def
 light up\drv8833_driver.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h
 light up\drv8833_driver.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h
 light up\drv8833_driver.o: ../Drivers/CMSIS/Include/core_cm3.h
-light up\drv8833_driver.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stdint.h
+light up\drv8833_driver.o: F:\Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 light up\drv8833_driver.o: ../Drivers/CMSIS/Include/cmsis_version.h
 light up\drv8833_driver.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 light up\drv8833_driver.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
 light up\drv8833_driver.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h
 light up\drv8833_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
-light up\drv8833_driver.o: D:\Keil528a\ARM\ARMCC\Bin\..\include\stddef.h
+light up\drv8833_driver.o: F:\Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 light up\drv8833_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h
 light up\drv8833_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h
 light up\drv8833_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio_ex.h
@@ -29,4 +30,3 @@ light up\drv8833_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi
 light up\drv8833_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 light up\drv8833_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 light up\drv8833_driver.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
-light up\drv8833_driver.o: ../Core/Inc/drv8833_config.h
