@@ -74,10 +74,10 @@ typedef enum { CAL_IDLE = 0, CAL_WAIT_SETTLE, CAL_SAMPLING, CAL_DONE } CalState_
  *                      LED Configuration
  * ========================================================= */
 // #define LED1, Power LED, always ON
-#define LED2_GPIO_PORT GPIOB
-#define LED2_PIN       GPIO_PIN_2
-#define LED3_GPIO_PORT GPIOD
-#define LED3_PIN       GPIO_PIN_0
+#define LED2_PORT GPIOB
+#define LED2_PIN  GPIO_PIN_2
+#define LED3_PORT GPIOD
+#define LED3_PIN  GPIO_PIN_0
 
 #ifdef __cplusplus
 }

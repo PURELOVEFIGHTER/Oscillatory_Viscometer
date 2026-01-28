@@ -27,7 +27,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "lwrb.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,7 +48,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-sysWorkMode system_mode = MODE_CALIBRITION;
+sysWorkMode system_mode = MODE_MEASUREMENT;
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DRV8833 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 DRV8833_HandleTypeDef hdrv1 = {
     .CHANNEL_A = {.direction = DRV_STAGE_COAST,
@@ -83,33 +83,40 @@ uint16_t Rp_data                 = 0;
 uint16_t L_data                  = 0;
 uint32_t LHR_data                = 0;
 
+uint32_t cnt = 0;
+
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Calibrition <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-extern float mean_episode[CAL_SAMPLE_EPISODE] = {0};
-extern uint8_t cal_episode_cnt                = 0;
-uint32_t cal_wait_start_tick                  = 0;
-uint32_t cal_sample_cnt                       = 0;
-uint64_t cal_sum                              = 0;
-uint64_t cal_sum_sq                           = 0;
-uint32_t cal_total_sample_cnt                 = 0;
-uint64_t cal_total_sum                        = 0;
-uint64_t cal_total_sum_sq                     = 0;
-volatile CalState_t cal_state                 = CAL_IDLE;
-uint16_t cal_current_position_um              = 0;
+float mean_episode[CAL_SAMPLE_EPISODE] = {0};
+uint8_t cal_episode_cnt                = 0;
+uint32_t cal_wait_start_tick           = 0;
+uint32_t cal_sample_cnt                = 0;
+uint64_t cal_sum                       = 0;
+uint64_t cal_sum_sq                    = 0;
+uint32_t cal_total_sample_cnt          = 0;
+uint64_t cal_total_sum                 = 0;
+uint64_t cal_total_sum_sq              = 0;
+volatile CalState_t cal_state          = CAL_IDLE;
+uint16_t cal_current_position_um       = 0;
 
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> UART <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 /* UART2 */
 volatile uint8_t UART2_RX_activeBuffer = 0;
 char UART2_RX_DMA_buffer[2][MSG_LEN]   = {0};
-char UART2_TX_buffer[MSG_LEN]          = {0};
-bool UART2_TX_send                     = false;
+static lwrb_t uart2_tx_rb;
+static uint8_t uart2_tx_rb_mem[UART2_TX_RB_SIZE];
+static volatile bool uart2_tx_busy = false;
 /* UART3 */
 uint8_t UART3_TX_buffer[QUEUE_LEN * 9];
 uint8_t frame[9];
 uint8_t * volatile UART3_TX_head = UART3_TX_buffer;
 uint8_t * volatile UART3_TX_tail = UART3_TX_buffer;
 volatile bool UART3_DMA_busy     = false;
-/* OLED update flag (set in TIM3 ISR) */
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OLED <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 volatile bool oled_update_pending = false;
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Button <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+volatile bool button_scan_pending = false;
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LED <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+volatile bool led_breath_enabled = false;
 
 /* USER CODE END PV */
 
@@ -121,6 +128,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
 void DRV_Start(DRV8833_Channel *ch, TIM_HandleTypeDef *htim) {
     HAL_GPIO_WritePin(hdrv1.nSLEEP_Port, hdrv1.nSLEEP_Pin, GPIO_PIN_SET);
     HAL_TIM_PWM_Start(ch->htim, ch->CH1);
@@ -199,6 +207,65 @@ void UART3_StartTx(void) {
         __set_PRIMASK(primask); /* Critical Section End */
     }
 }
+bool UART2_TxEnqueue(const uint8_t *data, uint16_t len) {
+    if (data == NULL || len == 0U) {
+        return false;
+    }
+    uint32_t primask = __get_PRIMASK();
+    __disable_irq(); /* Critical Section Begin */
+    lwrb_sz_t written = lwrb_write(&uart2_tx_rb, data, (lwrb_sz_t)len);
+    __set_PRIMASK(primask); /* Critical Section End */
+    return written == (lwrb_sz_t)len;
+}
+void UART2_TxKick(void) {
+    uint32_t primask = __get_PRIMASK();
+    __disable_irq(); /* Critical Section Begin */
+    if (uart2_tx_busy || lwrb_get_full(&uart2_tx_rb) == 0U) {
+        __set_PRIMASK(primask); /* Critical Section End */
+        return;
+    }
+
+    uint8_t *start = lwrb_get_linear_block_read_address(&uart2_tx_rb);
+    lwrb_sz_t size = lwrb_get_linear_block_read_length(&uart2_tx_rb);
+    if (size > UINT16_MAX) {
+        size = UINT16_MAX;
+    }
+    uart2_tx_busy = true;
+    __set_PRIMASK(primask); /* Critical Section End */
+
+    if (HAL_UART_Transmit_IT(&huart2, start, (uint16_t)size) != HAL_OK) {
+        primask = __get_PRIMASK();
+        __disable_irq(); /* Critical Section Begin */
+        uart2_tx_busy = false;
+        __set_PRIMASK(primask); /* Critical Section End */
+    }
+}
+void UART2_SendString(const char *str) {
+    if (str == NULL) {
+        return;
+    }
+    size_t len = strlen(str);
+    if (len == 0U) {
+        return;
+    }
+    if (len > UINT16_MAX) {
+        len = UINT16_MAX;
+    }
+    if (UART2_TxEnqueue((const uint8_t *)str, (uint16_t)len)) {
+        UART2_TxKick();
+    }
+}
+void UART2_TxOnComplete(uint16_t sent_len) {
+    if (sent_len == 0U) {
+        return;
+    }
+    uint32_t primask = __get_PRIMASK();
+    __disable_irq(); /* Critical Section Begin */
+    lwrb_skip(&uart2_tx_rb, (lwrb_sz_t)sent_len);
+    uart2_tx_busy = false;
+    __set_PRIMASK(primask); /* Critical Section End */
+    UART2_TxKick();
+}
 void UART2_Log(const char *level, const char *file, int line, const char *message) {
     uint32_t ticks   = HAL_GetTick();
     uint32_t hours   = ticks / 3600000U;
@@ -213,17 +280,19 @@ void UART2_Log(const char *level, const char *file, int line, const char *messag
     strncpy(msg_copy, message, MSG_LEN - 1);
     msg_copy[MSG_LEN - 1] = '\0';
 
-    snprintf(UART2_TX_buffer, MSG_LEN, "[%s] [%s] [%s:%d] %s\r\n", level, time_buf, file, line, msg_copy);
-    HAL_UART_Transmit(&huart2, (uint8_t *)UART2_TX_buffer, strlen(UART2_TX_buffer), HAL_MAX_DELAY);
+    char log_buf[MSG_LEN];
+    snprintf(log_buf, sizeof(log_buf), "[%s] [%s] [%s:%d] %s\r\n", level, time_buf, file, line, msg_copy);
+    UART2_SendString(log_buf);
 }
 
 static void StartReading(void) {
+    led_breath_enabled = true;
     DRV_Start(&hdrv1.CHANNEL_A, &htim1);
-    HAL_TIM_Base_Stop_IT(&htim3);
 }
 static void StopReading(void) {
+    led_breath_enabled = false;
+    HAL_GPIO_WritePin(LED2_PORT, LED2_PIN, GPIO_PIN_RESET);
     DRV_Stop(&hdrv1.CHANNEL_A, &htim1);
-    HAL_TIM_Base_Start_IT(&htim3);
 
     HAL_UART_DMAStop(&huart3);
     UART3_DMA_busy = false;
@@ -233,43 +302,45 @@ static void StopReading(void) {
 /* USER CODE END 0 */
 
 /**
- * @brief  The application entry point.
- * @retval int
- */
-int main(void) {
+  * @brief  The application entry point.
+  * @retval int
+  */
+int main(void)
+{
 
-    /* USER CODE BEGIN 1 */
+  /* USER CODE BEGIN 1 */
 
-    /* USER CODE END 1 */
+  /* USER CODE END 1 */
 
-    /* MCU Configuration--------------------------------------------------------*/
+  /* MCU Configuration--------------------------------------------------------*/
 
-    /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-    HAL_Init();
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
 
-    /* USER CODE BEGIN Init */
+  /* USER CODE BEGIN Init */
 
-    /* USER CODE END Init */
+  /* USER CODE END Init */
 
-    /* Configure the system clock */
-    SystemClock_Config();
+  /* Configure the system clock */
+  SystemClock_Config();
 
-    /* USER CODE BEGIN SysInit */
+  /* USER CODE BEGIN SysInit */
 
-    /* USER CODE END SysInit */
+  /* USER CODE END SysInit */
 
-    /* Initialize all configured peripherals */
-    MX_GPIO_Init();
-    MX_DMA_Init();
-    MX_I2C1_Init();
-    MX_SPI2_Init();
-    MX_TIM2_Init();
-    MX_USART2_UART_Init();
-    MX_USART3_UART_Init();
-    MX_TIM1_Init();
-    MX_TIM3_Init();
-    MX_TIM4_Init();
-    /* USER CODE BEGIN 2 */
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_DMA_Init();
+  MX_I2C1_Init();
+  MX_SPI2_Init();
+  MX_TIM2_Init();
+  MX_USART2_UART_Init();
+  MX_USART3_UART_Init();
+  MX_TIM1_Init();
+  MX_TIM3_Init();
+  MX_TIM4_Init();
+  /* USER CODE BEGIN 2 */
+    lwrb_init(&uart2_tx_rb, uart2_tx_rb_mem, sizeof(uart2_tx_rb_mem));
     buttons_init();
     HAL_TIM_Base_Start_IT(&htim2);
     if (system_mode == MODE_CALIBRITION) {
@@ -282,8 +353,9 @@ int main(void) {
         }
     }
 
-    snprintf(UART2_TX_buffer, sizeof(UART2_TX_buffer), "System Mode: %s", system_mode ? "CALIBRITION" : "MEASUREMENT");
-    UART2_Log("INFO", "main.c", __LINE__, UART2_TX_buffer);
+    char mode_msg[MSG_LEN];
+    snprintf(mode_msg, sizeof(mode_msg), "System Mode: %s", system_mode ? "CALIBRITION" : "MEASUREMENT");
+    UART2_Log("INFO", "main.c", __LINE__, mode_msg);
 
     /* UART2 DMA Init */
     HAL_UART_Receive_DMA(&huart2, (uint8_t *)UART2_RX_DMA_buffer[UART2_RX_activeBuffer], MSG_LEN);
@@ -297,7 +369,6 @@ int main(void) {
     /* DRV8833 Init */
     DRV_Init(&hdrv1);
     UART2_Log("INFO", "main.c", __LINE__, "DRV8833 Initialization Done...");
-
     /* LDC1101 Init */
     if (ldc1101_init(&ldc2, _LDC1101_RP_SET_RP_MIN_1_5KOhm)) {
         UART2_Log("ERROR", "main.c", __LINE__, "LDC1101 Initialization Failed...");
@@ -309,20 +380,21 @@ int main(void) {
         const float conv_cycles = (float)(rcount * 16U + 55U); // RCOUNT*16 + 55 reference cycles
         float sample_rate_hz    = f_clk_hz / conv_cycles;
         float sample_rate_ksps  = sample_rate_hz / 1000.0f;
-        snprintf(UART2_TX_buffer, sizeof(UART2_TX_buffer), "LDC1101 sample rate: %.3f kSPS (RCOUNT=0x%04X)",
-                 sample_rate_ksps, rcount);
-        UART2_Log("TRACE", "main.c", __LINE__, UART2_TX_buffer);
+        char rate_msg[MSG_LEN];
+        snprintf(rate_msg, sizeof(rate_msg), "LDC1101 sample rate: %.3f kSPS (RCOUNT=0x%04X)", sample_rate_ksps,
+                 rcount);
+        UART2_Log("TRACE", "main.c", __LINE__, rate_msg);
         ldc2_isWorking = true;
     }
-    /* USER CODE END 2 */
+  /* USER CODE END 2 */
 
-    /* Infinite loop */
-    /* USER CODE BEGIN WHILE */
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
     while (1) {
         if (system_mode == MODE_MEASUREMENT) {
             /* DRV8833 Frequency Control */
             if (drv_PWM_isChanged) {
-                // TIM1 Interrupt Frequency = 100kHz  (72MHz / 72 / 10)
+                // TIM1 Interrupt Frequency = 100kHz
                 const float baseFreq = 100000.0f;
                 // Calculate the number of interrupts needed for one period
                 float cnt_f       = baseFreq / drv_PWM_freq;
@@ -438,7 +510,7 @@ int main(void) {
                         else if (CALIBRITION_STEP_DIR == -1) // 增加
                             cal_current_position_um += CALIBRITION_STEP_UM;
                         cal_state = CAL_IDLE; // ready for the next button-triggered sampling
-                        HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_0);
+                        HAL_GPIO_TogglePin(LED3_PORT, LED3_PIN);
                         HAL_TIM_Base_Start_IT(&htim3);
                     }
                     break;
@@ -466,63 +538,85 @@ int main(void) {
             OLED_ShowString(0, 0, (char *)line_text, text_size, text_invert);
             oled_update_pending = false;
         }
-        if (UART2_TX_send) {
-            HAL_UART_Transmit(&huart2, (uint8_t *)UART2_TX_buffer, strlen(UART2_TX_buffer), HAL_MAX_DELAY);
-            UART2_TX_send = false;
-            memset(UART2_TX_buffer, 0, MSG_LEN);
+        if (button_scan_pending) {
+            button_scan_pending = false;
+            button_ticks();
         }
+        UART2_TxKick();
         /* USER CODE END 3 */
     }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    if (UART2_TX_send) {
-        HAL_UART_Transmit(&huart2, (uint8_t *)UART2_TX_buffer, strlen(UART2_TX_buffer), HAL_MAX_DELAY);
-        UART2_TX_send = false;
-        memset(UART2_TX_buffer, 0, MSG_LEN);
-    }
-    /* USER CODE END 3 */
+        if (oled_update_pending) {
+            const uint8_t text_size   = 12U;
+            const uint8_t text_invert = 0U;
+            const char *line_text     = "Sys Mode: UNKNOWN";
+            switch (system_mode) {
+                case MODE_MEASUREMENT:
+                    line_text = "Sys Mode: Measurement";
+                    break;
+                case MODE_CALIBRITION:
+                    line_text = "Sys Mode: Calibration";
+                    break;
+                default:
+                    break;
+            }
+            OLED_ShowString(0, 0, (char *)line_text, text_size, text_invert);
+            oled_update_pending = false;
+        }
+        if (button_scan_pending) {
+            button_scan_pending = false;
+            button_ticks();
+        }
+        UART2_TxKick();
+  /* USER CODE END 3 */
 }
 
 /**
- * @brief System Clock Configuration
- * @retval None
- */
-void SystemClock_Config(void) {
-    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-    RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  * @brief System Clock Configuration
+  * @retval None
+  */
+void SystemClock_Config(void)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-    /** Configure the main internal regulator output voltage
-     */
-    __HAL_RCC_PWR_CLK_ENABLE();
-    __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+  /** Configure the main internal regulator output voltage
+  */
+  __HAL_RCC_PWR_CLK_ENABLE();
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
-    /** Initializes the RCC Oscillators according to the specified parameters
-     * in the RCC_OscInitTypeDef structure.
-     */
-    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-    RCC_OscInitStruct.HSEState       = RCC_HSE_ON;
-    RCC_OscInitStruct.PLL.PLLState   = RCC_PLL_ON;
-    RCC_OscInitStruct.PLL.PLLSource  = RCC_PLLSOURCE_HSE;
-    RCC_OscInitStruct.PLL.PLLM       = 8;
-    RCC_OscInitStruct.PLL.PLLN       = 336;
-    RCC_OscInitStruct.PLL.PLLP       = RCC_PLLP_DIV2;
-    RCC_OscInitStruct.PLL.PLLQ       = 4;
-    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
-        Error_Handler();
-    }
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 8;
+  RCC_OscInitStruct.PLL.PLLN = 336;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+  RCC_OscInitStruct.PLL.PLLQ = 4;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
 
-    /** Initializes the CPU, AHB and APB buses clocks
-     */
-    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
-    RCC_ClkInitStruct.SYSCLKSource   = RCC_SYSCLKSOURCE_PLLCLK;
-    RCC_ClkInitStruct.AHBCLKDivider  = RCC_SYSCLK_DIV1;
-    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
-    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+  /** Initializes the CPU, AHB and APB buses clocks
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK) {
-        Error_Handler();
-    }
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
+  {
+    Error_Handler();
+  }
 }
 
 /* USER CODE BEGIN 4 */
@@ -530,29 +624,31 @@ void SystemClock_Config(void) {
 /* USER CODE END 4 */
 
 /**
- * @brief  This function is executed in case of error occurrence.
- * @retval None
- */
-void Error_Handler(void) {
-    /* USER CODE BEGIN Error_Handler_Debug */
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
+void Error_Handler(void)
+{
+  /* USER CODE BEGIN Error_Handler_Debug */
     /* User can add his own implementation to report the HAL error return state */
     __disable_irq();
     while (1) {
     }
-    /* USER CODE END Error_Handler_Debug */
+  /* USER CODE END Error_Handler_Debug */
 }
 #ifdef USE_FULL_ASSERT
 /**
- * @brief  Reports the name of the source file and the source line number
- *         where the assert_param error has occurred.
- * @param  file: pointer to the source file name
- * @param  line: assert_param error line source number
- * @retval None
- */
-void assert_failed(uint8_t *file, uint32_t line) {
-    /* USER CODE BEGIN 6 */
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
+void assert_failed(uint8_t *file, uint32_t line)
+{
+  /* USER CODE BEGIN 6 */
     /* User can add his own implementation to report the file name and line number,
        ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-    /* USER CODE END 6 */
+  /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

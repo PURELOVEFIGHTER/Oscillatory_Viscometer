@@ -31,4 +31,12 @@ ov_f407vgt6_2026.01.18/spi.o: ..\Core\Src\spi.c ..\Core\Inc\spi.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_spi.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim_ex.h \
-  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h \
+  F:\Keil\Keil_v5\ARM\ARMCLANG\include\stdio.h \
+  F:\Keil\Keil_v5\ARM\ARMCLANG\include\stdlib.h \
+  F:\Keil\Keil_v5\ARM\ARMCLANG\include\string.h \
+  ..\Core\Inc\ldc1101_driver.h \
+  F:\Keil\Keil_v5\ARM\ARMCLANG\include\stdbool.h \
+  ..\Core\Inc\drv8833_driver.h ..\Core\Inc\config.h \
+  ..\Core\Inc\command.h ..\Core\Inc\oled.h ..\Core\Inc\oledfont.h \
+  ..\Core\Inc\multi_button.h ..\Core\Inc\my_button.h

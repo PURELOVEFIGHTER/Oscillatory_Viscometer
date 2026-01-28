@@ -66,7 +66,7 @@ extern DMA_HandleTypeDef hdma_usart3_tx;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
 /* USER CODE BEGIN EV */
-
+extern volatile bool led_breath_enabled;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -296,9 +296,7 @@ void USART2_IRQHandler(void) {
     if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_IDLE) != RESET) {
         __HAL_UART_CLEAR_IDLEFLAG(&huart2);
         HAL_UART_DMAStop(&huart2);
-
         Command_Parse();
-        UART2_TX_send = true;
 
         memset(UART2_RX_DMA_buffer[UART2_RX_activeBuffer], 0, MSG_LEN);
         UART2_RX_activeBuffer ^= 1;
@@ -324,8 +322,13 @@ void USART3_IRQHandler(void) {
 /* USER CODE BEGIN 1 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (htim->Instance == TIM1) {
-        static uint32_t tim1_drv_cnt = 0;
-        static uint32_t tim1_led_cnt = 0;
+        static uint32_t tim1_drv_cnt      = 0;
+        static uint16_t led_pwm_counter   = 0;
+        static uint16_t led_breath_level  = 0;
+        static int8_t led_breath_dir      = 1;
+        static uint16_t led_step_ticks    = 0;
+        const uint16_t led_pwm_period     = 100U;
+        const uint16_t led_step_ticks_max = 1000U;
 
         if (tim1_drv_cnt < drv_PWM_assertCnt) {
             DRV_Forward(&hdrv1, &hdrv1.CHANNEL_A);
@@ -342,28 +345,56 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         }
         tim1_drv_cnt++;
 
-        // LED 心跳
-        if (tim1_led_cnt >= 100000U) {
-            HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-            tim1_led_cnt = 0;
+        if (led_breath_enabled) {
+            if (++led_step_ticks >= led_step_ticks_max) {
+                led_step_ticks = 0;
+                if (led_breath_dir > 0) {
+                    if (led_breath_level < led_pwm_period) {
+                        led_breath_level++;
+                    } else {
+                        led_breath_level = led_pwm_period;
+                        led_breath_dir   = -1;
+                    }
+                } else {
+                    if (led_breath_level > 0) {
+                        led_breath_level--;
+                    } else {
+                        led_breath_level = 0;
+                        led_breath_dir   = 1;
+                    }
+                }
+            }
+
+            if (++led_pwm_counter >= led_pwm_period) {
+                led_pwm_counter = 0;
+            }
+            if (led_pwm_counter < led_breath_level) {
+                HAL_GPIO_WritePin(LED2_PORT, LED2_PIN, GPIO_PIN_SET);
+            } else {
+                HAL_GPIO_WritePin(LED2_PORT, LED2_PIN, GPIO_PIN_RESET);
+            }
+        } else {
+            led_pwm_counter  = 0;
+            led_breath_level = 0;
+            led_breath_dir   = 1;
+            led_step_ticks   = 0;
+            HAL_GPIO_WritePin(LED2_PORT, LED2_PIN, GPIO_PIN_RESET);
         }
-        tim1_led_cnt++;
     }
 
     if (htim->Instance == TIM2) {
-        static uint8_t tim2_button_cnt = 0;
-        if (tim2_button_cnt == 25) {
-            tim2_button_cnt = 0;
-            button_ticks();
-        }
-        tim2_button_cnt++;
     }
 
     if (htim->Instance == TIM3) {
-        static uint16_t tim3_oled_cnt = 0;
-        tim3_oled_cnt++;
-        if (tim3_oled_cnt >= 1) {
-            tim3_oled_cnt        = 0;
+        static uint8_t tim3_btn_cnt;
+        static uint16_t tim3_oled_cnt;
+
+        if (++tim3_btn_cnt >= 25) {
+            tim3_btn_cnt        = 0;
+            button_scan_pending = true;
+        }
+        if (++tim3_oled_cnt >= 500) {
+            tim3_oled_cnt       = 0;
             oled_update_pending = true;
         }
     }
@@ -404,7 +435,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     }
 }
 
-
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == USART3) {
         uint32_t primask = __get_PRIMASK();
@@ -418,5 +448,13 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
 
         UART3_StartTx();
     }
+    if (huart->Instance == USART2) {
+        UART2_TxOnComplete(huart->TxXferSize);
+    }
 }
+
+// HAL_SYSTICK_Callback(void)
+// {
+//     button_ticks();
+// }
 /* USER CODE END 1 */

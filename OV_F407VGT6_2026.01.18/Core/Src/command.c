@@ -7,7 +7,6 @@
 
 extern UART_HandleTypeDef huart2;
 extern char UART2_RX_DMA_buffer[2][MSG_LEN];
-extern char UART2_TX_buffer[MSG_LEN];
 
 extern float drv_PWM_freq;
 extern float drv_PWM_DR;
@@ -21,15 +20,19 @@ void Command_Parse(void) {
     if (strncmp(UART2_RX_DMA_buffer[UART2_RX_activeBuffer], "DR:", 3) == 0) {
         drv_PWM_DR        = atoi(&UART2_RX_DMA_buffer[UART2_RX_activeBuffer][3]);
         drv_PWM_isChanged = true;
-        HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_2);
-        sprintf(UART2_TX_buffer, "PWM_DR set to %.2f%%\r\n", drv_PWM_DR);
+        HAL_GPIO_TogglePin(LED2_PORT, LED2_PIN);
+        char msg[MSG_LEN];
+        snprintf(msg, sizeof(msg), "PWM_DR set to %.2f%%\r\n", drv_PWM_DR);
+        UART2_SendString(msg);
     }
     /* 设置频率 */
     else if (strncmp(UART2_RX_DMA_buffer[UART2_RX_activeBuffer], "FR:", 3) == 0) {
         drv_PWM_freq      = atoi(&UART2_RX_DMA_buffer[UART2_RX_activeBuffer][3]);
         drv_PWM_isChanged = true;
-        HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_2);
-        sprintf(UART2_TX_buffer, "PWM_FREQ set to %.2fHz\r\n", drv_PWM_freq);
+        HAL_GPIO_TogglePin(LED2_PORT, LED2_PIN);
+        char msg[MSG_LEN];
+        snprintf(msg, sizeof(msg), "PWM_FREQ set to %.2fHz\r\n", drv_PWM_freq);
+        UART2_SendString(msg);
     }
     /* 启动频率扫描 */
     else if (strncmp(UART2_RX_DMA_buffer[UART2_RX_activeBuffer], "FR Scan", 7) == 0) {
@@ -39,8 +42,8 @@ void Command_Parse(void) {
         HAL_TIM_Base_Start_IT(&htim4);
         ldc2_isReading = true;
 
-        sprintf(UART2_TX_buffer, "Frequency scan start.\r\n");
-        HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_2);
+        UART2_SendString("Frequency scan start.\r\n");
+        HAL_GPIO_TogglePin(LED2_PORT, LED2_PIN);
     }
     /* 启动占空比扫描 */
     else if (strncmp(UART2_RX_DMA_buffer[UART2_RX_activeBuffer], "DR Scan", 7) == 0) {
@@ -50,8 +53,8 @@ void Command_Parse(void) {
         HAL_TIM_Base_Start_IT(&htim4);
         ldc2_isReading = true;
 
-        sprintf(UART2_TX_buffer, "Duty Ratio scan start.\r\n");
-        HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_2);
+        UART2_SendString("Duty Ratio scan start.\r\n");
+        HAL_GPIO_TogglePin(LED2_PORT, LED2_PIN);
     }
     /* 读取LDC寄存器 */
     else if (strncmp(UART2_RX_DMA_buffer[UART2_RX_activeBuffer], "Read:", 5) == 0) {
@@ -59,11 +62,13 @@ void Command_Parse(void) {
             uint8_t reg_addr;
             sscanf(&UART2_RX_DMA_buffer[UART2_RX_activeBuffer][5], "%hhx", &reg_addr);
             uint8_t reg_val = ldc1101_readByte(&ldc2, reg_addr);
-            sprintf(UART2_TX_buffer, "[0x%02X] = 0x%02X\r\n", reg_addr, reg_val);
+            char msg[MSG_LEN];
+            snprintf(msg, sizeof(msg), "[0x%02X] = 0x%02X\r\n", reg_addr, reg_val);
+            UART2_SendString(msg);
         } else {
-            sprintf(UART2_TX_buffer, "Cannot read register while reading LHR Data.\r\n");
+            UART2_SendString("Cannot read register while reading LHR Data.\r\n");
         }
-        HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_2);
+        HAL_GPIO_TogglePin(LED2_PORT, LED2_PIN);
     }
     /* LDC状态检查 */
     else if ((strncmp(UART2_RX_DMA_buffer[UART2_RX_activeBuffer], "RPL Check", 9) == 0 && !isLHR)
@@ -71,15 +76,17 @@ void Command_Parse(void) {
         if (ldc2_isReading == false) {
             uint8_t status = isLHR ? ldc1101_readByte(&ldc2, _LDC1101_REG_LHR_STATUS)
                                    : ldc1101_readByte(&ldc2, _LDC1101_REG_RP_L_MEASUREMENT_STATUS);
-            sprintf(UART2_TX_buffer, "%s Measurement Status: %d%d%d%d%d%d%d%d\r\n", isLHR ? "LHR" : "RP+L",
-                    (status >> 7) & 1, (status >> 6) & 1, (status >> 5) & 1, (status >> 4) & 1, (status >> 3) & 1,
-                    (status >> 2) & 1, (status >> 1) & 1, (status >> 0) & 1);
+            char msg[MSG_LEN];
+            snprintf(msg, sizeof(msg), "%s Measurement Status: %d%d%d%d%d%d%d%d\r\n", isLHR ? "LHR" : "RP+L",
+                     (status >> 7) & 1, (status >> 6) & 1, (status >> 5) & 1, (status >> 4) & 1,
+                     (status >> 3) & 1, (status >> 2) & 1, (status >> 1) & 1, (status >> 0) & 1);
+            UART2_SendString(msg);
         } else {
-            sprintf(UART2_TX_buffer, "Cannot check LDC status while reading LHR Data.\r\n");
+            UART2_SendString("Cannot check LDC status while reading LHR Data.\r\n");
         }
-        HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_2);
+        HAL_GPIO_TogglePin(LED2_PORT, LED2_PIN);
     } else {
-        sprintf(UART2_TX_buffer, "Unknown command\r\n");
-        HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_2);
+        UART2_SendString("Unknown command\r\n");
+        HAL_GPIO_TogglePin(LED2_PORT, LED2_PIN);
     }
 }

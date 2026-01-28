@@ -102,8 +102,12 @@ extern uint32_t LHR_data;
 /* UART2 */
 extern volatile uint8_t UART2_RX_activeBuffer;
 extern char UART2_RX_DMA_buffer[2][MSG_LEN];
-extern char UART2_TX_buffer[MSG_LEN];
-extern bool UART2_TX_send;
+/* UART2 TX ring buffer */
+#define UART2_TX_RB_SIZE 512
+bool UART2_TxEnqueue(const uint8_t *data, uint16_t len);
+void UART2_TxKick(void);
+void UART2_SendString(const char *str);
+void UART2_TxOnComplete(uint16_t sent_len);
 /* UART3 */
 #define QUEUE_LEN 1024
 extern uint8_t UART3_TX_buffer[QUEUE_LEN * 9];
@@ -129,6 +133,7 @@ extern uint64_t cal_total_sum_sq;
 extern volatile CalState_t cal_state;
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OLED <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 extern volatile bool oled_update_pending;
+extern volatile bool button_scan_pending;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
