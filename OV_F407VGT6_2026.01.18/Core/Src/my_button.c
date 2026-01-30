@@ -21,7 +21,8 @@ void btn1_single_click_handler(Button *btn) {
         ldc2_isReading = !ldc2_isReading;
 
         HAL_GPIO_TogglePin(LED2_PORT, LED2_PIN);
-        UART2_SendString(ldc2_isReading ? "Reading LHR Data.\r\n" : "Stopped LHR Data Reading.\r\n");
+        sprintf(UART2_TX_buffer, ldc2_isReading ? "Reading LHR Data.\r\n" : "Stopped LHR Data Reading.\r\n");
+        UART2_TX_send = true;
     } else if (system_mode == MODE_CALIBRITION) {
         if (cal_state == CAL_IDLE) {
             // 标定流程进入等待稳定阶段
@@ -38,7 +39,8 @@ void btn1_single_click_handler(Button *btn) {
             cal_wait_start_tick  = HAL_GetTick();
 
             HAL_GPIO_TogglePin(LED3_PORT, LED3_PIN);
-            UART2_SendString("Calibration start.\r\n");
+            sprintf(UART2_TX_buffer, "Calibration start.\r\n");
+            UART2_TX_send = true;
         }
     }
 }
@@ -48,7 +50,8 @@ void btn1_double_click_handler(Button *btn) {
         // 切换到标定模式
         HAL_GPIO_TogglePin(LED2_PORT, LED2_PIN);
         system_mode = MODE_CALIBRITION;
-        UART2_SendString("Switch to Calibration Mode.\r\n");
+        sprintf(UART2_TX_buffer, "Switch to Calibration Mode.\r\n");
+        UART2_TX_send           = true;
         cal_current_position_um = CALIBRITION_START_UM;
         uint8_t init_frame[11];
         memset(init_frame, 0xFF, sizeof(init_frame));
@@ -60,7 +63,8 @@ void btn1_double_click_handler(Button *btn) {
         // 切换到测量模式
         HAL_GPIO_TogglePin(LED2_PORT, LED2_PIN);
         system_mode = MODE_MEASUREMENT;
-        UART2_SendString("Switch to Measurement Mode.\r\n");
+        sprintf(UART2_TX_buffer, "Switch to Measurement Mode.\r\n");
+        UART2_TX_send = true;
     }
 }
 

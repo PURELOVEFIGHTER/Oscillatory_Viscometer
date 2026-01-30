@@ -289,20 +289,29 @@ void TIM4_IRQHandler(void) {
  */
 void USART2_IRQHandler(void) {
     /* USER CODE BEGIN USART2_IRQn 0 */
-
-    /* USER CODE END USART2_IRQn 0 */
-    HAL_UART_IRQHandler(&huart2);
-    /* USER CODE BEGIN USART2_IRQn 1 */
     if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_IDLE) != RESET) {
         __HAL_UART_CLEAR_IDLEFLAG(&huart2);
+        uint16_t rx_len = (uint16_t)(MSG_LEN - __HAL_DMA_GET_COUNTER(huart2.hdmarx));
         HAL_UART_DMAStop(&huart2);
-        Command_Parse();
+        if (rx_len >= MSG_LEN) {
+            rx_len = MSG_LEN - 1;
+        }
+        char *rx_buf = UART2_RX_DMA_buffer[UART2_RX_activeBuffer];
+        if (rx_len > 0) {
+            while (rx_len > 0 && (rx_buf[rx_len - 1] == '\n' || rx_buf[rx_len - 1] == '\r')) {
+                rx_len--;
+            }
+            rx_buf[rx_len] = '\0';
+            Command_Parse();
+        }
 
-        memset(UART2_RX_DMA_buffer[UART2_RX_activeBuffer], 0, MSG_LEN);
+        memset(rx_buf, 0, MSG_LEN);
         UART2_RX_activeBuffer ^= 1;
         HAL_UART_Receive_DMA(&huart2, (uint8_t *)UART2_RX_DMA_buffer[UART2_RX_activeBuffer], MSG_LEN);
     }
-
+    /* USER CODE END USART2_IRQn 0 */
+    HAL_UART_IRQHandler(&huart2);
+    /* USER CODE BEGIN USART2_IRQn 1 */
     /* USER CODE END USART2_IRQn 1 */
 }
 
@@ -448,13 +457,5 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
 
         UART3_StartTx();
     }
-    if (huart->Instance == USART2) {
-        UART2_TxOnComplete(huart->TxXferSize);
-    }
 }
-
-// HAL_SYSTICK_Callback(void)
-// {
-//     button_ticks();
-// }
 /* USER CODE END 1 */

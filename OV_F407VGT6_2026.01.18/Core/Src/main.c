@@ -27,7 +27,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "lwrb.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -102,9 +101,8 @@ uint16_t cal_current_position_um       = 0;
 /* UART2 */
 volatile uint8_t UART2_RX_activeBuffer = 0;
 char UART2_RX_DMA_buffer[2][MSG_LEN]   = {0};
-static lwrb_t uart2_tx_rb;
-static uint8_t uart2_tx_rb_mem[UART2_TX_RB_SIZE];
-static volatile bool uart2_tx_busy = false;
+char UART2_TX_buffer[MSG_LEN]          = {0};
+bool UART2_TX_send                     = false;
 /* UART3 */
 uint8_t UART3_TX_buffer[QUEUE_LEN * 9];
 uint8_t frame[9];
@@ -207,65 +205,7 @@ void UART3_StartTx(void) {
         __set_PRIMASK(primask); /* Critical Section End */
     }
 }
-bool UART2_TxEnqueue(const uint8_t *data, uint16_t len) {
-    if (data == NULL || len == 0U) {
-        return false;
-    }
-    uint32_t primask = __get_PRIMASK();
-    __disable_irq(); /* Critical Section Begin */
-    lwrb_sz_t written = lwrb_write(&uart2_tx_rb, data, (lwrb_sz_t)len);
-    __set_PRIMASK(primask); /* Critical Section End */
-    return written == (lwrb_sz_t)len;
-}
-void UART2_TxKick(void) {
-    uint32_t primask = __get_PRIMASK();
-    __disable_irq(); /* Critical Section Begin */
-    if (uart2_tx_busy || lwrb_get_full(&uart2_tx_rb) == 0U) {
-        __set_PRIMASK(primask); /* Critical Section End */
-        return;
-    }
 
-    uint8_t *start = lwrb_get_linear_block_read_address(&uart2_tx_rb);
-    lwrb_sz_t size = lwrb_get_linear_block_read_length(&uart2_tx_rb);
-    if (size > UINT16_MAX) {
-        size = UINT16_MAX;
-    }
-    uart2_tx_busy = true;
-    __set_PRIMASK(primask); /* Critical Section End */
-
-    if (HAL_UART_Transmit_IT(&huart2, start, (uint16_t)size) != HAL_OK) {
-        primask = __get_PRIMASK();
-        __disable_irq(); /* Critical Section Begin */
-        uart2_tx_busy = false;
-        __set_PRIMASK(primask); /* Critical Section End */
-    }
-}
-void UART2_SendString(const char *str) {
-    if (str == NULL) {
-        return;
-    }
-    size_t len = strlen(str);
-    if (len == 0U) {
-        return;
-    }
-    if (len > UINT16_MAX) {
-        len = UINT16_MAX;
-    }
-    if (UART2_TxEnqueue((const uint8_t *)str, (uint16_t)len)) {
-        UART2_TxKick();
-    }
-}
-void UART2_TxOnComplete(uint16_t sent_len) {
-    if (sent_len == 0U) {
-        return;
-    }
-    uint32_t primask = __get_PRIMASK();
-    __disable_irq(); /* Critical Section Begin */
-    lwrb_skip(&uart2_tx_rb, (lwrb_sz_t)sent_len);
-    uart2_tx_busy = false;
-    __set_PRIMASK(primask); /* Critical Section End */
-    UART2_TxKick();
-}
 void UART2_Log(const char *level, const char *file, int line, const char *message) {
     uint32_t ticks   = HAL_GetTick();
     uint32_t hours   = ticks / 3600000U;
@@ -281,8 +221,8 @@ void UART2_Log(const char *level, const char *file, int line, const char *messag
     msg_copy[MSG_LEN - 1] = '\0';
 
     char log_buf[MSG_LEN];
-    snprintf(log_buf, sizeof(log_buf), "[%s] [%s] [%s:%d] %s\r\n", level, time_buf, file, line, msg_copy);
-    UART2_SendString(log_buf);
+    snprintf(UART2_TX_buffer, MSG_LEN, "[%s] [%s] [%s:%d] %s\r\n", level, time_buf, file, line, msg_copy);
+    HAL_UART_Transmit(&huart2, (uint8_t *)UART2_TX_buffer, strlen(UART2_TX_buffer), HAL_MAX_DELAY);
 }
 
 static void StartReading(void) {
@@ -302,45 +242,43 @@ static void StopReading(void) {
 /* USER CODE END 0 */
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
-int main(void)
-{
+ * @brief  The application entry point.
+ * @retval int
+ */
+int main(void) {
 
-  /* USER CODE BEGIN 1 */
+    /* USER CODE BEGIN 1 */
 
-  /* USER CODE END 1 */
+    /* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+    /* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+    /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+    HAL_Init();
 
-  /* USER CODE BEGIN Init */
+    /* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+    /* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+    /* Configure the system clock */
+    SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
+    /* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
+    /* USER CODE END SysInit */
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_I2C1_Init();
-  MX_SPI2_Init();
-  MX_TIM2_Init();
-  MX_USART2_UART_Init();
-  MX_USART3_UART_Init();
-  MX_TIM1_Init();
-  MX_TIM3_Init();
-  MX_TIM4_Init();
-  /* USER CODE BEGIN 2 */
-    lwrb_init(&uart2_tx_rb, uart2_tx_rb_mem, sizeof(uart2_tx_rb_mem));
+    /* Initialize all configured peripherals */
+    MX_GPIO_Init();
+    MX_DMA_Init();
+    MX_I2C1_Init();
+    MX_SPI2_Init();
+    MX_TIM2_Init();
+    MX_USART2_UART_Init();
+    MX_USART3_UART_Init();
+    MX_TIM1_Init();
+    MX_TIM3_Init();
+    MX_TIM4_Init();
+    /* USER CODE BEGIN 2 */
     buttons_init();
     HAL_TIM_Base_Start_IT(&htim2);
     if (system_mode == MODE_CALIBRITION) {
@@ -380,16 +318,15 @@ int main(void)
         const float conv_cycles = (float)(rcount * 16U + 55U); // RCOUNT*16 + 55 reference cycles
         float sample_rate_hz    = f_clk_hz / conv_cycles;
         float sample_rate_ksps  = sample_rate_hz / 1000.0f;
-        char rate_msg[MSG_LEN];
-        snprintf(rate_msg, sizeof(rate_msg), "LDC1101 sample rate: %.3f kSPS (RCOUNT=0x%04X)", sample_rate_ksps,
-                 rcount);
-        UART2_Log("TRACE", "main.c", __LINE__, rate_msg);
+        snprintf(UART2_TX_buffer, sizeof(UART2_TX_buffer), "LDC1101 sample rate: %.3f kSPS (RCOUNT=0x%04X)",
+                 sample_rate_ksps, rcount);
+        UART2_Log("TRACE", "main.c", __LINE__, UART2_TX_buffer);
         ldc2_isWorking = true;
     }
-  /* USER CODE END 2 */
+    /* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+    /* Infinite loop */
+    /* USER CODE BEGIN WHILE */
     while (1) {
         if (system_mode == MODE_MEASUREMENT) {
             /* DRV8833 Frequency Control */
@@ -404,7 +341,6 @@ int main(void)
                 drv_PWM_halfCnt   = drv_PWM_cnt / 2;
                 drv_PWM_isChanged = false;
             }
-
             /* LDC Reading Control */
             if (ldc2_isReading != ldc2_isReadingPrev) {
                 if (ldc2_isReading)
@@ -519,8 +455,6 @@ int main(void)
                     break;
             }
         }
-
-        /* USER CODE BEGIN 3 */
         if (oled_update_pending) {
             const uint8_t text_size   = 12U;
             const uint8_t text_invert = 0U;
@@ -542,81 +476,60 @@ int main(void)
             button_scan_pending = false;
             button_ticks();
         }
-        UART2_TxKick();
-        /* USER CODE END 3 */
+        /* UART2 Transmission */
+        if (UART2_TX_send) {
+            HAL_UART_Transmit(&huart2, (uint8_t *)UART2_TX_buffer, strlen(UART2_TX_buffer), HAL_MAX_DELAY);
+            UART2_TX_send = false;
+            memset(UART2_TX_buffer, 0, MSG_LEN);
+        }
     }
 
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-        if (oled_update_pending) {
-            const uint8_t text_size   = 12U;
-            const uint8_t text_invert = 0U;
-            const char *line_text     = "Sys Mode: UNKNOWN";
-            switch (system_mode) {
-                case MODE_MEASUREMENT:
-                    line_text = "Sys Mode: Measurement";
-                    break;
-                case MODE_CALIBRITION:
-                    line_text = "Sys Mode: Calibration";
-                    break;
-                default:
-                    break;
-            }
-            OLED_ShowString(0, 0, (char *)line_text, text_size, text_invert);
-            oled_update_pending = false;
-        }
-        if (button_scan_pending) {
-            button_scan_pending = false;
-            button_ticks();
-        }
-        UART2_TxKick();
-  /* USER CODE END 3 */
+
+    /* USER CODE END 3 */
 }
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
-void SystemClock_Config(void)
-{
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ * @brief System Clock Configuration
+ * @retval None
+ */
+void SystemClock_Config(void) {
+    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+    RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Configure the main internal regulator output voltage
-  */
-  __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+    /** Configure the main internal regulator output voltage
+     */
+    __HAL_RCC_PWR_CLK_ENABLE();
+    __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 336;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 4;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
+    /** Initializes the RCC Oscillators according to the specified parameters
+     * in the RCC_OscInitTypeDef structure.
+     */
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+    RCC_OscInitStruct.HSEState       = RCC_HSE_ON;
+    RCC_OscInitStruct.PLL.PLLState   = RCC_PLL_ON;
+    RCC_OscInitStruct.PLL.PLLSource  = RCC_PLLSOURCE_HSE;
+    RCC_OscInitStruct.PLL.PLLM       = 8;
+    RCC_OscInitStruct.PLL.PLLN       = 336;
+    RCC_OscInitStruct.PLL.PLLP       = RCC_PLLP_DIV2;
+    RCC_OscInitStruct.PLL.PLLQ       = 4;
+    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
+        Error_Handler();
+    }
 
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+    /** Initializes the CPU, AHB and APB buses clocks
+     */
+    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+    RCC_ClkInitStruct.SYSCLKSource   = RCC_SYSCLKSOURCE_PLLCLK;
+    RCC_ClkInitStruct.AHBCLKDivider  = RCC_SYSCLK_DIV1;
+    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
-  {
-    Error_Handler();
-  }
+    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK) {
+        Error_Handler();
+    }
 }
 
 /* USER CODE BEGIN 4 */
@@ -624,31 +537,29 @@ void SystemClock_Config(void)
 /* USER CODE END 4 */
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
-void Error_Handler(void)
-{
-  /* USER CODE BEGIN Error_Handler_Debug */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
+void Error_Handler(void) {
+    /* USER CODE BEGIN Error_Handler_Debug */
     /* User can add his own implementation to report the HAL error return state */
     __disable_irq();
     while (1) {
     }
-  /* USER CODE END Error_Handler_Debug */
+    /* USER CODE END Error_Handler_Debug */
 }
 #ifdef USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
-void assert_failed(uint8_t *file, uint32_t line)
-{
-  /* USER CODE BEGIN 6 */
+ * @brief  Reports the name of the source file and the source line number
+ *         where the assert_param error has occurred.
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @retval None
+ */
+void assert_failed(uint8_t *file, uint32_t line) {
+    /* USER CODE BEGIN 6 */
     /* User can add his own implementation to report the file name and line number,
        ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* USER CODE END 6 */
+    /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
