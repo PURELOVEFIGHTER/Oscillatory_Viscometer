@@ -41,5 +41,4 @@ ov_f407vgt6_2026.01.18/main_1.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   ..\Core\Inc\command.h ..\Core\Inc\oled.h ..\Core\Inc\oledfont.h \
   ..\Core\Inc\multi_button.h ..\Core\Inc\my_button.h ..\Core\Inc\dma.h \
   ..\Core\Inc\i2c.h ..\Core\Inc\spi.h ..\Core\Inc\tim.h \
-  ..\Core\Inc\usart.h ..\Core\Inc\gpio.h ..\Core\Inc\lwrb.h \
-  F:\Keil\Keil_v5\ARM\ARMCLANG\include\stdatomic.h
+  ..\Core\Inc\usart.h ..\Core\Inc\gpio.h

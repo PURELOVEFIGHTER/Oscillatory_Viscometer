@@ -20,31 +20,33 @@ virtualFolder:
           folders:
             - name: Core
               files:
+                - path: ../Core/Src/adc.c
+                - path: ../Core/Src/command.c
                 - path: ../Core/Src/dma.c
-                - path: ../Core/Src/main.c
+                - path: ../Core/Src/drv8833_driver.c
                 - path: ../Core/Src/gpio.c
                 - path: ../Core/Src/i2c.c
-                - path: ../Core/Src/spi.c
-                - path: ../Core/Src/tim.c
-                - path: ../Core/Src/usart.c
-                - path: ../Core/Src/stm32f4xx_it.c
-                - path: ../Core/Src/stm32f4xx_hal_msp.c
-                - path: ../Core/Src/system_stm32f4xx.c
-                - path: ../Core/Src/my_button.c
-                - path: ../Core/Src/multi_button.c
-                - path: ../Core/Src/command.c
-                - path: ../Core/Src/drv8833_driver.c
                 - path: ../Core/Src/ldc1101_driver.c
-                - path: ../Core/Src/lwrb_ex.c
-                - path: ../Core/Src/lwrb.c
+                - path: ../Core/Src/main.c
+                - path: ../Core/Src/multi_button.c
+                - path: ../Core/Src/my_button.c
                 - path: ../Core/Src/oled.c
                 - path: ../Core/Src/oledfont.c
+                - path: ../Core/Src/spi.c
+                - path: ../Core/Src/stm32f4xx_hal_msp.c
+                - path: ../Core/Src/stm32f4xx_it.c
+                - path: ../Core/Src/system_stm32f4xx.c
+                - path: ../Core/Src/tim.c
+                - path: ../Core/Src/usart.c
+                - path: ../Core/Src/utility.c
               folders: []
     - name: Drivers
       files: []
       folders:
         - name: STM32F4xx_HAL_Driver
           files:
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c
             - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c
             - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c
             - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c

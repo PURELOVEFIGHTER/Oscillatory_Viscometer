@@ -42,6 +42,7 @@ extern "C" {
 #include "oled.h"
 #include "multi_button.h"
 #include "my_button.h"
+#include "utility.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -109,8 +110,8 @@ void UART2_Log(const char *level, const char *file, int line, const char *messag
 #define QUEUE_LEN 1024
 extern uint8_t UART3_TX_buffer[QUEUE_LEN * 9];
 extern uint8_t frame[9];
-extern uint8_t * volatile UART3_TX_head;
-extern uint8_t * volatile UART3_TX_tail;
+extern volatile uint16_t UART3_TX_head;
+extern volatile uint16_t UART3_TX_tail;
 extern volatile bool UART3_DMA_busy;
 bool UART3_Enqueue(const uint8_t *data, uint16_t len);
 void UART3_StartTx(void);
@@ -130,6 +131,9 @@ extern volatile CalState_t cal_state;
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OLED <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 extern volatile bool oled_update_pending;
 extern volatile bool button_scan_pending;
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ADC <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+#define ADC_BUF_LEN 256
+extern uint16_t adc_buf[ADC_BUF_LEN];
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
