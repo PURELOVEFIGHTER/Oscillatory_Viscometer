@@ -94,6 +94,8 @@ targets:
         - ../MDK-ARM/RTE/_OV_F407VGT6_2026.01.18
       libList: []
     excludeList: []
+    settings:
+      debugger: cortex-debug
     toolchain: AC6
     toolchainConfigMap:
       AC5:

@@ -133,9 +133,10 @@ extern volatile bool oled_update_pending;
 extern volatile bool button_scan_pending;
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ADC <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 #define ADC_BUF_LEN 256
-extern uint16_t adc_buf[ADC_BUF_LEN];
+extern uint16_t adc_buf[2][ADC_BUF_LEN];
+extern volatile uint8_t UART6_sending_index;
+extern volatile uint8_t UART6_tx_busy;
 /* USER CODE END Private defines */
-
 #ifdef __cplusplus
 }
 #endif

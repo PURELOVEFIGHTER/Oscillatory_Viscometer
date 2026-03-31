@@ -16,8 +16,8 @@ typedef enum {
  *               Frequency Scan Configuration
  * ========================================================= */
 #define FREQ_SCAN_DEFAULT_HZ   200
-#define FREQ_SCAN_START_HZ     150 // 扫频起始频率
-#define FREQ_SCAN_END_HZ       250 // 扫频终止频率
+#define FREQ_SCAN_START_HZ     0 // 扫频起始频率
+#define FREQ_SCAN_END_HZ       1000 // 扫频终止频率
 #define FREQ_SCAN_STEP_HZ      0.5 // 扫频步进
 #define FREQ_SCAN_HOLD_TIME_MS 50  // 每个频率采集时间(ms)
 
