@@ -133,10 +133,19 @@ extern volatile bool oled_update_pending;
 extern volatile bool button_scan_pending;
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ADC <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 #define ADC_BUF_LEN 256
+#define ADC_DMA_BUF_LEN (ADC_BUF_LEN * 2U)
+#define ADC_UART_TX_BYTES (ADC_BUF_LEN * sizeof(uint16_t))
+#define ADC_UART_PACKET_BYTES (ADC_UART_TX_BYTES + 2U)
+#define UART6_FRAME_HEAD 0xAAU
+#define UART6_FRAME_TAIL 0xFFU
+#define UART6_TX_INDEX_NONE 0xFFU
 extern uint16_t adc_buf[2][ADC_BUF_LEN];
+extern uint8_t UART6_tx_packet[2][ADC_UART_PACKET_BYTES];
 extern volatile uint8_t UART6_sending_index;
+extern volatile uint8_t UART6_pending_index;
 extern volatile uint8_t UART6_tx_busy;
 /* USER CODE END Private defines */
+
 #ifdef __cplusplus
 }
 #endif

@@ -24,7 +24,7 @@ typedef enum {
 /* =========================================================
  *                  Assert Level Configuration
  * ========================================================= */
-#define DUTY_RATIO_DEFAULT           50
+#define DUTY_RATIO_DEFAULT           95
 #define DUTY_RATIO_SCAN_START        0   // 有效电平扫描起始比例
 #define DUTY_RATIO_SCAN_END          100 // 有效电平扫描终止比例
 #define DUTY_RATIO_SCAN_STEP         1   // 扫频步进

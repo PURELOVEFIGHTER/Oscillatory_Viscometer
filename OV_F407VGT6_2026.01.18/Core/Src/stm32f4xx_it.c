@@ -53,7 +53,50 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+extern UART_HandleTypeDef huart6;
 
+static void UART6_PackBuffer(uint8_t buffer_index) {
+    if (buffer_index > 1U) {
+        return;
+    }
+
+    UART6_tx_packet[buffer_index][0] = UART6_FRAME_HEAD;
+    memcpy(&UART6_tx_packet[buffer_index][1], adc_buf[buffer_index], ADC_UART_TX_BYTES);
+    UART6_tx_packet[buffer_index][ADC_UART_PACKET_BYTES - 1U] = UART6_FRAME_TAIL;
+}
+
+static void UART6_StartBufferTx(uint8_t buffer_index) {
+    if (buffer_index > 1U) {
+        return;
+    }
+
+    if (HAL_UART_Transmit_DMA(&huart6, UART6_tx_packet[buffer_index], ADC_UART_PACKET_BYTES) != HAL_OK) {
+        UART6_tx_busy       = 0U;
+        UART6_sending_index = UART6_TX_INDEX_NONE;
+    }
+}
+
+static void UART6_RequestBufferTx(uint8_t buffer_index) {
+    uint32_t primask = __get_PRIMASK();
+    uint8_t start_index = UART6_TX_INDEX_NONE;
+
+    UART6_PackBuffer(buffer_index);
+
+    __disable_irq();
+    if (UART6_tx_busy == 0U) {
+        UART6_tx_busy       = 1U;
+        UART6_sending_index = buffer_index;
+        UART6_pending_index = UART6_TX_INDEX_NONE;
+        start_index         = buffer_index;
+    } else {
+        UART6_pending_index = buffer_index;
+    }
+    __set_PRIMASK(primask);
+
+    if (start_index != UART6_TX_INDEX_NONE) {
+        UART6_StartBufferTx(start_index);
+    }
+}
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -381,6 +424,18 @@ void DMA2_Stream6_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc) {
+    if ((hadc->Instance == ADC1) && (system_mode == MODE_MEASUREMENT) && ldc2_isReading) {
+        UART6_RequestBufferTx(0U);
+    }
+}
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
+    if ((hadc->Instance == ADC1) && (system_mode == MODE_MEASUREMENT) && ldc2_isReading) {
+        UART6_RequestBufferTx(1U);
+    }
+}
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (htim->Instance == TIM1) {
         static uint32_t tim1_drv_cnt      = 0;
@@ -397,8 +452,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         } else if (tim1_drv_cnt < drv_PWM_halfCnt) {
             DRV_Coast(&hdrv1, &hdrv1.CHANNEL_A);
         } else if (tim1_drv_cnt < drv_PWM_halfCnt + drv_PWM_assertCnt) {
-            DRV_Reverse(&hdrv1, &hdrv1.CHANNEL_A);
+            // DRV_Reverse(&hdrv1, &hdrv1.CHANNEL_A);
             drv_excitingLevel = false;
+            DRV_Coast(&hdrv1, &hdrv1.CHANNEL_A);
         } else if (tim1_drv_cnt < drv_PWM_cnt) {
             DRV_Coast(&hdrv1, &hdrv1.CHANNEL_A);
         } else {
@@ -511,6 +567,34 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
         __set_PRIMASK(primask);
 
         UART3_StartTx();
+    } else if (huart->Instance == USART6) {
+        uint32_t primask = __get_PRIMASK();
+        uint8_t pending_index;
+        bool start_pending = false;
+
+        __disable_irq();
+        UART6_tx_busy       = 0U;
+        UART6_sending_index = UART6_TX_INDEX_NONE;
+        pending_index       = UART6_pending_index;
+        if (pending_index < 2U) {
+            UART6_pending_index = UART6_TX_INDEX_NONE;
+            UART6_tx_busy       = 1U;
+            UART6_sending_index = pending_index;
+            start_pending       = true;
+        }
+        __set_PRIMASK(primask);
+
+        if (start_pending) {
+            UART6_StartBufferTx(pending_index);
+        }
+    }
+}
+
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
+    if (huart->Instance == USART6) {
+        UART6_tx_busy       = 0U;
+        UART6_sending_index = UART6_TX_INDEX_NONE;
+        UART6_pending_index = UART6_TX_INDEX_NONE;
     }
 }
 /* USER CODE END 1 */
