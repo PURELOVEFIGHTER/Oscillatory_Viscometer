@@ -24,6 +24,8 @@
 /* USER CODE BEGIN Includes */
 #include <multi_button.h>
 #include <my_button.h>
+#include "oscillate.h"
+#include "usart3.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -53,50 +55,7 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-extern UART_HandleTypeDef huart6;
 
-static void UART6_PackBuffer(uint8_t buffer_index) {
-    if (buffer_index > 1U) {
-        return;
-    }
-
-    UART6_tx_packet[buffer_index][0] = UART6_FRAME_HEAD;
-    memcpy(&UART6_tx_packet[buffer_index][1], adc_buf[buffer_index], ADC_UART_TX_BYTES);
-    UART6_tx_packet[buffer_index][ADC_UART_PACKET_BYTES - 1U] = UART6_FRAME_TAIL;
-}
-
-static void UART6_StartBufferTx(uint8_t buffer_index) {
-    if (buffer_index > 1U) {
-        return;
-    }
-
-    if (HAL_UART_Transmit_DMA(&huart6, UART6_tx_packet[buffer_index], ADC_UART_PACKET_BYTES) != HAL_OK) {
-        UART6_tx_busy       = 0U;
-        UART6_sending_index = UART6_TX_INDEX_NONE;
-    }
-}
-
-static void UART6_RequestBufferTx(uint8_t buffer_index) {
-    uint32_t primask = __get_PRIMASK();
-    uint8_t start_index = UART6_TX_INDEX_NONE;
-
-    UART6_PackBuffer(buffer_index);
-
-    __disable_irq();
-    if (UART6_tx_busy == 0U) {
-        UART6_tx_busy       = 1U;
-        UART6_sending_index = buffer_index;
-        UART6_pending_index = UART6_TX_INDEX_NONE;
-        start_index         = buffer_index;
-    } else {
-        UART6_pending_index = buffer_index;
-    }
-    __set_PRIMASK(primask);
-
-    if (start_index != UART6_TX_INDEX_NONE) {
-        UART6_StartBufferTx(start_index);
-    }
-}
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -368,7 +327,7 @@ void USART2_IRQHandler(void)
                 rx_len--;
             }
             rx_buf[rx_len] = '\0';
-            Command_Parse();
+            // Command_Parse();
         }
 
         memset(rx_buf, 0, MSG_LEN);
@@ -424,79 +383,9 @@ void DMA2_Stream6_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc) {
-    if ((hadc->Instance == ADC1) && (system_mode == MODE_MEASUREMENT) && ldc2_isReading) {
-        UART6_RequestBufferTx(0U);
-    }
-}
-
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
-    if ((hadc->Instance == ADC1) && (system_mode == MODE_MEASUREMENT) && ldc2_isReading) {
-        UART6_RequestBufferTx(1U);
-    }
-}
-
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (htim->Instance == TIM1) {
-        static uint32_t tim1_drv_cnt      = 0;
-        static uint16_t led_pwm_counter   = 0;
-        static uint16_t led_breath_level  = 0;
-        static int8_t led_breath_dir      = 1;
-        static uint16_t led_step_ticks    = 0;
-        const uint16_t led_pwm_period     = 100U;
-        const uint16_t led_step_ticks_max = 1000U;
-
-        if (tim1_drv_cnt < drv_PWM_assertCnt) {
-            DRV_Forward(&hdrv1, &hdrv1.CHANNEL_A);
-            drv_excitingLevel = true;
-        } else if (tim1_drv_cnt < drv_PWM_halfCnt) {
-            DRV_Coast(&hdrv1, &hdrv1.CHANNEL_A);
-        } else if (tim1_drv_cnt < drv_PWM_halfCnt + drv_PWM_assertCnt) {
-            // DRV_Reverse(&hdrv1, &hdrv1.CHANNEL_A);
-            drv_excitingLevel = false;
-            DRV_Coast(&hdrv1, &hdrv1.CHANNEL_A);
-        } else if (tim1_drv_cnt < drv_PWM_cnt) {
-            DRV_Coast(&hdrv1, &hdrv1.CHANNEL_A);
-        } else {
-            tim1_drv_cnt = 0;
-        }
-        tim1_drv_cnt++;
-
-        if (led_breath_enabled) {
-            if (++led_step_ticks >= led_step_ticks_max) {
-                led_step_ticks = 0;
-                if (led_breath_dir > 0) {
-                    if (led_breath_level < led_pwm_period) {
-                        led_breath_level++;
-                    } else {
-                        led_breath_level = led_pwm_period;
-                        led_breath_dir   = -1;
-                    }
-                } else {
-                    if (led_breath_level > 0) {
-                        led_breath_level--;
-                    } else {
-                        led_breath_level = 0;
-                        led_breath_dir   = 1;
-                    }
-                }
-            }
-
-            if (++led_pwm_counter >= led_pwm_period) {
-                led_pwm_counter = 0;
-            }
-            if (led_pwm_counter < led_breath_level) {
-                HAL_GPIO_WritePin(LED2_PORT, LED2_PIN, GPIO_PIN_SET);
-            } else {
-                HAL_GPIO_WritePin(LED2_PORT, LED2_PIN, GPIO_PIN_RESET);
-            }
-        } else {
-            led_pwm_counter  = 0;
-            led_breath_level = 0;
-            led_breath_dir   = 1;
-            led_step_ticks   = 0;
-            HAL_GPIO_WritePin(LED2_PORT, LED2_PIN, GPIO_PIN_RESET);
-        }
+        Oscillate_TickISR();
     }
 
     if (htim->Instance == TIM2) {
@@ -510,91 +399,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
             tim3_btn_cnt        = 0;
             button_scan_pending = true;
         }
-        if (++tim3_oled_cnt >= 500) {
+        if (++tim3_oled_cnt >= 1000) {
             tim3_oled_cnt       = 0;
             oled_update_pending = true;
         }
     }
 
     if (htim->Instance == TIM4) {
-        static uint8_t tim4_cnt = 0;
-        tim4_cnt++;
-        if (freq_scan_enabled) {
-            if (tim4_cnt > FREQ_SCAN_HOLD_TIME_MS) {
-                tim4_cnt = 0;
-                drv_PWM_freq += FREQ_SCAN_STEP_HZ;
-                drv_PWM_isChanged = true;
-                if (drv_PWM_freq > FREQ_SCAN_END_HZ) {
-                    freq_scan_enabled = false;
-                    ldc2_isReading    = false;
-                    drv_PWM_freq      = FREQ_SCAN_DEFAULT_HZ;
-                    HAL_TIM_Base_Stop_IT(&htim4);
-                    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
-                    DRV_Stop(&hdrv1.CHANNEL_A, &htim1);
-                }
-            }
-        }
-        if (DR_scan_enabled) {
-            if (tim4_cnt > DUTY_RATIO_SCAN_HOLD_TIME_MS) {
-                tim4_cnt = 0;
-                drv_PWM_DR += DUTY_RATIO_SCAN_STEP;
-                drv_PWM_isChanged = true;
-                if (drv_PWM_DR > DUTY_RATIO_SCAN_END) {
-                    DR_scan_enabled = false;
-                    ldc2_isReading  = false;
-                    drv_PWM_DR      = DUTY_RATIO_DEFAULT;
-                    HAL_TIM_Base_Stop_IT(&htim4);
-                    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
-                    DRV_Stop(&hdrv1.CHANNEL_A, &htim1);
-                }
-            }
-        }
+        Oscillate_ScanISR();
     }
 }
-
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == USART3) {
-        uint32_t primask = __get_PRIMASK();
-        __disable_irq();
-        uint16_t buffer_len = (uint16_t)sizeof(UART3_TX_buffer);
-        uint16_t tail       = UART3_TX_tail;
-        tail = (uint16_t)(tail + (uint16_t)huart->TxXferSize);
-        if (tail >= buffer_len) {
-            tail = (uint16_t)(tail - buffer_len);
-        }
-        UART3_TX_tail = tail;
-        UART3_DMA_busy = false;
-        __set_PRIMASK(primask);
-
-        UART3_StartTx();
-    } else if (huart->Instance == USART6) {
-        uint32_t primask = __get_PRIMASK();
-        uint8_t pending_index;
-        bool start_pending = false;
-
-        __disable_irq();
-        UART6_tx_busy       = 0U;
-        UART6_sending_index = UART6_TX_INDEX_NONE;
-        pending_index       = UART6_pending_index;
-        if (pending_index < 2U) {
-            UART6_pending_index = UART6_TX_INDEX_NONE;
-            UART6_tx_busy       = 1U;
-            UART6_sending_index = pending_index;
-            start_pending       = true;
-        }
-        __set_PRIMASK(primask);
-
-        if (start_pending) {
-            UART6_StartBufferTx(pending_index);
-        }
-    }
-}
-
-void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
-    if (huart->Instance == USART6) {
-        UART6_tx_busy       = 0U;
-        UART6_sending_index = UART6_TX_INDEX_NONE;
-        UART6_pending_index = UART6_TX_INDEX_NONE;
+        USART3_TxCpltCallback(huart);
     }
 }
 /* USER CODE END 1 */

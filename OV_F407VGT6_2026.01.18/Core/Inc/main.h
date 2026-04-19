@@ -43,6 +43,8 @@ extern "C" {
 #include "multi_button.h"
 #include "my_button.h"
 #include "utility.h"
+#include "oscillate.h"
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -71,33 +73,9 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 extern sysWorkMode system_mode;
-/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DRV8833 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-extern DRV8833_HandleTypeDef hdrv1;
-void DRV_Start(DRV8833_Channel *ch, TIM_HandleTypeDef *htim);
-void DRV_Stop(DRV8833_Channel *ch, TIM_HandleTypeDef *htim);
-// Scan Control
-extern volatile bool freq_scan_enabled;
-extern volatile bool DR_scan_enabled;
-// Frequency N Duty Ratio Control
-extern volatile bool drv_excitingLevel;
-extern float drv_PWM_freq;
-extern float drv_PWM_DR;
-extern bool drv_PWM_isChanged;
-extern uint32_t drv_PWM_cnt;
-extern uint32_t drv_PWM_halfCnt;
-extern uint32_t drv_PWM_assertCnt;
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LDC1101 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-extern LDC1101_HandleTypeDef ldc2;
-// Status
-extern volatile bool ldc2_isWorking;
-extern volatile bool ldc2_isReading;
-extern volatile bool ldc2_isReadingPrev;
-extern volatile bool ldc2_dataReady;
-extern uint8_t LDC_status;
-// Data
-extern uint16_t Rp_data;
-extern uint16_t L_data;
-extern uint32_t LHR_data;
+
+
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> UART <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 #define MSG_LEN 128
 /* UART2 */
@@ -106,15 +84,6 @@ extern char UART2_RX_DMA_buffer[2][MSG_LEN];
 extern char UART2_TX_buffer[MSG_LEN];
 extern bool UART2_TX_send;
 void UART2_Log(const char *level, const char *file, int line, const char *message);
-/* UART3 */
-#define QUEUE_LEN 1024
-extern uint8_t UART3_TX_buffer[QUEUE_LEN * 9];
-extern uint8_t frame[9];
-extern volatile uint16_t UART3_TX_head;
-extern volatile uint16_t UART3_TX_tail;
-extern volatile bool UART3_DMA_busy;
-bool UART3_Enqueue(const uint8_t *data, uint16_t len);
-void UART3_StartTx(void);
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Calibrition <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 extern uint16_t cal_current_position_um;
 extern uint32_t cal_wait_start_tick;
@@ -128,17 +97,22 @@ extern uint32_t cal_total_sample_cnt;
 extern uint64_t cal_total_sum;
 extern uint64_t cal_total_sum_sq;
 extern volatile CalState_t cal_state;
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Pulse Feedback <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+extern volatile bool pulse_active;
+extern volatile uint8_t pulse_feedback_trigger;
+extern volatile bool pulse_feedback_busy;
+extern volatile uint32_t pulse_feedback_frame_cnt;
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OLED <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 extern volatile bool oled_update_pending;
 extern volatile bool button_scan_pending;
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ADC <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-#define ADC_BUF_LEN 256
-#define ADC_DMA_BUF_LEN (ADC_BUF_LEN * 2U)
-#define ADC_UART_TX_BYTES (ADC_BUF_LEN * sizeof(uint16_t))
+#define ADC_BUF_LEN           256
+#define ADC_DMA_BUF_LEN       (ADC_BUF_LEN * 2U)
+#define ADC_UART_TX_BYTES     (ADC_BUF_LEN * sizeof(uint16_t))
 #define ADC_UART_PACKET_BYTES (ADC_UART_TX_BYTES + 2U)
-#define UART6_FRAME_HEAD 0xAAU
-#define UART6_FRAME_TAIL 0xFFU
-#define UART6_TX_INDEX_NONE 0xFFU
+#define UART6_FRAME_HEAD      0xAAU
+#define UART6_FRAME_TAIL      0xFFU
+#define UART6_TX_INDEX_NONE   0xFFU
 extern uint16_t adc_buf[2][ADC_BUF_LEN];
 extern uint8_t UART6_tx_packet[2][ADC_UART_PACKET_BYTES];
 extern volatile uint8_t UART6_sending_index;

@@ -7,10 +7,10 @@ ov_f407vgt6_2026.01.18/dma_1.o: ..\Core\Src\dma.c ..\Core\Inc\dma.h \
   ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h \
   ..\Drivers\CMSIS\Include\core_cm4.h \
   F:\Keil\Keil_v5\ARM\ARMCLANG\include\stdint.h \
-  G:\Oscillatory_Viscometer\OV_F407VGT6_2026.01.18\Drivers\CMSIS\Include\cmsis_version.h \
-  G:\Oscillatory_Viscometer\OV_F407VGT6_2026.01.18\Drivers\CMSIS\Include\cmsis_compiler.h \
-  G:\Oscillatory_Viscometer\OV_F407VGT6_2026.01.18\Drivers\CMSIS\Include\cmsis_armclang.h \
-  G:\Oscillatory_Viscometer\OV_F407VGT6_2026.01.18\Drivers\CMSIS\Include\mpu_armv7.h \
+  G:\Oscillatory_Viscometer\01_Project_Management\OV_F407VGT6_2026.01.18\Drivers\CMSIS\Include\cmsis_version.h \
+  G:\Oscillatory_Viscometer\01_Project_Management\OV_F407VGT6_2026.01.18\Drivers\CMSIS\Include\cmsis_compiler.h \
+  G:\Oscillatory_Viscometer\01_Project_Management\OV_F407VGT6_2026.01.18\Drivers\CMSIS\Include\cmsis_armclang.h \
+  G:\Oscillatory_Viscometer\01_Project_Management\OV_F407VGT6_2026.01.18\Drivers\CMSIS\Include\mpu_armv7.h \
   ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\Legacy\stm32_hal_legacy.h \
   F:\Keil\Keil_v5\ARM\ARMCLANG\include\stddef.h \
@@ -21,6 +21,9 @@ ov_f407vgt6_2026.01.18/dma_1.o: ..\Core\Src\dma.c ..\Core\Inc\dma.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_dma.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_dma_ex.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_cortex.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_adc.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_ll_adc.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_adc_ex.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_flash.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_flash_ex.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_flash_ramfunc.h \
@@ -35,8 +38,10 @@ ov_f407vgt6_2026.01.18/dma_1.o: ..\Core\Src\dma.c ..\Core\Inc\dma.h \
   F:\Keil\Keil_v5\ARM\ARMCLANG\include\stdio.h \
   F:\Keil\Keil_v5\ARM\ARMCLANG\include\stdlib.h \
   F:\Keil\Keil_v5\ARM\ARMCLANG\include\string.h \
-  ..\Core\Inc\ldc1101_driver.h \
+  ..\04_BSP\Inc\ldc1101_driver.h \
   F:\Keil\Keil_v5\ARM\ARMCLANG\include\stdbool.h \
-  ..\Core\Inc\drv8833_driver.h ..\Core\Inc\config.h \
-  ..\Core\Inc\command.h ..\Core\Inc\oled.h ..\Core\Inc\oledfont.h \
-  ..\Core\Inc\multi_button.h ..\Core\Inc\my_button.h
+  ..\04_BSP\Inc\device_common.h ..\04_BSP\Inc\drv8833_driver.h \
+  ..\05_Config\config.h ..\02_Middleware\Protocol\Inc\command.h \
+  ..\04_BSP\Inc\oled.h ..\04_BSP\Inc\oledfont.h \
+  ..\04_BSP\Inc\multi_button.h ..\04_BSP\Inc\my_button.h \
+  ..\06_Utilities\Inc\utility.h

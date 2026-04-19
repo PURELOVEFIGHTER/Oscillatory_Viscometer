@@ -8,37 +8,65 @@ virtualFolder:
   name: <virtual_root>
   files: []
   folders:
+    - name: 00_APP
+      files:
+        - path: ../00_APP/Src/task1_measurement.c
+      folders: []
+    - name: 01_Service
+      files:
+        - path: ../01_Service/Src/oscillate.c
+        - path: ../01_Service/Src/lhr_sample.c
+      folders: []
+    - name: 02_Middleware
+      files:
+        - path: ../02_Middleware/Src/command.c
+        - path: ../02_Middleware/Protocol/Src/pack.c
+        - path: ../02_Middleware/Transport/Src/usart2.c
+        - path: ../02_Middleware/Transport/Src/usart3.c
+        - path: ../02_Middleware/Transport/Src/usart6.c
+      folders: []
+    - name: 04_Drivers
+      files: []
+      folders:
+        - name: BSP
+          files:
+            - path: ../04_BSP/Src/drv8833_driver.c
+            - path: ../04_BSP/Src/ldc1101_driver.c
+            - path: ../04_BSP/Src/multi_button.c
+            - path: ../04_BSP/Src/my_button.c
+            - path: ../04_BSP/Src/oled.c
+            - path: ../04_BSP/Src/oledfont.c
+          folders: []
+    - name: 05_Config
+      files:
+        - path: ../05_Config/config.c
+      folders: []
+    - name: 06_Utilities
+      files:
+        - path: ../06_Utilities/Src/utility.c
+      folders: []
+    - name: MDK-ARM
+      files:
+        - path: ../MDK-ARM/startup_stm32f407xx.s
+      folders: []
     - name: Application
       files: []
       folders:
-        - name: MDK-ARM
-          files:
-            - path: ../MDK-ARM/startup_stm32f407xx.s
-          folders: []
         - name: User
           files: []
           folders:
             - name: Core
               files:
-                - path: ../Core/Src/adc.c
-                - path: ../Core/Src/command.c
-                - path: ../Core/Src/dma.c
-                - path: ../Core/Src/drv8833_driver.c
-                - path: ../Core/Src/gpio.c
-                - path: ../Core/Src/i2c.c
-                - path: ../Core/Src/ldc1101_driver.c
                 - path: ../Core/Src/main.c
-                - path: ../Core/Src/multi_button.c
-                - path: ../Core/Src/my_button.c
-                - path: ../Core/Src/oled.c
-                - path: ../Core/Src/oledfont.c
+                - path: ../Core/Src/gpio.c
+                - path: ../Core/Src/adc.c
+                - path: ../Core/Src/dma.c
+                - path: ../Core/Src/i2c.c
                 - path: ../Core/Src/spi.c
-                - path: ../Core/Src/stm32f4xx_hal_msp.c
-                - path: ../Core/Src/stm32f4xx_it.c
-                - path: ../Core/Src/system_stm32f4xx.c
                 - path: ../Core/Src/tim.c
                 - path: ../Core/Src/usart.c
-                - path: ../Core/Src/utility.c
+                - path: ../Core/Src/stm32f4xx_it.c
+                - path: ../Core/Src/stm32f4xx_hal_msp.c
               folders: []
     - name: Drivers
       files: []
@@ -47,8 +75,6 @@ virtualFolder:
           files:
             - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c
             - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c
-            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c
-            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c
             - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
             - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
             - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
@@ -62,6 +88,8 @@ virtualFolder:
             - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
             - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
             - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c
+            - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c
             - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c
             - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
             - path: ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
@@ -77,7 +105,7 @@ virtualFolder:
 dependenceList: []
 outDir: build
 miscInfo:
-  uid: 5b9d808da642cf294afa045f3b71f6be
+  uid: c4aead603290e7b59e4dd329eb8c6b27
 targets:
   OV_F407VGT6_2026.01.18:
     cppPreprocessAttrs:
@@ -85,83 +113,37 @@ targets:
         - USE_HAL_DRIVER
         - STM32F407xx
       incList:
+        - ../00_APP/Inc
+        - ../01_Service/Inc
+        - ../02_Middleware/Protocol/Inc
+        - ../04_BSP/Inc
+        - ../05_Config
+        - ../06_Utilities/Inc
         - ../Core/Inc
         - ../Drivers/STM32F4xx_HAL_Driver/Inc
         - ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy
         - ../Drivers/CMSIS/Device/ST/STM32F4xx/Include
         - ../Drivers/CMSIS/Include
+        - ../02_Middleware/Transport/Inc
         - .cmsis/include
         - ../MDK-ARM/RTE/_OV_F407VGT6_2026.01.18
       libList: []
     excludeList: []
-    settings:
-      debugger: cortex-debug
+    settings: {}
     toolchain: AC6
     toolchainConfigMap:
-      AC5:
-        archExtensions: ""
-        cpuType: Cortex-M4
-        floatingPointHardware: single
-        options:
-          version: 4
-          afterBuildTasks: []
-          asm-compiler: {}
-          beforeBuildTasks: []
-          c/cpp-compiler:
-            CXX_FLAGS: --diag_suppress=1 --diag_suppress=1295
-            C_FLAGS: --diag_suppress=1 --diag_suppress=1295
-            c99-mode: true
-            one-elf-section-per-function: true
-            optimization: level-0
-          global:
-            output-debug-info: enable
-            use-microLIB: false
-          linker:
-            $outputTaskExcludes:
-              - .bin
-            output-format: elf
-        scatterFilePath: <YOUR_SCATTER_FILE>.sct
-        storageLayout:
-          RAM:
-            - id: 1
-              isChecked: true
-              mem:
-                size: "0x1C000"
-                startAddr: "0x20000000"
-              noInit: false
-              tag: IRAM
-            - id: 2
-              isChecked: true
-              mem:
-                size: "0x4000"
-                startAddr: "0x2001C000"
-              noInit: false
-              tag: IRAM
-          ROM:
-            - id: 1
-              isChecked: true
-              isStartup: true
-              mem:
-                size: "0x10000"
-                startAddr: "0x08000000"
-              tag: IROM
-        useCustomScatterFile: false
       AC6:
         archExtensions: ""
         cpuType: Cortex-M4
         floatingPointHardware: single
         options:
           version: 3
-          afterBuildTasks:
-            - name: axf2elf
-              abortAfterFailed: false
-              command: 'echo "firmware: ${OutDir}/${ProjectName}.hex"'
-              disable: false
+          afterBuildTasks: []
           asm-compiler:
             $use: asm-auto
           beforeBuildTasks: []
           c/cpp-compiler:
-            language-c: c99
+            language-c: c17
             language-cpp: c++11
             one-elf-section-per-function: true
             optimization: level-0
@@ -171,6 +153,9 @@ targets:
             output-debug-info: enable
             use-microLIB: true
           linker:
+            $outputTaskExcludes:
+              - .bin
+              - .s19
             misc-controls: --diag_suppress=L6329
             output-format: elf
         scatterFilePath: ""
@@ -248,43 +233,6 @@ targets:
                 startAddr: "0x0"
               tag: IROM
         useCustomScatterFile: false
-      GCC:
-        archExtensions: ""
-        cpuType: Cortex-M4
-        floatingPointHardware: single
-        options:
-          version: 5
-          afterBuildTasks: []
-          asm-compiler:
-            ASM_FLAGS: ""
-          beforeBuildTasks: []
-          c/cpp-compiler:
-            CXX_FLAGS: ""
-            C_FLAGS: ""
-            language-c: c11
-            language-cpp: c++11
-            one-elf-section-per-data: true
-            one-elf-section-per-function: true
-            optimization: level-debug
-            warnings: all-warnings
-          global:
-            $float-abi-type: hard
-            misc-control: ""
-            not-use-syscalls: true
-            output-debug-info: enable
-            use-newlib-nano: true
-          linker:
-            $outputTaskExcludes:
-              - .bin
-            LD_FLAGS: ""
-            LIB_FLAGS: -lm
-            output-format: elf
-            remove-unused-input-sections: true
-        scatterFilePath: <YOUR_LINKER_SCRIPT>.lds
-        storageLayout:
-          RAM: []
-          ROM: []
-        useCustomScatterFile: true
     uploadConfigMap:
       JLink:
         baseAddr: ""
