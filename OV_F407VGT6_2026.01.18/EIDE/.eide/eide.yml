@@ -10,31 +10,37 @@ virtualFolder:
   folders:
     - name: 00_APP
       files:
+        - path: ../00_APP/Src/command.c
         - path: ../00_APP/Src/task1_measurement.c
+        - path: ../00_APP/Src/task3_pulse.c
+        - path: ../00_APP/Src/my_button.c
       folders: []
     - name: 01_Service
       files:
         - path: ../01_Service/Src/oscillate.c
         - path: ../01_Service/Src/lhr_sample.c
+        - path: ../01_Service/Src/pack.c
       folders: []
     - name: 02_Middleware
+      files: []
+      folders: []
+    - name: 03_Communication
       files:
-        - path: ../02_Middleware/Src/command.c
-        - path: ../02_Middleware/Protocol/Src/pack.c
-        - path: ../02_Middleware/Transport/Src/usart2.c
-        - path: ../02_Middleware/Transport/Src/usart3.c
-        - path: ../02_Middleware/Transport/Src/usart6.c
+        - path: ../03_Communication/Src/usart2.c
+        - path: ../03_Communication/Src/usart3.c
+        - path: ../03_Communication/Src/usart6.c
+        - path: ../03_Communication/Src/oled.c
       folders: []
     - name: 04_Drivers
       files: []
       folders:
         - name: BSP
           files:
+            - path: ../04_BSP/Src/led.c
             - path: ../04_BSP/Src/drv8833_driver.c
             - path: ../04_BSP/Src/ldc1101_driver.c
             - path: ../04_BSP/Src/multi_button.c
-            - path: ../04_BSP/Src/my_button.c
-            - path: ../04_BSP/Src/oled.c
+            - path: ../04_BSP/Src/oled_driver.c
             - path: ../04_BSP/Src/oledfont.c
           folders: []
     - name: 05_Config
@@ -105,7 +111,7 @@ virtualFolder:
 dependenceList: []
 outDir: build
 miscInfo:
-  uid: c4aead603290e7b59e4dd329eb8c6b27
+  uid: d971a4075f018eede1a901748dcce0ef
 targets:
   OV_F407VGT6_2026.01.18:
     cppPreprocessAttrs:
@@ -115,7 +121,7 @@ targets:
       incList:
         - ../00_APP/Inc
         - ../01_Service/Inc
-        - ../02_Middleware/Protocol/Inc
+        - ../02_Middleware
         - ../04_BSP/Inc
         - ../05_Config
         - ../06_Utilities/Inc
@@ -124,7 +130,7 @@ targets:
         - ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy
         - ../Drivers/CMSIS/Device/ST/STM32F4xx/Include
         - ../Drivers/CMSIS/Include
-        - ../02_Middleware/Transport/Inc
+        - ../03_Communication/Inc
         - .cmsis/include
         - ../MDK-ARM/RTE/_OV_F407VGT6_2026.01.18
       libList: []
@@ -138,12 +144,16 @@ targets:
         floatingPointHardware: single
         options:
           version: 3
-          afterBuildTasks: []
+          afterBuildTasks:
+            - name: axf to elf
+              abortAfterFailed: false
+              command: copy /Y "${OutDirBase}\${ProjectName}.axf" "${OutDirBase}\${ProjectName}.elf"
+              disable: false
           asm-compiler:
             $use: asm-auto
           beforeBuildTasks: []
           c/cpp-compiler:
-            language-c: c17
+            language-c: c11
             language-cpp: c++11
             one-elf-section-per-function: true
             optimization: level-0
@@ -233,6 +243,43 @@ targets:
                 startAddr: "0x0"
               tag: IROM
         useCustomScatterFile: false
+      GCC:
+        archExtensions: ""
+        cpuType: Cortex-M4
+        floatingPointHardware: single
+        options:
+          version: 5
+          afterBuildTasks: []
+          asm-compiler:
+            ASM_FLAGS: ""
+          beforeBuildTasks: []
+          c/cpp-compiler:
+            CXX_FLAGS: ""
+            C_FLAGS: ""
+            language-c: c11
+            language-cpp: c++11
+            one-elf-section-per-data: true
+            one-elf-section-per-function: true
+            optimization: level-debug
+            warnings: all-warnings
+          global:
+            $float-abi-type: hard
+            misc-control: ""
+            not-use-syscalls: true
+            output-debug-info: enable
+            use-newlib-nano: true
+          linker:
+            $outputTaskExcludes:
+              - .bin
+            LD_FLAGS: ""
+            LIB_FLAGS: -lm
+            output-format: elf
+            remove-unused-input-sections: true
+        scatterFilePath: <YOUR_LINKER_SCRIPT>.lds
+        storageLayout:
+          RAM: []
+          ROM: []
+        useCustomScatterFile: true
     uploadConfigMap:
       JLink:
         baseAddr: ""

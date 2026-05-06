@@ -16,6 +16,7 @@ PACK_StatusTypeDef Pack_WriteU32LE(uint8_t *buf, uint16_t buf_len, uint16_t *off
 PACK_StatusTypeDef Pack_WriteFloatLE(uint8_t *buf, uint16_t buf_len, uint16_t *offset, float value);
 
 /* 具体业务帧 */
+// [帧头 0xFF][LHR 4B][Freq 4B][Duty 1B][Level 1B][帧尾 0xAA]
 PACK_StatusTypeDef Pack_MeasurementFrame(uint32_t lhr_data, float freq, float duty_ratio, bool exciting_level,
                                          uint8_t *frame, uint16_t frame_len);
 

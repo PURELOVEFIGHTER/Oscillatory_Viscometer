@@ -4,7 +4,31 @@
  *  Created on: 2022年8月16日
  *      Author: HP
  */
-#include "oled.h"
+#include "oled_driver.h"
+#include <string.h>
+
+#define OLED_WIDTH 128
+#define OLED_PAGES 8
+
+#define OLED_I2C_ADDR  0x78
+#define OLED_CMD_ADDR  0x00
+#define OLED_DATA_ADDR 0x40
+
+static uint8_t OLED_GRAM[OLED_PAGES][OLED_WIDTH];
+
+static volatile uint8_t oled_dma_busy = 0;
+
+static void OLED_GRAM_WriteByte(uint8_t x, uint8_t y, uint8_t data, uint8_t Color_Turn) {
+    if (x >= OLED_WIDTH || y >= OLED_PAGES) {
+        return;
+    }
+
+    if (Color_Turn) {
+        OLED_GRAM[y][x] = ~data;
+    } else {
+        OLED_GRAM[y][x] = data;
+    }
+}
 
 /**********************************************************
  * 初始化命令,根据芯片手册书写
@@ -13,13 +37,12 @@ uint8_t CMD_Data[] = {0xAE, 0x00, 0x10, 0x40, 0xB0, 0x81, 0xFF, 0xA1, 0xA6, 0xA8
 
                       0xC8, 0xD3, 0x00, 0xD5, 0x80, 0xD8, 0x05, 0xD9, 0xF1, 0xDA, 0x12,
 
-                      0xD8, 0x30, 0x8D, 0x14, 0xAF};
+                      0xD8, 0x30, 0x8D, 0x14, 0xAF, 0x20, 0x00, 0x21, 0x00, 0x7F, 0x22, 0x00, 0x07};
 
 void WriteCmd(void) {
     uint8_t i = 0;
-
-    for (i = 0; i < 27; i++) {
-        HAL_I2C_Mem_Write(&hi2c1, 0x78, 0x00, I2C_MEMADD_SIZE_8BIT, &CMD_Data[i], 1, 0x100);
+    for (i = 0; i < sizeof(CMD_Data); i++) {
+        HAL_I2C_Mem_Write(&hi2c1, OLED_I2C_ADDR, OLED_CMD_ADDR, I2C_MEMADD_SIZE_8BIT, &CMD_Data[i], 1, 0x100);
     }
 }
 /**
@@ -39,7 +62,9 @@ void OLED_Init(void) {
  * @param {uint8_t} cmd 芯片手册规定的命令
  * @return {*}
  */
-void OLED_WR_CMD(uint8_t cmd) { HAL_I2C_Mem_Write(&hi2c1, 0x78, 0x00, I2C_MEMADD_SIZE_8BIT, &cmd, 1, 0x100); }
+void OLED_WR_CMD(uint8_t cmd) {
+    HAL_I2C_Mem_Write(&hi2c1, OLED_I2C_ADDR, OLED_CMD_ADDR, I2C_MEMADD_SIZE_8BIT, &cmd, 1, 0x100);
+}
 
 /**
  * @function: void OLED_WR_DATA(uint8_t data)
@@ -47,7 +72,25 @@ void OLED_WR_CMD(uint8_t cmd) { HAL_I2C_Mem_Write(&hi2c1, 0x78, 0x00, I2C_MEMADD
  * @param {uint8_t} data 数据
  * @return {*}
  */
-void OLED_WR_DATA(uint8_t data) { HAL_I2C_Mem_Write(&hi2c1, 0x78, 0x40, I2C_MEMADD_SIZE_8BIT, &data, 1, 0x100); }
+void OLED_WR_DATA(uint8_t data) {
+    HAL_I2C_Mem_Write(&hi2c1, OLED_I2C_ADDR, OLED_DATA_ADDR, I2C_MEMADD_SIZE_8BIT, &data, 1, 0x100);
+}
+
+void OLED_ClearDMAFlag(void) { oled_dma_busy = 0; }
+
+void OLED_Refresh_DMA(void) {
+    if (oled_dma_busy) {
+        return;
+    }
+
+    oled_dma_busy = 1;
+
+    if (HAL_I2C_Mem_Write_DMA(&hi2c1, OLED_I2C_ADDR, OLED_DATA_ADDR, I2C_MEMADD_SIZE_8BIT, (uint8_t *)OLED_GRAM,
+                              OLED_WIDTH * OLED_PAGES)
+        != HAL_OK) {
+        oled_dma_busy = 0;
+    }
+}
 
 /**
  * @function: void OLED_On(void)
@@ -55,36 +98,14 @@ void OLED_WR_DATA(uint8_t data) { HAL_I2C_Mem_Write(&hi2c1, 0x78, 0x40, I2C_MEMA
 
  * @return {*}
  */
-void OLED_On(void) {
-    uint8_t i, n;
-
-    for (i = 0; i < 8; i++) {
-        OLED_WR_CMD(0xb0 + i); // 设置页地址（0~7）
-        OLED_WR_CMD(0x00);     // 设置显示位置—列低地址
-        OLED_WR_CMD(0x10);     // 设置显示位置—列高地址
-
-        for (n = 0; n < 128; n++)
-            OLED_WR_DATA(1);
-    }
-}
+void OLED_On(void) { memset(OLED_GRAM, 0xFF, sizeof(OLED_GRAM)); }
 
 /**
  * @function: OLED_Clear(void)
  * @description: 清屏,整个屏幕是黑色的!和没点亮一样!!!
  * @return {*}
  */
-void OLED_Clear(void) {
-    uint8_t i, n;
-
-    for (i = 0; i < 8; i++) {
-        OLED_WR_CMD(0xb0 + i); // 设置页地址（0~7）
-        OLED_WR_CMD(0x00);     // 设置显示位置—列低地址
-        OLED_WR_CMD(0x10);     // 设置显示位置—列高地址
-
-        for (n = 0; n < 128; n++)
-            OLED_WR_DATA(0);
-    }
-}
+void OLED_Clear(void) { memset(OLED_GRAM, 0x00, sizeof(OLED_GRAM)); }
 
 /**
  * @function: void OLED_Display_On(void)
@@ -146,41 +167,38 @@ unsigned int oled_pow(uint8_t m, uint8_t n) {
  * @return {*}
  */
 void OLED_ShowChar(uint8_t x, uint8_t y, uint8_t chr, uint8_t Char_Size, uint8_t Color_Turn) {
-    unsigned char c = 0, i = 0;
-    c = chr - ' '; // 得到偏移后的值
+    uint8_t c = 0;
+    uint8_t i = 0;
 
-    if (x > 128 - 1) {
-        x = 0;
-        y = y + 2;
+    if (chr < ' ' || chr > '~') {
+        chr = ' ';
+    }
+
+    c = chr - ' ';
+
+    if (x >= OLED_WIDTH || y >= OLED_PAGES) {
+        return;
     }
 
     if (Char_Size == 16) {
-        OLED_Set_Pos(x, y);
-
-        for (i = 0; i < 8; i++) {
-            if (Color_Turn)
-                OLED_WR_DATA(~F8X16[c * 16 + i]);
-            else
-                OLED_WR_DATA(F8X16[c * 16 + i]);
+        if (x > OLED_WIDTH - 8 || y > OLED_PAGES - 2) {
+            return;
         }
 
-        OLED_Set_Pos(x, y + 1);
-
         for (i = 0; i < 8; i++) {
-            if (Color_Turn)
-                OLED_WR_DATA(~F8X16[c * 16 + i + 8]);
-            else
-                OLED_WR_DATA(F8X16[c * 16 + i + 8]);
+            OLED_GRAM_WriteByte(x + i, y, F8X16[c * 16 + i], Color_Turn);
         }
 
+        for (i = 0; i < 8; i++) {
+            OLED_GRAM_WriteByte(x + i, y + 1, F8X16[c * 16 + i + 8], Color_Turn);
+        }
     } else {
-        OLED_Set_Pos(x, y);
+        if (x > OLED_WIDTH - 6) {
+            return;
+        }
 
         for (i = 0; i < 6; i++) {
-            if (Color_Turn)
-                OLED_WR_DATA(~F6x8[c][i]);
-            else
-                OLED_WR_DATA(F6x8[c][i]);
+            OLED_GRAM_WriteByte(x + i, y, F6x8[c][i], Color_Turn);
         }
     }
 }
@@ -200,23 +218,26 @@ void OLED_ShowString(uint8_t x, uint8_t y, char *chr, uint8_t Char_Size, uint8_t
     uint8_t j = 0;
 
     while (chr[j] != '\0') {
+        if (y >= OLED_PAGES) {
+            break;
+        }
+
         OLED_ShowChar(x, y, chr[j], Char_Size, Color_Turn);
 
-        if (Char_Size == 12) // 6X8的字体列加6，显示下一个字符
+        if (Char_Size == 12) {
             x += 6;
-        else // 8X16的字体列加8，显示下一个字符
+        } else {
             x += 8;
+        }
 
-        if (x > 122 && Char_Size == 12) // TextSize6x8如果一行不够显示了，从下一行继续显示
-        {
+        if (x > 122 && Char_Size == 12) {
             x = 0;
             y++;
         }
 
-        if (x > 120 && Char_Size == 16) // TextSize8x16如果一行不够显示了，从下一行继续显示
-        {
+        if (x > 120 && Char_Size == 16) {
             x = 0;
-            y++;
+            y += 2;
         }
 
         j++;
@@ -271,7 +292,7 @@ void OLED_ShowNum(uint8_t x, uint8_t y, unsigned int num, uint8_t len, uint8_t s
 void OLED_Showdecimal(uint8_t x, uint8_t y, float num, uint8_t z_len, uint8_t f_len, uint8_t size2,
                       uint8_t Color_Turn) {
     uint8_t t, temp, i = 0; // i为负数标志位
-    uint8_t enshow;
+    uint8_t enshow = 0;
     int z_temp, f_temp;
 
     if (num < 0) {
@@ -326,22 +347,17 @@ void OLED_Showdecimal(uint8_t x, uint8_t y, float num, uint8_t z_len, uint8_t f_
  */
 void OLED_ShowCHinese(uint8_t x, uint8_t y, uint8_t no, uint8_t Color_Turn) {
     uint8_t t = 0;
-    OLED_Set_Pos(x, y);
 
-    for (t = 0; t < 16; t++) {
-        if (Color_Turn)
-            OLED_WR_DATA(~Hzk[2 * no][t]); // 显示汉字的上半部分
-        else
-            OLED_WR_DATA(Hzk[2 * no][t]); // 显示汉字的上半部分
+    if (x > OLED_WIDTH - 16 || y > OLED_PAGES - 2) {
+        return;
     }
 
-    OLED_Set_Pos(x, y + 1);
+    for (t = 0; t < 16; t++) {
+        OLED_GRAM_WriteByte(x + t, y, Hzk[2 * no][t], Color_Turn);
+    }
 
     for (t = 0; t < 16; t++) {
-        if (Color_Turn)
-            OLED_WR_DATA(~Hzk[2 * no + 1][t]); // 显示汉字的上半部分
-        else
-            OLED_WR_DATA(Hzk[2 * no + 1][t]); // 显示汉字的上半部分
+        OLED_GRAM_WriteByte(x + t, y + 1, Hzk[2 * no + 1][t], Color_Turn);
     }
 }
 
@@ -358,21 +374,24 @@ void OLED_ShowCHinese(uint8_t x, uint8_t y, uint8_t no, uint8_t Color_Turn) {
  */
 void OLED_DrawBMP(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, uint8_t *BMP, uint8_t Color_Turn) {
     uint32_t j = 0;
-    uint8_t x = 0, y = 0;
+    uint8_t x  = 0;
+    uint8_t y  = 0;
 
-    if (y1 % 8 == 0)
-        y = y1 / 8;
-    else
-        y = y1 / 8 + 1;
+    if (x0 >= OLED_WIDTH || y0 >= OLED_PAGES) {
+        return;
+    }
+
+    if (x1 > OLED_WIDTH) {
+        x1 = OLED_WIDTH;
+    }
+
+    if (y1 > OLED_PAGES) {
+        y1 = OLED_PAGES;
+    }
 
     for (y = y0; y < y1; y++) {
-        OLED_Set_Pos(x0, y);
-
         for (x = x0; x < x1; x++) {
-            if (Color_Turn)
-                OLED_WR_DATA(~BMP[j++]); // 显示反相图片
-            else
-                OLED_WR_DATA(BMP[j++]); // 显示图片
+            OLED_GRAM_WriteByte(x, y, BMP[j++], Color_Turn);
         }
     }
 }

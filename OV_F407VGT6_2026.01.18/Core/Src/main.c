@@ -25,9 +25,11 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "task1_measurement.h"
+#include "task3_pulse.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,12 +50,14 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-sysWorkMode system_mode = MODE_MEASUREMENT;
+SysWorkMode system_mode = MODE_MEASUREMENT;
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DRV8833 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 DRV_HandleTypeDef hdrv1;
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LDC1101 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 LDC_HandleTypeDef hldc1;
-
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LED <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+LED_Handle_t hled1;
+LED_Handle_t hled2;
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Calibrition <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 float mean_episode[CAL_SAMPLE_EPISODE] = {0};
 uint8_t cal_episode_cnt                = 0;
@@ -67,22 +71,6 @@ uint64_t cal_total_sum           = 0;
 uint64_t cal_total_sum_sq        = 0;
 volatile CalState_t cal_state    = CAL_IDLE;
 uint16_t cal_current_position_um = 0;
-
-/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Pulse Feedback <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-volatile bool pulse_active                 = false;
-volatile uint8_t pulse_feedback_trigger    = 0;
-volatile bool pulse_feedback_busy          = false;
-volatile uint32_t pulse_feedback_frame_cnt = 0;
-
-/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> UART <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-/* UART2 */
-volatile uint8_t UART2_RX_activeBuffer = 0;
-char UART2_RX_DMA_buffer[2][MSG_LEN]   = {0};
-char UART2_TX_buffer[MSG_LEN]          = {0};
-bool UART2_TX_send                     = false;
-
-/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OLED <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-volatile bool oled_update_pending = false;
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Button <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 volatile bool button_scan_pending = false;
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LED <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
@@ -103,24 +91,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void UART2_Log(const char *level, const char *file, int line, const char *message) {
-    uint32_t ticks   = HAL_GetTick();
-    uint32_t hours   = ticks / 3600000U;
-    uint32_t minutes = (ticks / 60000U) % 60U;
-    uint32_t seconds = (ticks / 1000U) % 60U;
-    uint32_t millis  = ticks % 1000U;
-    char time_buf[16];
-    snprintf(time_buf, sizeof(time_buf), "%02lu:%02lu:%02lu.%03lu", (unsigned long)hours, (unsigned long)minutes,
-             (unsigned long)seconds, (unsigned long)millis);
 
-    char msg_copy[MSG_LEN];
-    strncpy(msg_copy, message, MSG_LEN - 1);
-    msg_copy[MSG_LEN - 1] = '\0';
-
-    char log_buf[MSG_LEN];
-    snprintf(UART2_TX_buffer, MSG_LEN, "[%s] [%s] [%s:%d] %s\r\n", level, time_buf, file, line, msg_copy);
-    HAL_UART_Transmit(&huart2, (uint8_t *)UART2_TX_buffer, strlen(UART2_TX_buffer), HAL_MAX_DELAY);
-}
 /* USER CODE END 0 */
 
 /**
@@ -164,41 +135,48 @@ int main(void) {
     MX_USART6_UART_Init();
     MX_TIM5_Init();
     /* USER CODE BEGIN 2 */
-    Oscillate_Init();
+    //*------------- Hardware Initialization -------------*//
     buttons_init();
-    HAL_TIM_Base_Start_IT(&htim2);
+    HAL_TIM_Base_Start_IT(&htim3);
 
-    char mode_msg[MSG_LEN];
-    snprintf(mode_msg, sizeof(mode_msg), "System Mode: %s", system_mode ? "CALIBRITION" : "MEASUREMENT");
-    UART2_Log("INFO", "main.c", __LINE__, mode_msg);
-
-    /* UART2 DMA Init */
-    HAL_UART_Receive_DMA(&huart2, (uint8_t *)UART2_RX_DMA_buffer[UART2_RX_activeBuffer], MSG_LEN);
-    __HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);
-
-    /* OLED Init */
     OLED_Init();
     OLED_Clear();
     OLED_Display_On();
-    HAL_TIM_Base_Start_IT(&htim3);
-    /* DRV8833 Init */
-    BSP_DRV_Init(&hdrv1);
-    UART2_Log("INFO", "main.c", __LINE__, "DRV8833 Initialization Done...");
-    /* LDC1101 Init */
+
+    LED_Init(&hled1, &led1_cfg);
+    LED_Init(&hled2, &led2_cfg);
+
+    if (BSP_DRV_Init(&hdrv1) == DEVICE_OK)
+        UART2_Log("INFO", __FUNCTION__, __LINE__, "DRV8833 Initialization Done...");
+
     if (ldc1101_init(&hldc1)) {
-        UART2_Log("ERROR", "main.c", __LINE__, "LDC1101 Initialization Failed...");
+        UART2_Log("ERROR", __FUNCTION__, __LINE__, "LDC1101 Initialization Failed...");
     } else {
-        UART2_Log("INFO", "main.c", __LINE__, "LDC1101 Initialization Done...");
-        uint16_t rcount = (uint16_t)(ldc1101_readByte(&hldc1, _LDC1101_REG_LHR_RCOUNT_LSB));
-        rcount |= (uint16_t)(ldc1101_readByte(&hldc1, _LDC1101_REG_LHR_RCOUNT_MSB) << 8);
-        const float f_clk_hz    = 16000000.0f;                 // LDC1101 Extenal Reference Clock Frequency = 16MHz
-        const float conv_cycles = (float)(rcount * 16U + 55U); // RCOUNT*16 + 55 reference cycles
-        float sample_rate_hz    = f_clk_hz / conv_cycles;
-        float sample_rate_ksps  = sample_rate_hz / 1000.0f;
-        snprintf(UART2_TX_buffer, sizeof(UART2_TX_buffer), "LDC1101 sample rate: %.3f kSPS (RCOUNT=0x%04X)",
-                 sample_rate_ksps, rcount);
-        UART2_Log("TRACE", "main.c", __LINE__, UART2_TX_buffer);
+        UART2_Log("INFO", __FUNCTION__, __LINE__, "LDC1101 Initialization Done...");
+        if (ldc1101_writeConfig(&hldc1, &ldc_lhr_cfg, ldc_lhr_cfg_size) == DEVICE_OK) {
+            UART2_Log("INFO", __FUNCTION__, __LINE__, "LDC1101 Configuration Done...");
+            snprintf(UART2_TX_buffer, sizeof(UART2_TX_buffer), "LDC1101 sample rate: %.3f kSPS (RCOUNT=0x%04X)",
+                     ldc1101_getLHRSampleRate(&hldc1) / 1000.0f, ldc1101_getLHRRCount(&hldc1));
+            UART2_Log("TRACE", __FUNCTION__, __LINE__, UART2_TX_buffer);
+        } else {
+            UART2_Log("ERROR", __FUNCTION__, __LINE__, "LDC1101 Configuration Failed...");
+        }
     }
+
+    HAL_UART_Receive_DMA(&huart2, (uint8_t *)UART2_RX_DMA_buffer[UART2_RX_activeBuffer], MSG_LEN);
+    __HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);
+
+    //*------------- Service Initialization -------------*//
+    Oscillate_Init();
+    LHRSample_Init();
+
+    //*------------- Application Initialization -------------*//
+    char mode_msg[MSG_LEN];
+    snprintf(mode_msg, sizeof(mode_msg), "System Mode: %s", system_mode ? "CALIBRITION" : "MEASUREMENT");
+    UART2_Log("INFO", __FUNCTION__, __LINE__, mode_msg);
+    Task1_Measurement_Init();
+    Task3_Pulse_Init();
+
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -282,82 +260,10 @@ int main(void) {
             // default:
             //     break;
         } else if (system_mode == MODE_PULSE_FEEDBACK) {
-            // /* 1. 当前空闲，且存在待执行脉冲反馈请求，则启动一轮新的采集 */
-            // if ((!pulse_feedback_busy) && (pulse_feedback_trigger > 0)) {
-            //     pulse_feedback_trigger--;
-            //     pulse_feedback_busy      = true;
-            //     pulse_feedback_frame_cnt = 0;
-            //     pulse_active             = true;
-            //     DRV_Start(&hdrv1.CHANNEL_A, &htim1);
-            //     HAL_GPIO_WritePin(LED3_PORT, LED3_PIN, GPIO_PIN_SET);
-            // }
-            // if (pulse_active == false) {
-            //     DRV_Stop(&hdrv1.CHANNEL_A, &htim1);
-            // }
-
-            // /* 2. 当前正在执行脉冲反馈采集，则持续发送反馈帧 */
-            // if (pulse_feedback_busy) {
-            //     if (pulse_feedback_frame_cnt < PULSE_FEEDBACK_FRAME_NUM) {
-
-            //         LDC_status = ldc1101_readByte(&hldc1, _LDC1101_REG_LHR_STATUS);
-            //         if ((LDC_status & 0x01) == 0) {
-            //             ldc2_dataReady = true;
-            //         }
-
-            //         if (ldc2_dataReady) {
-            //             ldc2_dataReady = false;
-            //             LHR_data       = ldc1101_getLHRData(&hldc1);
-
-            //             /* === frame [LHR(4B)][Freq(4B)][Duty(1B)][Level(1B)][Tail(1B)] === */
-            //             frame[0] = (uint8_t)(LHR_data);
-            //             frame[1] = (uint8_t)(LHR_data >> 8);
-            //             frame[2] = (uint8_t)(LHR_data >> 16);
-            //             frame[3] = (uint8_t)(LHR_data >> 24);
-
-            //             uint32_t freq_scaled = (uint32_t)(drv_PWM_freq * 100.0f);
-            //             frame[4]             = (uint8_t)(freq_scaled);
-            //             frame[5]             = (uint8_t)(freq_scaled >> 8);
-            //             frame[6]             = (uint8_t)(freq_scaled >> 16);
-            //             frame[7]             = (uint8_t)(freq_scaled >> 24);
-
-            //             frame[8]  = (uint8_t)drv_PWM_DR;
-            //             frame[9]  = (uint8_t)drv_excitingLevel;
-            //             frame[10] = 0xAA;
-
-            //             /* 入队成功才计数 */
-            //             if (UART3_Enqueue(frame, sizeof(frame))) {
-            //                 UART3_StartTx();
-            //                 pulse_feedback_frame_cnt++;
-            //             }
-            //         }
-
-            //     } else {
-            //         /* 本轮采集完成 */
-            //         pulse_feedback_busy      = false;
-            //         pulse_feedback_frame_cnt = 0;
-            //         HAL_GPIO_WritePin(LED3_PORT, LED3_PIN, GPIO_PIN_RESET);
-            //     }
-            // }
+            Task3_Pulse_Run();
         }
-        if (oled_update_pending) {
-            const uint8_t text_size   = 12U;
-            const uint8_t text_invert = 0U;
-            const char *line_text     = "Sys Mode: UNKNOWN";
-            switch (system_mode) {
-                case MODE_MEASUREMENT:
-                    line_text = "Sys Mode: Measurement";
-                    break;
-                case MODE_CALIBRITION:
-                    line_text = "Sys Mode: Calibration";
-                    break;
-                case MODE_PULSE_FEEDBACK:
-                    line_text = "Sys Mode: Pulse Feedback";
-                    break;
-                default:
-                    break;
-            }
-            OLED_ShowString(0, 0, (char *)line_text, text_size, text_invert);
-            oled_update_pending = false;
+        if (OLED_GetUpdatePending()) {
+            OLED_Update(system_mode);
         }
         if (button_scan_pending) {
             button_scan_pending = false;

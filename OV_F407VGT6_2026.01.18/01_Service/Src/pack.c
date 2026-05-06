@@ -2,6 +2,7 @@
 #include "stddef.h"
 #include "string.h"
 
+#define PACK_FRAME_HEAD 0xFFU
 #define PACK_FRAME_TAIL 0xAAU
 
 PACK_StatusTypeDef Pack_WriteU8(uint8_t *buf, uint16_t buf_len, uint16_t *offset, uint8_t value) {
@@ -58,6 +59,8 @@ PACK_StatusTypeDef Pack_MeasurementFrame(uint32_t lhr_data, float freq, float du
 
     freq_scaled = (uint32_t)(freq * 100.0f);
 
+    if (Pack_WriteU8(frame, frame_len, &offset, PACK_FRAME_HEAD) != PACK_OK)
+        return PACK_ERROR;
     if (Pack_WriteU32LE(frame, frame_len, &offset, lhr_data) != PACK_OK)
         return PACK_ERROR;
     if (Pack_WriteU32LE(frame, frame_len, &offset, freq_scaled) != PACK_OK)

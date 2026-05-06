@@ -21,16 +21,14 @@ LHRSample_State_t LHRSample_GetState(void) { return s_LHR_state; }
 void LHRSample_Start(void) {
     ldc1101_setPowerMode(&hldc1, LDC_ACTIVE);
     s_LHR_state = LHR_SAMPLE_RUNNING;
-    return;
 }
 
 void LHRSample_Stop(void) {
     ldc1101_setPowerMode(&hldc1, LDC_SLEEP);
     s_LHR_state = LHR_SAMPLE_STOPPED;
-    return;
 }
 
-uint32_t LHRSample_Poll(void) {
+bool LHRSample_Poll(uint32_t *out_LHR_data) {
     uint8_t LHR_status;
     LHR_status = ldc1101_readByte(&hldc1, _LDC1101_REG_LHR_STATUS);
 
@@ -39,9 +37,10 @@ uint32_t LHRSample_Poll(void) {
         if (s_count_enable) {
             s_sample_cnt++;
         }
-    } else
-        return 0;
-    return s_LHR_data;
+        *out_LHR_data = s_LHR_data;
+        return true;
+    }
+    return false;
 }
 
 void LHRSample_CountSwitch(bool enable) { s_count_enable = enable; }

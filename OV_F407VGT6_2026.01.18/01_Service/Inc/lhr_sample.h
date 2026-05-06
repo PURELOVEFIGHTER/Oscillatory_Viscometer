@@ -12,7 +12,7 @@ void LHRSample_Init(void);
 LHRSample_State_t LHRSample_GetState(void);
 void LHRSample_Start(void);
 void LHRSample_Stop(void);
-uint32_t LHRSample_Poll(void);
+bool LHRSample_Poll(uint32_t *out_LHR_data);
 void LHRSample_CountSwitch(bool enable);
 void LHRSample_ResetCount(void);
 uint32_t LHRSample_GetCount(void);

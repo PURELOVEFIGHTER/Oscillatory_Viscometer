@@ -6,6 +6,8 @@ extern "C" {
 #endif
 
 void Task1_Measurement_Init(void);
+void Task1_Measurement_Start(void);
+void Task1_Measurement_Stop(void);
 void Task1_Measurement_Toggle(void);
 void Task1_Measurement_Run(void);
 

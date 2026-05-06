@@ -7,8 +7,6 @@ extern "C" {
 
 #include "multi_button.h"
 
-extern Button btn1;
-extern Button btn2;
 uint8_t getButtonLevel(uint8_t button_id);
 void buttons_init(void);
 

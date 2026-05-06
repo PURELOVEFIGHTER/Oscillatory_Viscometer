@@ -10,48 +10,52 @@ extern "C" {
 #include "stm32f4xx_hal.h"
 #include "device_common.h"
 
+#define REF_CLK_HZ 16000000U // LDC1101 å‚è€ƒæ—¶é’Ÿé¢‘çŽ‡ï¼ŒæŒ‰ç¡¬ä»¶è¿›è¡Œä¿®æ”¹
 /* Register Begin*/
+#define _LDC1101_REG_TOTAL      32 // å¯„å­˜å™¨æ€»æ•°é‡
+#define _LDC1101_REG_READ       11 // åªè¯»å¯„å­˜å™¨æ•°é‡
+#define _LDC1101_REG_WRITE_READ 21 // å¯è¯»å¯å†™å¯„å­˜å™¨æ•°é‡
 // Configuration Registers
-#define _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE 0x01 // ÅäÖÃ RP+L ²âÁ¿¶¯Ì¬·¶Î§
-#define _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_1     0x02 // RP+L Í¨µÀÊ±¼ä³£Êý TC1
-#define _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_2     0x03 // L Í¨µÀÊ±¼ä³£Êý TC2
-#define _LDC1101_REG_CFG_RP_L_CONVERSION_INTERVAL     0x04 // RP+L ×ª»»¼ä¸ô
-#define _LDC1101_REG_CFG_ADDITIONAL_DEVICE            0x05 // ÆäËûÉèÖÃ
-#define _LDC1101_REG_RP_THRESH_H_LSB                  0x06 // RPLÄ£Ê½ RP ¸ßÃÅÏÞ£¨16Î»£©
+#define _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE 0x01 // ï¿½ï¿½ï¿½ï¿½ RP+L ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¬ï¿½ï¿½Î§
+#define _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_1     0x02 // RP+L Í¨ï¿½ï¿½Ê±ï¿½ä³£ï¿½ï¿½ TC1
+#define _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_2     0x03 // L Í¨ï¿½ï¿½Ê±ï¿½ä³£ï¿½ï¿½ TC2
+#define _LDC1101_REG_CFG_RP_L_CONVERSION_INTERVAL     0x04 // RP+L ×ªï¿½ï¿½ï¿½ï¿½ï¿½?
+#define _LDC1101_REG_CFG_ADDITIONAL_DEVICE            0x05 // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+#define _LDC1101_REG_RP_THRESH_H_LSB                  0x06 // RPLÄ£Ê½ RP ï¿½ï¿½ï¿½ï¿½ï¿½Þ£ï¿½16Î»ï¿½ï¿½
 #define _LDC1101_REG_RP_THRESH_H_MSB                  0x07
-#define _LDC1101_REG_RP_THRESH_L_LSB                  0x08 // RPLÄ£Ê½ RP µÍÃÅÏÞ£¨16Î»£©
+#define _LDC1101_REG_RP_THRESH_L_LSB                  0x08 // RPLÄ£Ê½ RP ï¿½ï¿½ï¿½ï¿½ï¿½Þ£ï¿½16Î»ï¿½ï¿½
 #define _LDC1101_REG_RP_THRESH_L_MSB                  0x09
-#define _LDC1101_REG_CFG_INTB_MODE                    0x0A // ÉèÖÃ INTB ±¨¸æÄÚÈÝ
-#define _LDC1101_REG_CFG_POWER_STATE                  0x0B // ÉèÖÃµçÔ´×´Ì¬£¨¹¤×÷¡¢ÐÝÃß£©
-#define _LDC1101_REG_AMPLITUDE_CONTROL_REQUIREMENT    0x0C // ´«¸ÐÆ÷Õñ·ù¿ØÖÆÂß¼­ÊÇ·ñ¼¤»î
-#define _LDC1101_REG_L_THRESH_HI_LSB                  0x16 // LHRÄ£Ê½ L Í¨µÀ¸ßÃÅÏÞ£¨16Î»£©
-#define _LDC1101_REG_L_THRESH_HI_MSB                  0x17
-#define _LDC1101_REG_L_THRESH_LO_LSB                  0x18 // LHRÄ£Ê½ L Í¨µÀµÍÃÅÏÞ£¨16Î»£©
-#define _LDC1101_REG_L_THRESH_LO_MSB                  0x19
-#define _LDC1101_REG_LHR_RCOUNT_LSB                   0x30 // LHR ¼ÆÊýÆ÷ÉèÖÃ£¨16Î»£©
-#define _LDC1101_REG_LHR_RCOUNT_MSB                   0x31
-#define _LDC1101_REG_LHR_OFFSET_LSB                   0x32 // LHR Æ«ÒÆÐÞÕýÖµ£¨16Î»£©
-#define _LDC1101_REG_LHR_OFFSET_MSB                   0x33
-#define _LDC1101_REG_CFG_LHR                          0x34 // ÉèÖÃ LHR Ä£Ê½µÄÆµÂÊ·ÖÆµÒò×Ó
+#define _LDC1101_REG_CFG_INTB_MODE                    0x0A // ï¿½ï¿½ï¿½ï¿½ INTB ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+#define _LDC1101_REG_CFG_POWER_STATE                  0x0B // ï¿½ï¿½ï¿½Ãµï¿½Ô´×´Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß£ï¿½
+#define _LDC1101_REG_AMPLITUDE_CONTROL_REQUIREMENT 0x0C // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¼ï¿½ï¿½Ç·ñ¼¤»ï¿½?
+#define _LDC1101_REG_L_THRESH_HI_LSB               0x16 // LHRÄ£Ê½ L Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ£ï¿½16Î»ï¿½ï¿½
+#define _LDC1101_REG_L_THRESH_HI_MSB               0x17
+#define _LDC1101_REG_L_THRESH_LO_LSB               0x18 // LHRÄ£Ê½ L Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ£ï¿½16Î»ï¿½ï¿½
+#define _LDC1101_REG_L_THRESH_LO_MSB               0x19
+#define _LDC1101_REG_LHR_RCOUNT_LSB                0x30 // LHR ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã£ï¿½16Î»ï¿½ï¿½
+#define _LDC1101_REG_LHR_RCOUNT_MSB                0x31
+#define _LDC1101_REG_LHR_OFFSET_LSB                0x32 // LHR Æ«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½16Î»ï¿½ï¿½
+#define _LDC1101_REG_LHR_OFFSET_MSB                0x33
+#define _LDC1101_REG_CFG_LHR                       0x34 // ï¿½ï¿½ï¿½ï¿½ LHR Ä£Ê½ï¿½ï¿½Æµï¿½Ê·ï¿½Æµï¿½ï¿½ï¿½ï¿½
 
 // Data Registers
-#define _LDC1101_REG_RP_L_MEASUREMENT_STATUS 0x20 // RP+L Ä£Ê½×´Ì¬×Ö
-#define _LDC1101_REG_RP_DATA_LSB             0x21 // RP+L Ä£Ê½µÄ RP ²âÁ¿Êý¾Ý£¨16Î»£©
+#define _LDC1101_REG_RP_L_MEASUREMENT_STATUS 0x20 // RP+L Ä£Ê½×´Ì¬ï¿½ï¿½
+#define _LDC1101_REG_RP_DATA_LSB             0x21 // RP+L Ä£Ê½ï¿½ï¿½ RP ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½16Î»ï¿½ï¿½
 #define _LDC1101_REG_RP_DATA_MSB             0x22
-#define _LDC1101_REG_L_DATA_LSB              0x23 // RP+L Ä£Ê½µÄ L ²âÁ¿Êý¾Ý£¨16Î»£©
+#define _LDC1101_REG_L_DATA_LSB              0x23 // RP+L Ä£Ê½ï¿½ï¿½ L ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½16Î»ï¿½ï¿½
 #define _LDC1101_REG_L_DATA_MSB              0x24
-#define _LDC1101_REG_LHR_DATA_LSB            0x38 // LHR Ä£Ê½²âÁ¿Êý¾Ý£¨24 Î»£©
+#define _LDC1101_REG_LHR_DATA_LSB            0x38 // LHR Ä£Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½24 Î»ï¿½ï¿½
 #define _LDC1101_REG_LHR_DATA_MID            0x39
 #define _LDC1101_REG_LHR_DATA_MSB            0x3A
-#define _LDC1101_REG_LHR_STATUS              0x3B // LHR ×´Ì¬×Ö
+#define _LDC1101_REG_LHR_STATUS              0x3B // LHR ×´Ì¬ï¿½ï¿½
 
 // Identification Registers
-#define _LDC1101_REG_DEVICE_RID_VALUE 0x3E // Ð¾Æ¬ID£¬¹Ì¶¨Öµ£º0xD4
-#define _LDC1101_REG_CHIP_ID          0x3F // ÐÞ¶©ºÅ
+#define _LDC1101_REG_DEVICE_RID_VALUE 0x3E // Ð¾Æ¬IDï¿½ï¿½ï¿½Ì¶ï¿½Öµï¿½ï¿½0xD4
+#define _LDC1101_REG_CHIP_ID          0x3F // ï¿½Þ¶ï¿½ï¿½ï¿½
 /* Register End */
 
 /**
- * @brief ÉèÖÃ RP+L Ä£Ê½ÏÂ RP µÄÃÅÏÞÖµ
+ * @brief ï¿½ï¿½ï¿½ï¿½ RP+L Ä£Ê½ï¿½ï¿½ RP ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
  * @reg   _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE    0x01
  */
 #define _LDC1101_RP_SET_RP_MAX_IS_DRIVEN          0x00
@@ -76,7 +80,7 @@ extern "C" {
 #define _LDC1101_RP_SET_RP_MIN_0_75KOhm 0x07
 
 /**
- * @brief TC1£¬TC2 Ê¹ÓÃ RP+L Ä£Ê½Ê±Ð´Èë
+ * @brief TC1ï¿½ï¿½TC2 Ê¹ï¿½ï¿½ RP+L Ä£Ê½Ê±Ð´ï¿½ï¿½
  * @reg   _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_1    0x02
  * @reg   _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_2    0x03
  */
@@ -192,11 +196,11 @@ extern "C" {
 
 /* Configure RP+L conversion interval (RW) */
 /**
- * @brirf ¿ØÖÆÐ¾Æ¬²ÉÑùÆµÂÊµÄÏÂÏÞºÍ×ª»»Ëã·¨µÄÏìÓ¦ÑÓ³Ù
- * @feat  ¿ìËÙ½ðÊô¼ì²â	            1MHz	        192 ¦Ìs ¨C 384 ¦Ìs
- *	  	  ÖÐËÙ/»úÐµ¼ì²â	        800kHz ¨C 1MHz	    384 ¦Ìs ¨C 768 ¦Ìs
- *		  ÂýËÙ/ÎÈ¶¨ÐÔÓÅÏÈ¼ì²â	     500kHz	         1536 ¦Ìs ¨C 6144 ¦Ìs
- * @feat  ½ö×÷ÓÃÓÚ RP+L Ä£Ê½
+ * @brirf ï¿½ï¿½ï¿½ï¿½Ð¾Æ¬ï¿½ï¿½ï¿½ï¿½Æµï¿½Êµï¿½ï¿½ï¿½ï¿½Þºï¿½×ªï¿½ï¿½ï¿½ã·¨ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ó³ï¿½
+ * @feat  ï¿½ï¿½ï¿½Ù½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?	            1MHz	        192 ï¿½ï¿½s ï¿½C 384 ï¿½ï¿½s
+ *	  	  ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½Ðµï¿½ï¿½ï¿½?	        800kHz ï¿½C 1MHz	    384 ï¿½ï¿½s ï¿½C 768 ï¿½ï¿½s
+ *		  ï¿½ï¿½ï¿½ï¿½/ï¿½È¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½ï¿½?	     500kHz	         1536 ï¿½ï¿½s ï¿½C 6144 ï¿½ï¿½s
+ * @feat  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ RP+L Ä£Ê½
  * @reg   _LDC1101_REG_CFG_RP_L_CONVERSION_INTERVAL    0x04
  */
 #define _LDC1101_DIG_CFG_MIN_FREQ_500kHz 0x00
@@ -225,36 +229,40 @@ extern "C" {
 
 /* Configure additional device settings (RW) */
 /*
- * @brief ÅäÖÃ¸½¼Ó¹¦ÄÜ
+ * @brief ï¿½ï¿½ï¿½Ã¸ï¿½ï¿½Ó¹ï¿½ï¿½ï¿½
  * @reg   _LDC1101_REG_CFG_ADDITIONAL_DEVICE_SETTINGS    0x05
  */
-#define _LDC1101_ALT_CFG_SHUTDOWN_ENABLE    0x02 // Ð¾Æ¬¹Ø¶ÏÄ£Ê½£¬ÅäºÏ_LDC1101_REG_CFG_POWER_STATEÉèÖÃ
+#define _LDC1101_ALT_CFG_SHUTDOWN_ENABLE    0x02 // Ð¾Æ¬ï¿½Ø¶ï¿½Ä£Ê½ï¿½ï¿½ï¿½ï¿½ï¿½_LDC1101_REG_CFG_POWER_STATEï¿½ï¿½ï¿½ï¿½
 #define _LDC1101_ALT_CFG_SHUTDOWN_DISABLE   0x00
-#define _LDC1101_ALT_CFG_L_OPTIMAL_DISABLED 0x00 //  L Í¨µÀµÄÓÅ»¯Â·¾¶£¨LHRÄ£Ê½ÆôÓÃ£©
+#define _LDC1101_ALT_CFG_L_OPTIMAL_DISABLED 0x00 //  L Í¨ï¿½ï¿½ï¿½ï¿½ï¿½Å»ï¿½Â·ï¿½ï¿½ï¿½ï¿½LHRÄ£Ê½ï¿½ï¿½ï¿½Ã£ï¿½
 #define _LDC1101_ALT_CFG_L_OPTIMAL_ENABLE   0x01
 
 /* Configure INTB reporting on SDO pin (RW) */
 /**
- * @brief ÊÇ·ñÆôÓÃ SDO Òý½ÅµÄ INTB ±¨¸æ¸´ÓÃ¹¦ÄÜ
+ * @brief ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ SDO ï¿½ï¿½ï¿½Åµï¿½ INTB ï¿½ï¿½ï¿½æ¸´ï¿½Ã¹ï¿½ï¿½ï¿½
  * @reg   _LDC1101_REG_CFG_INTB_MODE    0x0A
- *        ÓÉ×î¸ßÎ» bit7 ×¨ÃÅ¿ØÖÆ
+ *        ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½? bit7 ×¨ï¿½Å¿ï¿½ï¿½ï¿½
  */
 #define _LDC1101_INTB_MODE_DONT_REPORT_INTB_ON_SDO_PIN 0x00
 #define _LDC1101_INTB_MODE_REPORT_INTB_ON_SDO_PIN      0x80
 
-#define _LDC1101_INTB_MODE_REPORT_LHR_DATA_READY              0x20 // LHR Êý¾Ý¸üÐÂÍê³É¾Í´¥·¢ÖÐ¶Ï
-#define _LDC1101_INTB_MODE_L_CONVERSION_TO_L_THRESHOLDS       0x10 // L Í¨µÀÊý¾ÝÔ½¹ý¸ß/µÍÃÅÏÞ´¥·¢
-#define _LDC1101_INTB_MODE_L_CONVERSION_TO_L_HIGH_THRESHOLDS  0x08 // L Í¨µÀÊý¾Ý³¬¹ý¸ßÃÅÏÞ´¥·¢
-#define _LDC1101_INTB_MODE_REPORT_RP_L_DATA_READY             0x04 // RP+L Êý¾Ý¸üÐÂÍê³É¾Í´¥·¢ÖÐ¶Ï
-#define _LDC1101_INTB_MODE_RP_CONVERSION_TO_L_THRESHOLDS      0x02 // RP Í¨µÀÊý¾ÝÔ½¹ýµÍÃÅÏÞ´¥·¢
-#define _LDC1101_INTB_MODE_RP_CONVERSION_TO_L_HIGH_THRESHOLDS 0x01 // RP Í¨µÀÊý¾ÝÔ½¹ý¸ß/µÍÃÅÏÞ´¥·¢
+#define _LDC1101_INTB_MODE_REPORT_LHR_DATA_READY 0x20 // LHR ï¿½ï¿½ï¿½Ý¸ï¿½ï¿½ï¿½ï¿½ï¿½É¾Í´ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½?
+#define _LDC1101_INTB_MODE_L_CONVERSION_TO_L_THRESHOLDS \
+    0x10 // L Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô½ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½Þ´ï¿½ï¿½ï¿½
+#define _LDC1101_INTB_MODE_L_CONVERSION_TO_L_HIGH_THRESHOLDS \
+    0x08                                               // L Í¨ï¿½ï¿½ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ´ï¿½ï¿½ï¿½
+#define _LDC1101_INTB_MODE_REPORT_RP_L_DATA_READY 0x04 // RP+L ï¿½ï¿½ï¿½Ý¸ï¿½ï¿½ï¿½ï¿½ï¿½É¾Í´ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½?
+#define _LDC1101_INTB_MODE_RP_CONVERSION_TO_L_THRESHOLDS \
+    0x02 // RP Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ´ï¿½ï¿½ï¿½
+#define _LDC1101_INTB_MODE_RP_CONVERSION_TO_L_HIGH_THRESHOLDS \
+    0x01 // RP Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô½ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½Þ´ï¿½ï¿½ï¿½
 
 /* Configure Power State (RW) */
 /**
- * @brief ¼¤»î¡¢Ë¯Ãß¡¢¹Ø¶ÏÄ£Ê½ÉèÖÃ
- * @feat  ÔÚ³õÊ¼»¯½×¶Î£¬½¨ÒéÏÈÐ´Èë SLEEP Ä£Ê½£¨0x01£©ÅäÖÃºÃ²ÎÊý;
- *        È»ºóÔÙÇÐ»»µ½ ACTIVE Ä£Ê½£¨0x00£©¿ªÊ¼¹¤×÷£»
- *        SHUTDOWN Ä£Ê½Ö»ÓÐÔÚÍêÈ«²»Ê¹ÓÃÐ¾Æ¬Ê±²ÅÍÆ¼ö½øÈë¡£
+ * @brief ï¿½ï¿½ï¿½î¡¢Ë¯ï¿½ß¡ï¿½ï¿½Ø¶ï¿½Ä£Ê½ï¿½ï¿½ï¿½ï¿½
+ * @feat  ï¿½Ú³ï¿½Ê¼ï¿½ï¿½ï¿½×¶Î£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ SLEEP Ä£Ê½ï¿½ï¿½0x01ï¿½ï¿½ï¿½ï¿½ï¿½ÃºÃ²ï¿½ï¿½ï¿½;
+ *        È»ï¿½ï¿½ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½ ACTIVE Ä£Ê½ï¿½ï¿½0x00ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ *        SHUTDOWN Ä£Ê½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½Ê¹ï¿½ï¿½Ð¾Æ¬Ê±ï¿½ï¿½ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ë¡£
  * @reg   _LDC1101_REG_CFG_POWER_STATE    0x0B
  */
 #define _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE 0x00
@@ -263,9 +271,9 @@ extern "C" {
 
 /* High Resolution L Configuration (RW) */
 /**
- * @brief ÅäÖÃ LHR Ä£Ê½ÏÂµÄ·ÖÆµÆ÷£¬Ó°Ïì²âÁ¿·Ö±æÂÊºÍËÙ¶È
- * @feat  ÉèÖÃºó¿ÉÒÔÁ¢¼´ÉúÐ§£¬ÎÞÐè¸´Î»
- * @feat  ºÍ LHR_RCOUNT Ò»Æð¾ö¶¨×îÖÕµÄ²âÁ¿ËÙ¶ÈÓë¾«¶È
+ * @brief ï¿½ï¿½ï¿½ï¿½ LHR Ä£Ê½ï¿½ÂµÄ·ï¿½Æµï¿½ï¿½ï¿½ï¿½Ó°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½Êºï¿½ï¿½Ù¶ï¿½?
+ * @feat  ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½è¸´ï¿½?
+ * @feat  ï¿½ï¿½ LHR_RCOUNT Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÕµÄ²ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½ï¿½ï¿½?ï¿½ï¿½
  * @reg   _LDC1101_REG_CFG_LHR  0x34
  */
 #define _LDC1101_LHR_CFG_FREQUENCY_NOT_DIVIDED  0x00
@@ -278,17 +286,9 @@ typedef struct {
     uint8_t value;
 } LDC_RegConfig_t;
 
-typedef enum {
-    LDC_ACTIVE   = 0, // Ê¹ÄÜ
-    LDC_SLEEP    = 1, // Ë¯Ãß
-    LDC_SHUTDOWN = 2  // ¹Ø¶Ï
-} LDC_PowerState_t;
+typedef enum { LDC_ACTIVE = 0, LDC_SLEEP, LDC_SHUTDOWN } LDC_PowerState_t;
 
-typedef enum {
-    LDC_DEFAULT = 0, // Î´³õÊ¼»¯
-    LDC_MODE_RP,     // RP+L Ä£Ê½
-    LDC_MODE_LHR     // LHR Ä£Ê½
-} LDC_Mode_t;
+typedef enum { LDC_DEFAULT = 0, LDC_MODE_RPL, LDC_MODE_LHR } LDC_Mode_t;
 
 typedef struct {
     SPI_HandleTypeDef *hspi;
@@ -299,22 +299,20 @@ typedef struct {
 } LDC_HandleTypeDef;
 
 void ldc1101_writeByte(LDC_HandleTypeDef *hldc, uint8_t addr, uint8_t _data);
+void ldc1101_writeBurst(LDC_HandleTypeDef *hldc, uint8_t start_addr, uint8_t *data, uint8_t len);
 uint8_t ldc1101_readByte(LDC_HandleTypeDef *hldc, uint8_t addr);
-
+void ldc1101_readBurst(LDC_HandleTypeDef *hldc, uint8_t start_addr, uint8_t *out_data, uint8_t len);
+DEVICE_StatusTypeDef ldc1101_writeConfig(LDC_HandleTypeDef *hldc, const LDC_RegConfig_t *cfg, uint16_t cfg_size);
 DEVICE_StatusTypeDef ldc1101_init(LDC_HandleTypeDef *hldc);
-
 DEVICE_StatusTypeDef ldc1101_setPowerMode(LDC_HandleTypeDef *hldc, uint8_t mode);
-
 void ldc1101_goTo_Lmode(LDC_HandleTypeDef *hldc);
-
 void ldc1101_goTo_RPmode(LDC_HandleTypeDef *hldc);
-
 uint16_t ldc1101_getRPData(LDC_HandleTypeDef *hldc);
-
 uint16_t ldc1101_getLData(LDC_HandleTypeDef *hldc);
-
 uint32_t ldc1101_getLHRData(LDC_HandleTypeDef *hldc);
-
+uint16_t ldc1101_getLHRRCount(LDC_HandleTypeDef *hldc);
+float ldc1101_getLHRSampleRate(LDC_HandleTypeDef *hldc);
+bool ldc1101_setLHRSampleRate(LDC_HandleTypeDef *hldc, float sample_rate);
 extern LDC_HandleTypeDef hldc1;
 
 #ifdef __cplusplus

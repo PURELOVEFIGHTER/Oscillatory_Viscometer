@@ -35,15 +35,26 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 
+#include "config.h"
+
 #include "ldc1101_driver.h"
 #include "drv8833_driver.h"
-#include "config.h"
-#include "command.h"
-#include "oled.h"
+#include "led.h"
+#include "oled_driver.h"
 #include "multi_button.h"
-#include "my_button.h"
+
+#include "command.h"
+
 #include "utility.h"
+
+#include "usart2.h"
+#include "usart3.h"
+#include "oled.h"
+
+#include "my_button.h"
+
 #include "oscillate.h"
+#include "lhr_sample.h"
 
 /* USER CODE END Includes */
 
@@ -72,18 +83,7 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 
 /* USER CODE BEGIN Private defines */
-extern sysWorkMode system_mode;
-/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LDC1101 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-
-
-/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> UART <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-#define MSG_LEN 128
-/* UART2 */
-extern volatile uint8_t UART2_RX_activeBuffer;
-extern char UART2_RX_DMA_buffer[2][MSG_LEN];
-extern char UART2_TX_buffer[MSG_LEN];
-extern bool UART2_TX_send;
-void UART2_Log(const char *level, const char *file, int line, const char *message);
+extern SysWorkMode system_mode;
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Calibrition <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 extern uint16_t cal_current_position_um;
 extern uint32_t cal_wait_start_tick;
@@ -102,8 +102,7 @@ extern volatile bool pulse_active;
 extern volatile uint8_t pulse_feedback_trigger;
 extern volatile bool pulse_feedback_busy;
 extern volatile uint32_t pulse_feedback_frame_cnt;
-/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OLED <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-extern volatile bool oled_update_pending;
+
 extern volatile bool button_scan_pending;
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ADC <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 #define ADC_BUF_LEN           256

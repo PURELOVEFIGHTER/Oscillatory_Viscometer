@@ -338,7 +338,7 @@
               <MiscControls />
               <Define>USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine />
-              <IncludePath>../00_APP;../01_Service/Inc;../02_Middleware/Protocol/Inc;../04_BSP/Inc;../05_Config;../06_Utilities/Inc;../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../02_Middleware/Transport/Inc</IncludePath>
+              <IncludePath>../00_APP/Inc;../01_Service/Inc;../02_Middleware;../04_BSP/Inc;../05_Config;../06_Utilities/Inc;../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../03_Communication/Inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -381,6 +381,18 @@
       <Groups>
         <Group>
           <GroupName>00_APP</GroupName>
+          <Files>
+            <File>
+              <FileName>command.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\00_APP\Src\command.c</FilePath>
+            </File>
+            <File>
+              <FileName>task1_measurement.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\00_APP\Src\task1_measurement.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>01_Service</GroupName>
@@ -390,35 +402,38 @@
               <FileType>1</FileType>
               <FilePath>..\01_Service\Src\oscillate.c</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>02_Middleware</GroupName>
-          <Files>
             <File>
-              <FileName>command.c</FileName>
+              <FileName>lhr_sample.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\02_Middleware\Src\command.c</FilePath>
+              <FilePath>..\01_Service\Src\lhr_sample.c</FilePath>
             </File>
             <File>
               <FileName>pack.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\02_Middleware\Protocol\Src\pack.c</FilePath>
+              <FilePath>..\01_Service\Src\pack.c</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>02_Middleware</GroupName>
+        </Group>
+        <Group>
+          <GroupName>03_Communication</GroupName>
+          <Files>
             <File>
               <FileName>usart2.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\02_Middleware\Transport\Src\usart2.c</FilePath>
+              <FilePath>..\03_Communication\Src\usart2.c</FilePath>
             </File>
             <File>
               <FileName>usart3.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\02_Middleware\Transport\Src\usart3.c</FilePath>
+              <FilePath>..\03_Communication\Src\usart3.c</FilePath>
             </File>
             <File>
               <FileName>usart6.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\02_Middleware\Transport\Src\usart6.c</FilePath>
+              <FilePath>..\03_Communication\Src\usart6.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -459,6 +474,13 @@
         </Group>
         <Group>
           <GroupName>05_Config</GroupName>
+          <Files>
+            <File>
+              <FileName>config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\05_Config\config.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>06_Utilities</GroupName>

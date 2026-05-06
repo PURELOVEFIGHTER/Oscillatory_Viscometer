@@ -4,7 +4,6 @@
  */
 
 #include "multi_button.h"
-#include "main.h"
 
 // Macro for callback execution with null check
 #define EVENT_CB(ev)                \

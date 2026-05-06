@@ -1,49 +1,6 @@
 #include "ldc1101_driver.h"
+#include "stdlib.h"
 extern SPI_HandleTypeDef hspi2;
-
-// SPI Ğ´¼Ä´æÆ÷
-void ldc1101_writeByte(LDC_HandleTypeDef *hldc, uint8_t addr, uint8_t _data) {
-    uint8_t writeReg[2] = {addr & 0x7F, _data};
-
-    HAL_GPIO_WritePin(hldc->cs_port, hldc->cs_pin, GPIO_PIN_RESET);
-    HAL_SPI_Transmit(hldc->hspi, writeReg, 2, HAL_MAX_DELAY);
-    HAL_GPIO_WritePin(hldc->cs_port, hldc->cs_pin, GPIO_PIN_SET);
-}
-
-// SPI ¶Á¼Ä´æÆ÷
-uint8_t ldc1101_readByte(LDC_HandleTypeDef *hldc, uint8_t addr) {
-    uint8_t tx_data[2];
-    uint8_t rx_data[2];
-
-    tx_data[0] = 0x80 | addr;
-    tx_data[1] = 0x00;
-
-    HAL_GPIO_WritePin(hldc->cs_port, hldc->cs_pin, GPIO_PIN_RESET);
-    HAL_SPI_TransmitReceive(hldc->hspi, tx_data, rx_data, 2, HAL_MAX_DELAY);
-    HAL_GPIO_WritePin(hldc->cs_port, hldc->cs_pin, GPIO_PIN_SET);
-
-    return rx_data[1]; // µÚ¶ş¸ö×Ö½ÚÊÇ¼Ä´æÆ÷Öµ
-}
-
-DEVICE_StatusTypeDef ldc1101_setPowerMode(LDC_HandleTypeDef *hldc, uint8_t mode) {
-    switch (mode) {
-        case _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE:
-            ldc1101_writeByte(hldc, _LDC1101_REG_CFG_POWER_STATE, mode);
-            hldc->power_state = LDC_ACTIVE;
-            break;
-        case _LDC1101_FUNC_MODE_SLEEP_MODE:
-            ldc1101_writeByte(hldc, _LDC1101_REG_CFG_POWER_STATE, mode);
-            hldc->power_state = LDC_SLEEP;
-            break;
-        case _LDC1101_FUNC_MODE_SHUTDOWN_MODE:
-            ldc1101_writeByte(hldc, _LDC1101_REG_CFG_POWER_STATE, mode);
-            hldc->power_state = LDC_SHUTDOWN;
-            break;
-        default:
-            return DEVICE_ERROR; // ÎŞĞ§Ä£Ê½£¬Ö±½Ó·µ»Ø
-    }
-    return DEVICE_OK;
-}
 
 DEVICE_StatusTypeDef ldc1101_init(LDC_HandleTypeDef *hldc) {
     if (hldc == NULL) {
@@ -61,6 +18,83 @@ DEVICE_StatusTypeDef ldc1101_init(LDC_HandleTypeDef *hldc) {
     return DEVICE_OK;
 }
 
+// SPIå†™å•ä¸ªå¯„å­˜å™¨
+void ldc1101_writeByte(LDC_HandleTypeDef *hldc, uint8_t addr, uint8_t _data) {
+    uint8_t writeReg[2] = {addr & 0x7F, _data};
+
+    HAL_GPIO_WritePin(hldc->cs_port, hldc->cs_pin, GPIO_PIN_RESET);
+    HAL_SPI_Transmit(hldc->hspi, writeReg, 2, HAL_MAX_DELAY);
+    HAL_GPIO_WritePin(hldc->cs_port, hldc->cs_pin, GPIO_PIN_SET);
+}
+// SPIé¡ºåºå†™å¤šä¸ªå¯„å­˜å™¨ï¼ˆèµ·å§‹åœ°å€è‡ªåŠ¨é€’å¢ï¼‰
+void ldc1101_writeBurst(LDC_HandleTypeDef *hldc, uint8_t start_addr, uint8_t *data, uint8_t len) {
+    if (((start_addr + len - 1U) > 0x3FU) || (len > _LDC1101_REG_WRITE_READ) || (len == 0U)) {
+        return;
+    }
+    uint8_t tx_data[_LDC1101_REG_WRITE_READ + 1];
+    tx_data[0] = start_addr & 0x7FU;
+
+    for (uint8_t i = 0; i < len; i++) {
+        tx_data[i + 1U] = data[i];
+    }
+    HAL_GPIO_WritePin(hldc->cs_port, hldc->cs_pin, GPIO_PIN_RESET);
+    HAL_SPI_Transmit(hldc->hspi, tx_data, len + 1U, HAL_MAX_DELAY);
+    HAL_GPIO_WritePin(hldc->cs_port, hldc->cs_pin, GPIO_PIN_SET);
+}
+
+// SPIè¯»å•ä¸ªå¯„å­˜å™¨
+uint8_t ldc1101_readByte(LDC_HandleTypeDef *hldc, uint8_t addr) {
+    uint8_t tx_data[2];
+    uint8_t rx_data[2];
+
+    tx_data[0] = 0x80 | addr;
+    tx_data[1] = 0x00;
+
+    HAL_GPIO_WritePin(hldc->cs_port, hldc->cs_pin, GPIO_PIN_RESET);
+    HAL_SPI_TransmitReceive(hldc->hspi, tx_data, rx_data, 2, HAL_MAX_DELAY);
+    HAL_GPIO_WritePin(hldc->cs_port, hldc->cs_pin, GPIO_PIN_SET);
+
+    return rx_data[1];
+}
+// SPIé¡ºåºè¯»å¤šä¸ªå¯„å­˜å™¨ï¼ˆèµ·å§‹åœ°å€è‡ªåŠ¨é€’å¢ï¼‰
+void ldc1101_readBurst(LDC_HandleTypeDef *hldc, uint8_t start_addr, uint8_t *out_data, uint8_t len) {
+    if (((start_addr + len - 1U) > 0x3FU) || (len > _LDC1101_REG_TOTAL) || (len == 0U)) {
+        return;
+    }
+    uint8_t tx_data[_LDC1101_REG_TOTAL + 1] = {0};
+    uint8_t rx_data[_LDC1101_REG_TOTAL + 1] = {0};
+
+    tx_data[0] = 0x80 | start_addr;
+
+    HAL_GPIO_WritePin(hldc->cs_port, hldc->cs_pin, GPIO_PIN_RESET);
+    HAL_SPI_TransmitReceive(hldc->hspi, tx_data, rx_data, len + 1U, HAL_MAX_DELAY);
+    HAL_GPIO_WritePin(hldc->cs_port, hldc->cs_pin, GPIO_PIN_SET);
+
+    for (uint8_t i = 0; i < len; i++) {
+        out_data[i] = rx_data[i + 1U];
+    }
+}
+
+DEVICE_StatusTypeDef ldc1101_setPowerMode(LDC_HandleTypeDef *hldc, uint8_t mode) {
+    switch (mode) {
+        case _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE:
+            ldc1101_writeByte(hldc, _LDC1101_REG_CFG_POWER_STATE, mode);
+            hldc->power_state = LDC_ACTIVE;
+            break;
+        case _LDC1101_FUNC_MODE_SLEEP_MODE:
+            ldc1101_writeByte(hldc, _LDC1101_REG_CFG_POWER_STATE, mode);
+            hldc->power_state = LDC_SLEEP;
+            break;
+        case _LDC1101_FUNC_MODE_SHUTDOWN_MODE:
+            ldc1101_writeByte(hldc, _LDC1101_REG_CFG_POWER_STATE, mode);
+            hldc->power_state = LDC_SHUTDOWN;
+            break;
+        default:
+            return DEVICE_ERROR;
+    }
+    return DEVICE_OK;
+}
+
 DEVICE_StatusTypeDef ldc1101_writeConfig(LDC_HandleTypeDef *hldc, const LDC_RegConfig_t *cfg, uint16_t cfg_size) {
     if (hldc == NULL || cfg == NULL || cfg_size == 0) {
         return DEVICE_ERROR;
@@ -72,103 +106,69 @@ DEVICE_StatusTypeDef ldc1101_writeConfig(LDC_HandleTypeDef *hldc, const LDC_RegC
     return DEVICE_OK;
 }
 
-//// Îª¶ÁÈ¡ RP ÖµÒÔÉèÖÃ RP_MIN
-// uint8_t ldc1101_init(LDC_HandleTypeDef *hldc, uint8_t RP_MIN)
-//{
-//     // ÉèÖÃÎª SLEEP Ä£Ê½£¬¿ªÊ¼³õÊ¼»¯
-//     ldc1101_writeByte(hldc, _LDC1101_REG_CFG_POWER_STATE,
-//     _LDC1101_FUNC_MODE_SLEEP_MODE);// 0x01
-
-//    // ÏÈ¶ÁÈ¡ CHIP ID£¬È·ÈÏ SPI ºÍĞ¾Æ¬Õı³£
-//    uint8_t chip_id = ldc1101_readByte(hldc, _LDC1101_REG_CHIP_ID);
-//    if(chip_id != 0xD4)
-//    {
-//        return DEVICE_ERROR;
-//    }
-
-//    // ÉèÖÃ RP ²âÁ¿¶¯Ì¬·¶Î§(0x01,0x47)
-//    ldc1101_writeByte(hldc, _LDC1101_REG_CFG_RP_MEASUREMENT_DYNAMIC_RANGE,
-//    RP_MIN |
-//																																					_LDC1101_RP_SET_RP_MAX_6KOhm);
-
-//    // ÅäÖÃÄÚ²¿Ê±¼ä³£Êı(0x02,0x9A)(0x03,0xFD)
-//    ldc1101_writeByte(hldc, _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_1, 0x9A);
-//    ldc1101_writeByte(hldc, _LDC1101_REG_CFG_INTERNAL_TIME_CONSTANT_2, 0xFD);
-
-//    // ÅäÖÃ RPL ×ª»»Ê±¼ä(0x04,0xC4)
-//    ldc1101_writeByte(hldc, _LDC1101_REG_CFG_RP_L_CONVERSION_INTERVAL, 0xC4);
-
-//    // ÅäÖÃÊÂ¼ş±¨¸æ
-//    ldc1101_writeByte(hldc, _LDC1101_REG_CFG_INTB_MODE,
-//    _LDC1101_INTB_MODE_DONT_REPORT_INTB_ON_SDO_PIN);
-
-//    // ¹Ø±ÕÆäËû¸¨Öú¹¦ÄÜ
-//    ldc1101_writeByte(hldc, _LDC1101_REG_CFG_ADDITIONAL_DEVICE,
-//    _LDC1101_ALT_CFG_L_OPTIMAL_DISABLED |
-//																															 _LDC1101_ALT_CFG_SHUTDOWN_DISABLE);//
-// 0x00
-
-//    // ¹Ø±ÕÃÅÏŞ¹¦ÄÜ£¨³õ´Îµ÷ÊÔ²»Ê¹ÓÃ£©
-//    ldc1101_writeByte(hldc, _LDC1101_REG_RP_THRESH_H_MSB, 0x00);
-//    ldc1101_writeByte(hldc, _LDC1101_REG_RP_THRESH_H_LSB, 0x00);
-//    ldc1101_writeByte(hldc, _LDC1101_REG_RP_THRESH_L_MSB, 0x00);
-//    ldc1101_writeByte(hldc, _LDC1101_REG_RP_THRESH_L_LSB, 0x00);
-//    ldc1101_writeByte(hldc, _LDC1101_REG_L_THRESH_HI_MSB, 0x00);
-//    ldc1101_writeByte(hldc, _LDC1101_REG_L_THRESH_HI_LSB, 0x00);
-//    ldc1101_writeByte(hldc, _LDC1101_REG_L_THRESH_LO_MSB, 0x00);
-//    ldc1101_writeByte(hldc, _LDC1101_REG_L_THRESH_LO_LSB, 0x00);
-
-//    // ¹Ø±ÕÕñ·ù¿ØÖÆ
-//    ldc1101_writeByte(hldc, _LDC1101_REG_AMPLITUDE_CONTROL_REQUIREMENT, 0x00);
-
-//    // ÇĞ»»µ½ ACTIVE CONVERSION Ä£Ê½¿ªÊ¼²âÁ¿
-//    ldc1101_writeByte(hldc, _LDC1101_REG_CFG_POWER_STATE,
-//    _LDC1101_FUNC_MODE_ACTIVE_CONVERSION_MODE);
-
-//    isLHR = 0;
-
-//    // µÈ´ı²âÁ¿ÎÈ¶¨
-//    HAL_Delay(100);
-
-//    return DEVICE_OK;
-//}
-
-// ÇĞ»»µ½ LHR Ä£Ê½
+// è¿›å…¥ LHR æ¨¡å¼
 void ldc1101_goTo_Lmode(LDC_HandleTypeDef *hldc) {
     ldc1101_writeByte(hldc, _LDC1101_REG_CFG_ADDITIONAL_DEVICE, 0x01);
     ldc1101_writeByte(hldc, _LDC1101_REG_AMPLITUDE_CONTROL_REQUIREMENT, 0x01);
     hldc->mode = LDC_MODE_LHR;
 }
 
-// ÇĞ»»µ½ RPL Ä£Ê½
+// è¿›å…¥ RP+L æ¨¡å¼
 void ldc1101_goTo_RPmode(LDC_HandleTypeDef *hldc) {
     ldc1101_writeByte(hldc, _LDC1101_REG_CFG_ADDITIONAL_DEVICE, 0x02);
     ldc1101_writeByte(hldc, _LDC1101_REG_AMPLITUDE_CONTROL_REQUIREMENT, 0x00);
-    hldc->mode = LDC_MODE_RP;
+    hldc->mode = LDC_MODE_RPL;
 }
 
-// »ñÈ¡ RP Êı¾İ
+// è®¾ç½®é‡‡æ ·ç‡
+bool ldc1101_setLHRSampleRate(LDC_HandleTypeDef *hldc, float sample_rate) {
+    if (hldc == NULL || sample_rate < 15.0f || sample_rate > 1.83908e5f) {
+        return false;
+    }
+    ldc1101_setPowerMode(hldc, LDC_SLEEP);
+    if (ldc1101_readByte(hldc, _LDC1101_REG_CFG_POWER_STATE) == _LDC1101_FUNC_MODE_SLEEP_MODE) {
+        float T_sample         = 1.0f / sample_rate;
+        float T_conv           = T_sample - 55.0f / REF_CLK_HZ;             // å‡å»å‚è€ƒå‘¨æœŸæ—¶é—´
+        uint16_t rcount        = (uint16_t)((T_conv * REF_CLK_HZ) / 16.0f); // è®¡ç®—RCOUNTå€¼
+        uint8_t rcount_data[2] = {rcount & 0xFF, (rcount >> 8) & 0xFF};
+        ldc1101_writeBurst(hldc, _LDC1101_REG_LHR_RCOUNT_LSB, rcount_data, 2);
+        return true;
+    }else{
+        return false;
+    }
+}
+
+// è¯»å– Rp æ•°æ®
 uint16_t ldc1101_getRPData(LDC_HandleTypeDef *hldc) {
-    uint16_t data;
-    data = ldc1101_readByte(hldc, _LDC1101_REG_RP_DATA_LSB);
-    data = data | (ldc1101_readByte(hldc, _LDC1101_REG_RP_DATA_MSB) << 8);
-    return data;
+    uint8_t data[2];
+    ldc1101_readBurst(hldc, _LDC1101_REG_RP_DATA_LSB, data, 2);
+    return ((uint16_t)data[0]) | ((uint16_t)data[1] << 8);
 }
 
-// »ñÈ¡ L Êı¾İ
+// è¯»å– L æ•°æ®
 uint16_t ldc1101_getLData(LDC_HandleTypeDef *hldc) {
-    uint16_t data;
-    data = ldc1101_readByte(hldc, _LDC1101_REG_L_DATA_LSB);
-    data = data | (ldc1101_readByte(hldc, _LDC1101_REG_L_DATA_MSB) << 8);
-    return data;
+    uint8_t data[2];
+    ldc1101_readBurst(hldc, _LDC1101_REG_L_DATA_LSB, data, 2);
+    return ((uint16_t)data[0]) | ((uint16_t)data[1] << 8);
 }
 
-// »ñÈ¡ LHR Êı¾İ
+// è¯»å– LHR æ•°æ®
 uint32_t ldc1101_getLHRData(LDC_HandleTypeDef *hldc) {
-    uint32_t data = 0;
-    data |= (uint32_t)ldc1101_readByte(hldc, _LDC1101_REG_LHR_DATA_LSB);
-    data |= ((uint32_t)ldc1101_readByte(hldc, _LDC1101_REG_LHR_DATA_MID) << 8);
-    data |= ((uint32_t)ldc1101_readByte(hldc, _LDC1101_REG_LHR_DATA_MSB) << 16);
+    uint8_t data[3];
+    ldc1101_readBurst(hldc, _LDC1101_REG_LHR_DATA_LSB, data, 3);
+    return ((uint32_t)data[0]) | ((uint32_t)data[1] << 8) | ((uint32_t)data[2] << 16);
+}
 
-    return data; // ·µ»Ø24Î»Êı¾İ£¬µÍ24Î»ÓĞĞ§
+// è·å–é‡‡æ ·ç‡ï¼ˆåå…­è¿›åˆ¶æ ¼å¼ï¼‰
+uint16_t ldc1101_getLHRRCount(LDC_HandleTypeDef *hldc) {
+    uint16_t rcount;
+    ldc1101_readBurst(hldc, _LDC1101_REG_LHR_RCOUNT_LSB, (uint8_t *)&rcount, 2);
+    return rcount;
+}
+
+// è·å–é‡‡æ ·ç‡(åè¿›åˆ¶æ ¼å¼ï¼Œå•ä½Hz)
+float ldc1101_getLHRSampleRate(LDC_HandleTypeDef *hldc) {
+    uint16_t rcount   = ldc1101_getLHRRCount(hldc);
+    float conv_cycles = (float)(rcount * 16U + 55U); // RCOUNT*16 + 55 reference cycles
+    return REF_CLK_HZ / conv_cycles;
 }

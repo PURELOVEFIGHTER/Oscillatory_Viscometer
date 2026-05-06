@@ -9,7 +9,7 @@ extern "C" {
 #include "stm32f4xx_hal.h"
 #include "stdint.h"
 
-void Command_Parse(void);
+void Command_Parse(char *cmd);
 
 #ifdef __cplusplus
 }

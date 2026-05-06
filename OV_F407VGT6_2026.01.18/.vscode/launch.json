@@ -10,13 +10,17 @@
             "request": "launch",
             "name": "openocd",
             "servertype": "openocd",
-            "executable": "${workspaceFolder}/build/OV_F407VGT6_2026.01.18/OV_F407VGT6_2026.01.18.elf",
-            "gdbPath": "F:\\Microsoft VS Code\\Extensions(User)\\.eide\\tools\\gcc_arm\\bin\\arm-none-eabi-gdb.exe",
+            "executable": "${workspaceFolder}\\EIDE\\build\\OV_F407VGT6_2026.01.18\\OV_F407VGT6_2026.01.18.axf",
+            "gdbPath": "C:\\Users\\Lab414313755\\.eide\\tools\\gcc_arm\\bin\\arm-none-eabi-gdb.exe",
             "runToEntryPoint": "main",
             "configFiles": [
                 "interface/cmsis-dap.cfg",
                 "target/stm32f4x.cfg"
-            ]
+            ],
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 20
+            }
         }
     ]
 }
