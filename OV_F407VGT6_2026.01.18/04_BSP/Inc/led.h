@@ -14,15 +14,13 @@ typedef enum {
 typedef enum {
     LED_STATE_OFF = 0, // 灯灭
     LED_STATE_ON,      // 灯亮
-    LED_STATE_BLINK,   // 闪烁
-    LED_STATE_BREATH   // 呼吸灯
 } LED_State_t;
 
 typedef struct {
     GPIO_TypeDef *GPIOx;
     uint16_t GPIO_Pin;
     LED_ActiveLevel_t ActiveLevel;
-} LED_Init_t;
+} LED_InitTypeDef;
 
 typedef struct {
     GPIO_TypeDef *GPIOx;           // LED所在GPIO端口
@@ -31,7 +29,7 @@ typedef struct {
     LED_State_t State;             // 当前LED状态
 } LED_Handle_t;
 
-void LED_Init(LED_Handle_t *hled, const LED_Init_t *config);
+void LED_Init(LED_Handle_t *hled, const LED_InitTypeDef *config);
 void LED_On(LED_Handle_t *hled);
 void LED_Off(LED_Handle_t *hled);
 void LED_Blink(LED_Handle_t *hled);

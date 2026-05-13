@@ -7,7 +7,6 @@ extern "C" {
 
 #include "stm32f4xx_hal.h"
 #include "device_common.h"
-#include "tim.h"
 
 /* =========================================================
  *                     DRV8833 电源状态
@@ -35,6 +34,16 @@ typedef struct {
     uint32_t CH2;
 } DRV_Channel_t;
 /* =========================================================
+ *                     DRV8833 初始化结构体
+ * ========================================================= */
+typedef struct {
+    TIM_HandleTypeDef *htim;
+    uint32_t CH1;
+    uint32_t CH2;
+    GPIO_TypeDef *nSLEEP_Port;
+    uint16_t nSLEEP_Pin;
+} DRV_InitTypeDef;
+/* =========================================================
  *                     DRV8833 句柄结构体
  * ========================================================= */
 typedef struct {
@@ -55,7 +64,7 @@ static inline uint32_t DRV_GetPWMPeriod(TIM_HandleTypeDef *htim);
 /* =========================================================
  *                     DRV8833 外部接口
  * ========================================================= */
-DEVICE_StatusTypeDef BSP_DRV_Init(DRV_HandleTypeDef *hdrv);
+DEVICE_StatusTypeDef BSP_DRV_Init(DRV_HandleTypeDef *hdrv, DRV_InitTypeDef *init);
 void DRV_Wake(DRV_HandleTypeDef *hdrv);
 void DRV_Sleep(DRV_HandleTypeDef *hdrv);
 

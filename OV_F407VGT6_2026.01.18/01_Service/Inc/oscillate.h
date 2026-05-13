@@ -29,6 +29,8 @@ void Oscillate_ScanDone(void);
 void Oscillate_ScanISR(void);
 Oscillate_State_t Oscillate_GetState(void);
 void Oscillate_RegisterScanCallback(OscillateScanCallback_t cb);
+void Oscillate_FreqStepDirectionToggle(void);
+uint8_t Oscillate_GetFreqStepDirection(void);
 #ifdef __cplusplus
 }
 #endif

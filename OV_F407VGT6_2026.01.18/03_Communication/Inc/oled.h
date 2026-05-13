@@ -4,12 +4,23 @@
 extern "C" {
 #endif
 
-#include "config.h"
 #include "oled_driver.h"
+#include "config.h"
 
-#define OLED_TEXT_SIZE   12U
+#define OLED_TEXT_SIZE OLED_TEXT_SIZE_12
+
+// 根据字号选择字符宽度
+#if (OLED_TEXT_SIZE == OLED_TEXT_SIZE_12)
+
+    #define OLED_CHAR_WIDTH  6U
+    #define OLED_CHAR_HEIGHT 8U
+
+#elif (OLED_TEXT_SIZE == OLED_TEXT_SIZE_16)
+
+    #define OLED_CHAR_WIDTH  8U
+    #define OLED_CHAR_HEIGHT 16U
+#endif
 #define OLED_TEXT_INVERT 0U
-
 
 void OLED_Update(SysWorkMode system_mode);
 void OLED_SetUpdatePending(void);

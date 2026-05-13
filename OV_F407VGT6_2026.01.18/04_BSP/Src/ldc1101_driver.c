@@ -1,14 +1,13 @@
 #include "ldc1101_driver.h"
 #include "stdlib.h"
-extern SPI_HandleTypeDef hspi2;
 
-DEVICE_StatusTypeDef ldc1101_init(LDC_HandleTypeDef *hldc) {
-    if (hldc == NULL) {
+DEVICE_StatusTypeDef ldc1101_init(LDC_HandleTypeDef *hldc,const LDC_InitTypeDef *init) {
+    if (hldc == NULL || init == NULL) {
         return DEVICE_ERROR;
     }
-    hldc->hspi        = &hspi2;
-    hldc->cs_port     = GPIOB;
-    hldc->cs_pin      = GPIO_PIN_12;
+    hldc->hspi        = init->hspi;
+    hldc->cs_port     = init->cs_port;
+    hldc->cs_pin      = init->cs_pin;
     hldc->power_state = LDC_SLEEP;
     hldc->mode        = LDC_DEFAULT;
     uint8_t chip_id   = ldc1101_readByte(hldc, _LDC1101_REG_CHIP_ID);
@@ -166,7 +165,7 @@ uint16_t ldc1101_getLHRRCount(LDC_HandleTypeDef *hldc) {
     return rcount;
 }
 
-// 获取采样率(十进制格式，单位Hz)
+// 获取采样率(十进制格式)
 float ldc1101_getLHRSampleRate(LDC_HandleTypeDef *hldc) {
     uint16_t rcount   = ldc1101_getLHRRCount(hldc);
     float conv_cycles = (float)(rcount * 16U + 55U); // RCOUNT*16 + 55 reference cycles

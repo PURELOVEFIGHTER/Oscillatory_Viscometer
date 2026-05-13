@@ -143,17 +143,16 @@ int main(void) {
     OLED_Clear();
     OLED_Display_On();
 
-    LED_Init(&hled1, &led1_cfg);
-    LED_Init(&hled2, &led2_cfg);
+    LED_Init(&hled1, &LED1_hardware);
+    LED_Init(&hled2, &LED2_hardware);
 
-    if (BSP_DRV_Init(&hdrv1) == DEVICE_OK)
+    if (BSP_DRV_Init(&hdrv1, &DRV1_hardware) == DEVICE_OK)
         UART2_Log("INFO", __FUNCTION__, __LINE__, "DRV8833 Initialization Done...");
-
-    if (ldc1101_init(&hldc1)) {
+    if (ldc1101_init(&hldc1, &LDC1_hardware) != DEVICE_OK) {
         UART2_Log("ERROR", __FUNCTION__, __LINE__, "LDC1101 Initialization Failed...");
     } else {
         UART2_Log("INFO", __FUNCTION__, __LINE__, "LDC1101 Initialization Done...");
-        if (ldc1101_writeConfig(&hldc1, &ldc_lhr_cfg, ldc_lhr_cfg_size) == DEVICE_OK) {
+        if (ldc1101_writeConfig(&hldc1, &LDC_LHR_cfg, LDC_LHR_cfg_size) == DEVICE_OK) {
             UART2_Log("INFO", __FUNCTION__, __LINE__, "LDC1101 Configuration Done...");
             snprintf(UART2_TX_buffer, sizeof(UART2_TX_buffer), "LDC1101 sample rate: %.3f kSPS (RCOUNT=0x%04X)",
                      ldc1101_getLHRSampleRate(&hldc1) / 1000.0f, ldc1101_getLHRRCount(&hldc1));
@@ -171,9 +170,6 @@ int main(void) {
     LHRSample_Init();
 
     //*------------- Application Initialization -------------*//
-    char mode_msg[MSG_LEN];
-    snprintf(mode_msg, sizeof(mode_msg), "System Mode: %s", system_mode ? "CALIBRITION" : "MEASUREMENT");
-    UART2_Log("INFO", __FUNCTION__, __LINE__, mode_msg);
     Task1_Measurement_Init();
     Task3_Pulse_Init();
 
@@ -271,7 +267,7 @@ int main(void) {
         }
         /* UART2 Transmission */
         if (UART2_TX_send) {
-            HAL_UART_Transmit(&huart2, (uint8_t *)UART2_TX_buffer, strlen(UART2_TX_buffer), HAL_MAX_DELAY);
+            HAL_UART_Transmit(&huart2, (uint8_t *)UART2_TX_buffer, strlen(UART2_TX_buffer), 0x0100);
             UART2_TX_send = false;
             memset(UART2_TX_buffer, 0, MSG_LEN);
         }

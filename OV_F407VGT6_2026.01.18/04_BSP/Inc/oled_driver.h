@@ -8,8 +8,15 @@
 #ifndef OLED_DRIVER_H_
     #define OLED_DRIVER_H_
 
+    #ifdef __cplusplus
+extern "C" {
+    #endif
+
     #include "stm32f4xx_hal.h"
     #include "oledfont.h"
+
+    #define OLED_TEXT_SIZE_12 12U
+    #define OLED_TEXT_SIZE_16 16U
 extern I2C_HandleTypeDef hi2c1;
 
 void WriteCmd(void);
@@ -34,6 +41,10 @@ void OLED_Some_HorizontalShift(uint8_t direction, uint8_t start, uint8_t end);
 void OLED_VerticalAndHorizontalShift(uint8_t direction);
 void OLED_DisplayMode(uint8_t mode);
 void OLED_IntensityControl(uint8_t intensity);
+
+    #ifdef __cplusplus
+}
+    #endif
 
 #endif /* OLED_OLED_H_ */
 // ————————————————

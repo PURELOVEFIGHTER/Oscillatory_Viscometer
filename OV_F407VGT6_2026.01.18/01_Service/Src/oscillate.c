@@ -4,8 +4,11 @@ extern DRV_HandleTypeDef hdrv1;
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim4;
 
-static Oscillate_State_t s_oscillate_state     = OSCILLATE_STOPPED;
-static OscillateScanCallback_t s_scan_callback = 0;
+extern SysWorkMode system_mode;
+
+static Oscillate_State_t s_oscillate_state        = OSCILLATE_STOPPED;
+static OscillateScanCallback_t s_scan_callback    = 0;
+static volatile uint8_t s_oscillate_freq_increase = 1;
 
 static volatile uint8_t drv_excitingLevel = 0;
 static float drv_PWM_freq                 = 0.0f;
@@ -33,7 +36,7 @@ void Oscillate_Init(void) {
     DRV_Sleep(&hdrv1);
     s_oscillate_state = OSCILLATE_STOPPED;
     s_scan_type       = SCAN_IDLE;
-    drv_PWM_freq      = FREQ_SCAN_DEFAULT_HZ;
+    drv_PWM_freq      = FREQ_DEFAULT_HZ_A;
     drv_PWM_DR        = DUTY_RATIO_DEFAULT;
     Oscillate_CalculatePWMParam();
 }
@@ -63,6 +66,9 @@ void Oscillate_Stop(void) {
     }
 }
 
+void Oscillate_FreqStepDirectionToggle(void) { s_oscillate_freq_increase = !s_oscillate_freq_increase; }
+uint8_t Oscillate_GetFreqStepDirection(void) { return s_oscillate_freq_increase; }
+
 void Oscillate_ScanStart(Scan_Type_t type) {
     // 重置相位计数
     s_tim4_cnt = 0;
@@ -71,9 +77,9 @@ void Oscillate_ScanStart(Scan_Type_t type) {
 
     s_scan_type = type;
     if (type == SCAN_FREQ) {
-        drv_PWM_freq = FREQ_SCAN_START_HZ;
+        drv_PWM_freq = (float)FREQ_SCAN_START_HZ;
     } else if (type == SCAN_DR) {
-        drv_PWM_DR = DUTY_RATIO_SCAN_START;
+        drv_PWM_DR = (float)DUTY_RATIO_SCAN_START;
     }
     Oscillate_CalculatePWMParam();
     HAL_TIM_Base_Start_IT(&htim4);

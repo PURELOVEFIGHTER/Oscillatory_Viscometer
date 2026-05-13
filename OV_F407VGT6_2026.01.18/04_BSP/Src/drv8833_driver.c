@@ -4,17 +4,17 @@ static inline uint32_t DRV_GetPWMPeriod(TIM_HandleTypeDef *htim) {
     return (htim != NULL) ? __HAL_TIM_GET_AUTORELOAD(htim) : 0U;
 }
 
-DEVICE_StatusTypeDef BSP_DRV_Init(DRV_HandleTypeDef *hdrv) {
-    if (hdrv == NULL) {
+DEVICE_StatusTypeDef BSP_DRV_Init(DRV_HandleTypeDef *hdrv,DRV_InitTypeDef *init) {
+     if (hdrv == NULL || init == NULL) {
         return DEVICE_ERROR;
     }
     hdrv->DRV_Power           = DRV_DISABLE; // 默认休眠状态
     hdrv->CHANNEL_A.direction = DRV_STAGE_COAST;
-    hdrv->CHANNEL_A.htim      = &htim2;
-    hdrv->CHANNEL_A.CH1       = TIM_CHANNEL_1;
-    hdrv->CHANNEL_A.CH2       = TIM_CHANNEL_2;
-    hdrv->nSLEEP_Port         = GPIOA;
-    hdrv->nSLEEP_Pin          = GPIO_PIN_4;
+    hdrv->CHANNEL_A.htim      = init->htim;
+    hdrv->CHANNEL_A.CH1       = init->CH1;
+    hdrv->CHANNEL_A.CH2       = init->CH2;
+    hdrv->nSLEEP_Port         = init->nSLEEP_Port;
+    hdrv->nSLEEP_Pin          = init->nSLEEP_Pin;
 
     return DEVICE_OK;
 }

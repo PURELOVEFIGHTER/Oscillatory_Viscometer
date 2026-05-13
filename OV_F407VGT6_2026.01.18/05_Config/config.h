@@ -4,11 +4,12 @@
 extern "C" {
 #endif
 
+#include "drv8833_driver.h"
 #include "ldc1101_driver.h"
 #include "led.h"
 
 /* =========================================================
- *             System Working Mode Configuration
+ *                    System Work Mode
  * ========================================================= */
 typedef enum {
     MODE_MEASUREMENT    = 0, // Mode0：测量模式
@@ -17,13 +18,15 @@ typedef enum {
 } SysWorkMode;
 
 /* =========================================================
- *               Frequency Scan Configuration
+ *                 Frequency Configuration
  * ========================================================= */
-#define FREQ_SCAN_DEFAULT_HZ   274
-#define FREQ_SCAN_START_HZ     250 // 扫频起始频率
-#define FREQ_SCAN_END_HZ       500 // 扫频终止频率
-#define FREQ_SCAN_STEP_HZ      1   // 扫频步进
-#define FREQ_SCAN_HOLD_TIME_MS 40  // 每个频率采集时间(ms)
+#define FREQ_DEFAULT_HZ_A      548
+#define FREQ_DEFAULT_HZ_B      1043.5
+#define FREQ_DEFAULT_HZ_C      273
+#define FREQ_SCAN_START_HZ     100  // 扫频起始频率  500
+#define FREQ_SCAN_END_HZ       1200 // 扫频终止频率  650
+#define FREQ_SCAN_STEP_HZ      0.5  // 扫频步进
+#define FREQ_SCAN_HOLD_TIME_MS 100  // 每个频率采集时间(ms)
 
 /* =========================================================
  *                  Duty Ratio Configuration
@@ -32,7 +35,7 @@ typedef enum {
 #define DUTY_RATIO_SCAN_START        0   // 有效电平扫描起始比例
 #define DUTY_RATIO_SCAN_END          100 // 有效电平扫描终止比例
 #define DUTY_RATIO_SCAN_STEP         1   // 扫频步进
-#define DUTY_RATIO_SCAN_HOLD_TIME_MS 30  // 每个占空比采集时间(ms)
+#define DUTY_RATIO_SCAN_HOLD_TIME_MS 50  // 每个占空比采集时间(ms)
 
 /* =========================================================
  *                  Calibrition Configuration
@@ -46,26 +49,25 @@ typedef enum {
 typedef enum { CAL_IDLE = 0, CAL_WAIT_SETTLE, CAL_SAMPLING, CAL_DONE } CalState_t;
 
 /* =========================================================
- *                  Pulse Feedback Configuration
+ *                 Pulse Feedback Configuration
  * ========================================================= */
 #define PULSE_FEEDBACK_MAX_NUM     3000U
 #define PULSE_FEEDBACK_TRIGGER_MAX 10U
 
 /* =========================================================
- *                   LDC1101 Configuration
+ *     LDC1101 Hardware Registration and Configuration
  * ========================================================= */
-#define LDC_SPI          hspi2
-#define LDC_CS_GPIO_PORT GPIOB
-#define LDC_CS_PIN       GPIO_PIN_12
-extern const uint16_t ldc_lhr_cfg_size;
-extern const LDC_RegConfig_t ldc_lhr_cfg[];
+extern const LDC_InitTypeDef LDC1_hardware;
+extern const uint16_t LDC_LHR_cfg_size;
+extern const LDC_RegConfig_t LDC_LHR_cfg[];
 
 /* =========================================================
- *                     DRV8833 Configuration
+ *                DRV8833 Hardware Registration
  * ========================================================= */
+extern const DRV_InitTypeDef DRV1_hardware;
 
 /* =========================================================
- *                      Key Configuration
+ *                  Key Hardware Registration
  * ========================================================= */
 #define KEY1_GPIO_PORT GPIOA
 #define KEY1_PIN       GPIO_PIN_0
@@ -73,10 +75,10 @@ extern const LDC_RegConfig_t ldc_lhr_cfg[];
 #define KEY2_PIN       GPIO_PIN_1
 
 /* =========================================================
- *                      LED Configuration
+ *                  LED Hardware Registration
  * ========================================================= */
-extern const LED_Init_t led1_cfg;
-extern const LED_Init_t led2_cfg;
+extern const LED_InitTypeDef LED1_hardware;
+extern const LED_InitTypeDef LED2_hardware;
 
 #ifdef __cplusplus
 }
